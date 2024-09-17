@@ -1,8 +1,14 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 
@@ -14,37 +20,53 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController providerEmailController = TextEditingController();
-  TextEditingController providerFullNameContoller = TextEditingController();
-  TextEditingController providerPassController = TextEditingController();
-  TextEditingController providerConfrimPassController = TextEditingController();
-  TextEditingController providerContactController = TextEditingController();
-  TextEditingController providerLocation = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  bool _isLoading = false;
+  Uint8List? _image;
+  String? imageUrl;
 
-  //Password Check
-  bool passwordVisible = false;
-  bool passwordVisibleConfrim = false;
   @override
   void initState() {
     super.initState();
-    passwordVisible = true;
-    passwordVisibleConfrim = true;
+    fetchData();
   }
 
-  String? selectedLocation; // New variable to hold the selected description
-  void setSelectedDescription(String description) {
+  void fetchData() async {
+    // Fetch data from Firestore
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    // Update the controllers with the fetched data
     setState(() {
-      selectedLocation = description;
-      providerLocation.text =
-          description; // Optionally set the text field value
+      addressController.text = data['address'] ?? '';
+      phoneController.text = (data['phone'] ?? ''); // Convert int to string
+      nameController.text = data['fullName'] ?? ''; // Convert int to string
+      imageUrl = data['image'];
     });
   }
 
-  //loader
-  bool isLoading = false;
+  Future<void> selectImage() async {
+    Uint8List ui = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = ui;
+    });
+  }
 
-  //Image
-  Uint8List? _image;
+  Future<String> uploadImageToStorage(Uint8List image) async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child('users')
+        .child('${FirebaseAuth.instance.currentUser!.uid}.jpg');
+    UploadTask uploadTask = ref.putData(image);
+    TaskSnapshot snapshot = await uploadTask;
+    return await snapshot.ref.getDownloadURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,23 +80,32 @@ class _EditProfileState extends State<EditProfile> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage("assets/profilephoto.png"),
+              child: GestureDetector(
+                onTap: () => selectImage(),
+                child: _image != null
+                    ? CircleAvatar(
+                        radius: 59, backgroundImage: MemoryImage(_image!))
+                    : imageUrl != null
+                        ? CircleAvatar(
+                            radius: 59,
+                            backgroundImage: NetworkImage(imageUrl!))
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset("assets/profilephoto.png"),
+                          ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8),
               child: TextFormInputField(
-                  controller: providerEmailController,
-                  hintText: "Email Address",
+                  controller: nameController,
+                  hintText: "Nombre y apellido",
                   textInputType: TextInputType.emailAddress),
             ),
             Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: TextFormField(
-                  obscureText: passwordVisible,
-                  keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(8),
@@ -83,14 +114,13 @@ class _EditProfileState extends State<EditProfile> {
                     hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                     hintText: "Domicilio",
                   ),
-                  controller: providerPassController,
+                  controller: addressController,
                 )),
             Padding(
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8, top: 8, bottom: 8),
                 child: TextFormField(
-                  obscureText: passwordVisibleConfrim,
-                  keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(8),
@@ -99,18 +129,60 @@ class _EditProfileState extends State<EditProfile> {
                     hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                     hintText: "Telefono",
                   ),
-                  controller: providerConfrimPassController,
+                  controller: phoneController,
                 )),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: isLoading
+              child: _isLoading
                   ? Center(
                       child: CircularProgressIndicator(
                         color: mainColor,
                       ),
                     )
-                  : SaveButton(title: "Edit Profile", onTap: () async {}),
+                  : SaveButton(
+                      title: "Edit Profile",
+                      onTap: () async {
+                        setState(() {
+                          _isLoading = true;
+                        });
+
+                        String? downloadUrl;
+                        if (_image != null) {
+                          downloadUrl = await uploadImageToStorage(_image!);
+                        } else {
+                          downloadUrl = imageUrl;
+                        }
+
+                        try {
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(FirebaseAuth.instance.currentUser!
+                                  .uid) // Use widget.uuid here
+                              .update({
+                            "fullName": nameController.text,
+                            "phone":
+                                phoneController.text, // Convert string to int
+                            "address":
+                                addressController.text, // Convert string to int
+                            "image": downloadUrl,
+                          });
+                          showMessageBar(
+                              "Profile Updated Successfully ", context);
+                        } catch (e) {
+                          // Handle errors here
+                          print("Error updating service: $e");
+                          showMessageBar("Failed to update service", context);
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => MainDashboard()));
+                        }
+                      }),
             ),
             const SizedBox(
               height: 20,
@@ -120,8 +192,4 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-
-  //Fucctions
-  /// Select Image From Gallery
-  selectImage() async {}
 }

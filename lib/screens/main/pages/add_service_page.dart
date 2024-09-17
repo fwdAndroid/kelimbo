@@ -172,10 +172,6 @@ class _AddServicePageState extends State<AddServicePage> {
                               context);
                         } catch (e) {
                           showMessageBar(e.toString(), context);
-                        } finally {
-                          setState(() {
-                            isAdded = false;
-                          });
                         }
                       }
                     }),
