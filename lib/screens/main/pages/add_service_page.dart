@@ -2,12 +2,12 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:marketplace/screens/main/main_dashboard.dart';
-import 'package:marketplace/services/database.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/utils/image_utils.dart';
-import 'package:marketplace/widgets/save_button.dart';
-import 'package:marketplace/widgets/text_form_field.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/services/database.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
+import 'package:kelimbo/widgets/save_button.dart';
+import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class AddServicePage extends StatefulWidget {

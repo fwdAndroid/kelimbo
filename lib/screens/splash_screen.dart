@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:marketplace/screens/auth/auth_login.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/screens/auth/auth_login.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

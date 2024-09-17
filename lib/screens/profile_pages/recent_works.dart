@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/detail/service_detail.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/screens/detail/service_detail.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 class RecentWorks extends StatefulWidget {
   const RecentWorks({super.key});

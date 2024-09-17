@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/main/chat/messages.dart';
+import 'package:kelimbo/screens/main/chat/messages.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});

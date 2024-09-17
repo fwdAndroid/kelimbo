@@ -2,9 +2,9 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/save_button.dart';
-import 'package:marketplace/widgets/text_form_field.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/save_button.dart';
+import 'package:kelimbo/widgets/text_form_field.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});

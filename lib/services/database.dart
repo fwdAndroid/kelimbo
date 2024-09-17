@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:marketplace/models/service_model.dart';
-import 'package:marketplace/services/storage_methods.dart';
+import 'package:kelimbo/models/service_model.dart';
+import 'package:kelimbo/services/storage_methods.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:uuid/uuid.dart';
 

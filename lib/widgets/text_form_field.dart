@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 class TextFormInputField extends StatelessWidget {
   final TextEditingController controller;

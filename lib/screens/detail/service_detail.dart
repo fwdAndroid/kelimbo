@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/detail/service_rate.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/save_button.dart';
+import 'package:kelimbo/screens/detail/service_rate.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class ServiceDetail extends StatefulWidget {
   const ServiceDetail({super.key});

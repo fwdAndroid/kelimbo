@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/text_form_field.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/text_form_field.dart';
 
 class Messages extends StatefulWidget {
   const Messages({super.key});

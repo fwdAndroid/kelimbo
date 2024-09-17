@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:marketplace/screens/main/pages/add_service_page.dart';
-import 'package:marketplace/screens/main/pages/chat_page.dart';
-import 'package:marketplace/screens/main/pages/favourite_page.dart';
-import 'package:marketplace/screens/main/pages/home_page.dart';
-import 'package:marketplace/screens/main/pages/profile_page.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/screens/main/pages/add_service_page.dart';
+import 'package:kelimbo/screens/main/pages/chat_page.dart';
+import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/screens/main/pages/home_page.dart';
+import 'package:kelimbo/screens/main/pages/profile_page.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 class MainDashboard extends StatefulWidget {
   @override

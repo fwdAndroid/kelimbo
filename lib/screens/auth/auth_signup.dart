@@ -7,13 +7,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:marketplace/screens/auth/auth_login.dart';
-import 'package:marketplace/screens/main/main_dashboard.dart';
-import 'package:marketplace/services/auth_methods.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/utils/image_utils.dart';
-import 'package:marketplace/widgets/save_button.dart';
-import 'package:marketplace/widgets/text_form_field.dart';
+import 'package:kelimbo/screens/auth/auth_login.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/services/auth_methods.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
+import 'package:kelimbo/widgets/save_button.dart';
+import 'package:kelimbo/widgets/text_form_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});

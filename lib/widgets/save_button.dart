@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 // ignore: must_be_immutable
 class SaveButton extends StatelessWidget {

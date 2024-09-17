@@ -2,12 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/auth/auth_signup.dart';
-import 'package:marketplace/screens/main/main_dashboard.dart';
-import 'package:marketplace/screens/main/pages/add_service_page.dart';
-import 'package:marketplace/services/auth_methods.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/save_button.dart';
+import 'package:kelimbo/screens/auth/auth_signup.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/services/auth_methods.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 
 class AuthLogin extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/hiring/hiring_service.dart';
-import 'package:marketplace/utils/colors.dart';
+import 'package:kelimbo/screens/hiring/hiring_service.dart';
+import 'package:kelimbo/utils/colors.dart';
 
 class FavouritePage extends StatefulWidget {
   const FavouritePage({super.key});

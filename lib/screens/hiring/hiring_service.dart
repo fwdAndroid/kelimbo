@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/hiring/hiring_service_comment.dart';
-import 'package:marketplace/widgets/save_button.dart';
+import 'package:kelimbo/screens/hiring/hiring_service_comment.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class HiringService extends StatefulWidget {
   const HiringService({super.key});

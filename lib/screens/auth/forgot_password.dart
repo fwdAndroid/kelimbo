@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/auth/auth_login.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/save_button.dart';
+import 'package:kelimbo/screens/auth/auth_login.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});

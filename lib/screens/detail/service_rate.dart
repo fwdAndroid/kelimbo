@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:marketplace/screens/main/main_dashboard.dart';
-import 'package:marketplace/utils/colors.dart';
-import 'package:marketplace/widgets/save_button.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class ServiceRate extends StatefulWidget {
   const ServiceRate({super.key});
