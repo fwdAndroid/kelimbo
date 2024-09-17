@@ -158,7 +158,7 @@ class _AddServicePageState extends State<AddServicePage> {
                             price: int.parse(priceController.text),
                             description: descriptionController.text,
                             pricePerHer: int.parse(discountController.text),
-                            // file: _image!,
+                            file: _image!,
                           );
 
                           Navigator.push(
@@ -167,6 +167,9 @@ class _AddServicePageState extends State<AddServicePage> {
                               builder: (builder) => MainDashboard(),
                             ),
                           );
+                          showMessageBar(
+                              "Services Added Successfully".toString(),
+                              context);
                         } catch (e) {
                           showMessageBar(e.toString(), context);
                         } finally {

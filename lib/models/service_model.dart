@@ -4,7 +4,7 @@ class ServiceModel {
   String uuid;
   int price;
   int pricePerHr;
-  // String photo;
+  String photo;
   String description;
   String title;
   String category;
@@ -17,7 +17,7 @@ class ServiceModel {
       required this.price,
       required this.pricePerHr,
       required this.description,
-      // required this.photo,
+      required this.photo,
       required this.category,
       required this.favorite,
       required this.uuid});
@@ -27,7 +27,7 @@ class ServiceModel {
         'uid': uid,
         'pricePerHr': pricePerHr,
         'description': description,
-        // 'photo': photo,
+        'photo': photo,
         'category': category,
         'title': title,
         'favorite': favorite,
@@ -37,7 +37,7 @@ class ServiceModel {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return ServiceModel(
-        // photo: snapshot['photo'],
+        photo: snapshot['photo'],
         uid: snapshot['uid'],
         favorite: snapshot['favorite'],
         title: snapshot['title'],

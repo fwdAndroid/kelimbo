@@ -23,19 +23,19 @@ class Database {
     required int price,
     required String description,
     required int pricePerHer,
-    // required Uint8List file,
+    required Uint8List file,
   }) async {
     String res = 'Some error occurred';
     try {
       if (title.isNotEmpty && category.isNotEmpty) {
         // Compress image before upload
-        // Uint8List compressedFile = await compressImage(file);
+        Uint8List compressedFile = await compressImage(file);
 
         // Upload compressed image to Firestore storage
-        // String photoURL = await StorageMethods().uploadImageToStorage(
-        //   'servicesImages',
-        //   compressedFile,
-        // );
+        String photoURL = await StorageMethods().uploadImageToStorage(
+          'servicesImages',
+          compressedFile,
+        );
 
         var uuid = Uuid().v4();
 
@@ -49,7 +49,7 @@ class Database {
           uuid: uuid,
           price: price,
           category: category,
-          // photo: photoURL,
+          photo: photoURL,
         );
 
         // Add service to Firestore
