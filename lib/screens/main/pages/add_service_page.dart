@@ -30,6 +30,10 @@ class _AddServicePageState extends State<AddServicePage> {
     'Salud',
     'Turismo',
     'Entrenamiento personal',
+    'Vehículos',
+    'Mascotas',
+    'Fotografía y vídeo',
+    'Belleza'
   ];
 
   Uint8List? _image;
