@@ -7,6 +7,8 @@ import 'package:kelimbo/screens/profile_pages/jobs_budget.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_hired.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/widgets/delete_widgets.dart';
+import 'package:kelimbo/widgets/logout_widget.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -170,7 +172,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               ListTile(
-                onTap: () {},
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return DeleteAlertWidget();
+                    },
+                  );
+                },
                 title: Text(
                   "Delete account",
                   style: GoogleFonts.workSans(
@@ -189,8 +198,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ListTile(
                 onTap: () {
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (builder) => PrivacyPolicy()));
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return LogoutWidget();
+                    },
+                  );
                 },
                 title: Text(
                   "Go Out ",
@@ -210,7 +223,16 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SaveButton(title: "Logout", onTap: () {}),
+                child: SaveButton(
+                    title: "Logout",
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return LogoutWidget();
+                        },
+                      );
+                    }),
               )
             ],
           ),
