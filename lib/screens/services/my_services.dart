@@ -111,7 +111,7 @@ class _MyServicesState extends State<MyServices> {
                                       color: yellow,
                                     ),
                                     Text(
-                                      "5.0",
+                                      data['totalRate'].toString(),
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
@@ -119,7 +119,7 @@ class _MyServicesState extends State<MyServices> {
                                   ],
                                 ),
                                 Text(
-                                  "85 Reviews",
+                                  data['totalReviews'].toString() + " Reviews",
                                   style: GoogleFonts.inter(
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.bold,

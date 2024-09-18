@@ -10,6 +10,9 @@ class ServiceModel {
   String category;
   String uid;
   bool favorite;
+  double totalRate; // Stores the total rate
+  int totalReviews; // Stores the total number of reviews
+  Map<String, int> reviews; // Stores reviews with corresponding ratings
 
   ServiceModel(
       {required this.uid,
@@ -20,6 +23,9 @@ class ServiceModel {
       required this.photo,
       required this.category,
       required this.favorite,
+      required this.reviews,
+      required this.totalRate,
+      required this.totalReviews,
       required this.uuid});
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +38,9 @@ class ServiceModel {
         'title': title,
         'favorite': favorite,
         'uuid': uuid,
+        'totalRate': totalRate, // Include in toJson
+        'totalReviews': totalReviews, // Include in toJson
+        'reviews': reviews, // Include reviews as a list of strings
       };
   static ServiceModel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
@@ -45,6 +54,10 @@ class ServiceModel {
         price: snapshot['price'],
         pricePerHr: snapshot['pricePerHr'],
         category: snapshot['category'],
+        totalRate: snapshot['totalRate'], // Fetch from snapshot
+        totalReviews: snapshot['totalReviews'], // Fetch from snapshot
+        reviews: Map<String, int>.from(
+            snapshot['reviews']), // Fetch reviews map from snapshot
         uuid: snapshot['uuid']);
   }
 }

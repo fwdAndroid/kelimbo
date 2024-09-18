@@ -41,6 +41,9 @@ class Database {
 
         // Create ServiceModel object
         ServiceModel serviceModel = ServiceModel(
+          totalRate: 0,
+          totalReviews: 0,
+          reviews: {},
           favorite: false,
           pricePerHr: pricePerHer,
           uid: FirebaseAuth.instance.currentUser!.uid,
