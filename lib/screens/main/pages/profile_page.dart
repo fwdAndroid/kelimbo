@@ -6,6 +6,7 @@ import 'package:kelimbo/screens/profile_pages/edit_profile.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_budget.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_hired.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
+import 'package:kelimbo/screens/services/my_services.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
 import 'package:kelimbo/widgets/logout_widget.dart';
@@ -71,6 +72,27 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 title: Text(
                   "View Profile",
+                  style: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: colorBlack,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8),
+                child: Divider(
+                  color: iconColor,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => MyServices()));
+                },
+                title: Text(
+                  "My Services",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
