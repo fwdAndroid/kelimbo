@@ -152,10 +152,10 @@ class _HomePageState extends State<HomePage> {
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection("services")
+                        .where("favorite", isEqualTo: false)
                         .where("uid",
                             isNotEqualTo:
                                 FirebaseAuth.instance.currentUser!.uid)
-                        .where("favorite", isEqualTo: false)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
