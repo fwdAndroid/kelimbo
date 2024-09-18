@@ -14,8 +14,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController serviceNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(130), // Adjust the height as needed
@@ -152,8 +155,7 @@ class _HomePageState extends State<HomePage> {
                 child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("services")
-                      .where("uid",
-                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .where("uid", isNotEqualTo: currentUserId)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
@@ -170,17 +172,23 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
+                    // Filter out items marked as favorites by the current user
+                    final filteredDocs = snapshot.data!.docs.where((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      final favorites =
+                          data['favorite'] as List<dynamic>? ?? [];
+                      return !favorites.contains(currentUserId);
+                    }).toList();
+
                     return ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
+                      itemCount: filteredDocs.length,
                       scrollDirection: Axis.horizontal,
-                      itemBuilder: (index, context) {
-                        final List<DocumentSnapshot> documents =
-                            snapshot.data!.docs;
-                        final Map<String, dynamic> data =
-                            documents[context].data() as Map<String, dynamic>;
+                      itemBuilder: (context, index) {
+                        final data =
+                            filteredDocs[index].data() as Map<String, dynamic>;
 
                         bool isFavorite = (data['favorite'] as List<dynamic>)
-                            .contains(FirebaseAuth.instance.currentUser!.uid);
+                            .contains(currentUserId);
 
                         return SizedBox(
                           height: 300,
@@ -212,19 +220,14 @@ class _HomePageState extends State<HomePage> {
                                             // Remove from favorites
                                             await docRef.update({
                                               "favorite":
-                                                  FieldValue.arrayRemove([
-                                                FirebaseAuth
-                                                    .instance.currentUser!.uid
-                                              ])
+                                                  FieldValue.arrayRemove(
+                                                      [currentUserId])
                                             });
                                           } else {
                                             // Add to favorites
                                             await docRef.update({
-                                              "favorite":
-                                                  FieldValue.arrayUnion([
-                                                FirebaseAuth
-                                                    .instance.currentUser!.uid
-                                              ])
+                                              "favorite": FieldValue.arrayUnion(
+                                                  [currentUserId])
                                             });
                                           }
                                         },
@@ -312,8 +315,7 @@ class _HomePageState extends State<HomePage> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("services")
-                      .where("uid",
-                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .where("uid", isNotEqualTo: currentUserId)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {

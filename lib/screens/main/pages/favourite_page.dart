@@ -72,9 +72,20 @@ class _FavouritePageState extends State<FavouritePage> {
                               fontWeight: FontWeight.w300,
                               fontSize: 15),
                         ),
-                        trailing: Icon(
-                          Icons.favorite,
-                          color: red,
+                        trailing: GestureDetector(
+                          onTap: () async {
+                            final docRef = FirebaseFirestore.instance
+                                .collection("services")
+                                .doc(data['uuid']);
+                            await docRef.update({
+                              "favorite":
+                                  FieldValue.arrayRemove([currentUserId])
+                            });
+                          },
+                          child: Icon(
+                            Icons.favorite,
+                            color: red,
+                          ),
                         ),
                       ),
                       Row(
