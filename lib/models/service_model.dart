@@ -13,6 +13,9 @@ class ServiceModel {
   double totalRate; // Stores the total rate
   int totalReviews; // Stores the total number of reviews
   Map<String, int> reviews; // Stores reviews with corresponding ratings
+  String userName;
+  String userImage;
+  String userEmail;
 
   ServiceModel(
       {required this.uid,
@@ -25,12 +28,18 @@ class ServiceModel {
       required this.favorite,
       required this.reviews,
       required this.totalRate,
+      required this.userName,
+      required this.userImage,
+      required this.userEmail,
       required this.totalReviews,
       required this.uuid});
 
   Map<String, dynamic> toJson() => {
         'price': price,
         'uid': uid,
+        'userName': userName,
+        'userImage': userImage,
+        'userEmail': userEmail,
         'pricePerHr': pricePerHr,
         'description': description,
         'photo': photo,
@@ -52,6 +61,9 @@ class ServiceModel {
         title: snapshot['title'],
         description: snapshot['description'],
         price: snapshot['price'],
+        userName: snapshot['userName'],
+        userImage: snapshot['userImage'],
+        userEmail: snapshot['userEmail'],
         pricePerHr: snapshot['pricePerHr'],
         category: snapshot['category'],
         totalRate: snapshot['totalRate'], // Fetch from snapshot

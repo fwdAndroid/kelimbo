@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,134 +56,154 @@ class _AddServicePageState extends State<AddServicePage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-              child: TextFormInputField(
-                maxLenght: 30,
-                controller: serviceNameController,
-                hintText: "Title Name",
-                textInputType: TextInputType.text,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                maxLength: 30,
-                controller: descriptionController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(22)),
-                      borderSide: BorderSide(
-                        color: textColor,
-                      )),
-                  contentPadding: EdgeInsets.all(8),
-                  fillColor: Color(0xffF6F7F9),
-                  hintText: "Description",
-                  hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            GestureDetector(
-              onTap: () => selectImage(),
-              child: _image != null
-                  ? CircleAvatar(
-                      radius: 59, backgroundImage: MemoryImage(_image!))
-                  : GestureDetector(
-                      onTap: () => selectImage(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset("assets/Choose Image.png"),
+      body: StreamBuilder<Object>(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data == null) {
+              return Center(child: Text('No data available'));
+            }
+            var snap = snapshot.data;
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: TextFormInputField(
+                      maxLenght: 30,
+                      controller: serviceNameController,
+                      hintText: "Title Name",
+                      textInputType: TextInputType.text,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      maxLength: 30,
+                      controller: descriptionController,
+                      maxLines: 4,
+                      decoration: InputDecoration(
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(22)),
+                            borderSide: BorderSide(
+                              color: textColor,
+                            )),
+                        contentPadding: EdgeInsets.all(8),
+                        fillColor: Color(0xffF6F7F9),
+                        hintText: "Description",
+                        hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                        border: InputBorder.none,
                       ),
                     ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-              child: DropdownButton(
-                value: dropdownvalue,
-                isExpanded: true,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: items.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownvalue = newValue!;
-                  });
-                },
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8),
-                    child: TextFormInputField(
-                      controller: priceController,
-                      hintText: "Price",
-                      textInputType: TextInputType.number,
-                    ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8),
-                    child: TextFormInputField(
-                      controller: discountController,
-                      hintText: "Price Per Hr",
-                      textInputType: TextInputType.number,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            isAdded
-                ? Center(child: CircularProgressIndicator())
-                : SaveButton(
-                    title: "Publish",
-                    onTap: () async {
-                      if (validateInputs(context)) {
-                        setState(() {
-                          isAdded = true;
-                        });
-
-                        try {
-                          Database().addService(
-                            category: dropdownvalue,
-                            title: serviceNameController.text,
-                            price: int.parse(priceController.text),
-                            description: descriptionController.text,
-                            pricePerHer: int.parse(discountController.text),
-                            file: _image!,
-                          );
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (builder) => MainDashboard(),
+                  GestureDetector(
+                    onTap: () => selectImage(),
+                    child: _image != null
+                        ? CircleAvatar(
+                            radius: 59, backgroundImage: MemoryImage(_image!))
+                        : GestureDetector(
+                            onTap: () => selectImage(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset("assets/Choose Image.png"),
                             ),
-                          );
-                          showMessageBar(
-                              "Services Added Successfully".toString(),
-                              context);
-                        } catch (e) {
-                          showMessageBar(e.toString(), context);
-                        }
-                      }
-                    }),
-          ],
-        ),
-      ),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: DropdownButton(
+                      value: dropdownvalue,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropdownvalue = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8),
+                          child: TextFormInputField(
+                            controller: priceController,
+                            hintText: "Price",
+                            textInputType: TextInputType.number,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8),
+                          child: TextFormInputField(
+                            controller: discountController,
+                            hintText: "Price Per Hr",
+                            textInputType: TextInputType.number,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  isAdded
+                      ? Center(child: CircularProgressIndicator())
+                      : SaveButton(
+                          title: "Publish",
+                          onTap: () async {
+                            if (validateInputs(context)) {
+                              setState(() {
+                                isAdded = true;
+                              });
+
+                              try {
+                                Database().addService(
+                                  userName: snap['fullName'],
+                                  userImage: snap['image'],
+                                  userEmail: snap['email'],
+                                  category: dropdownvalue,
+                                  title: serviceNameController.text,
+                                  price: int.parse(priceController.text),
+                                  description: descriptionController.text,
+                                  pricePerHer:
+                                      int.parse(discountController.text),
+                                  file: _image!,
+                                );
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) => MainDashboard(),
+                                  ),
+                                );
+                                showMessageBar(
+                                    "Services Added Successfully".toString(),
+                                    context);
+                              } catch (e) {
+                                showMessageBar(e.toString(), context);
+                              }
+                            }
+                          }),
+                ],
+              ),
+            );
+          }),
     );
   }
 

@@ -24,6 +24,9 @@ class Database {
     required String description,
     required int pricePerHer,
     required Uint8List file,
+    required String userEmail,
+    required String userName,
+    required String userImage,
   }) async {
     String res = 'Some error occurred';
     try {
@@ -41,6 +44,9 @@ class Database {
 
         // Create ServiceModel object
         ServiceModel serviceModel = ServiceModel(
+          userEmail: userEmail,
+          userImage: userImage,
+          userName: userName,
           totalRate: 0,
           totalReviews: 0,
           reviews: {},
