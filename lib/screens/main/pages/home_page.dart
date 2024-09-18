@@ -346,8 +346,24 @@ class _HomePageState extends State<HomePage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (builder) =>
-                                                HiringService()));
+                                            builder: (builder) => HiringService(
+                                                  category: data['category'],
+                                                  totalReviews:
+                                                      data['totalReviews']
+                                                          .toString(),
+                                                  uuid: data['uuid'],
+                                                  uid: data['uid'],
+                                                  totalRating: data['totalRate']
+                                                      .toString(),
+                                                  title: data['title'],
+                                                  price:
+                                                      data['price'].toString(),
+                                                  perHrPrice: data['pricePerHr']
+                                                      .toString(),
+                                                  photo: data['photo'],
+                                                  description:
+                                                      data['description'],
+                                                )));
                                   },
                                   leading: CircleAvatar(
                                     backgroundImage:

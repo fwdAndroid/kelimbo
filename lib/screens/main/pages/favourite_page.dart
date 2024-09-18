@@ -49,7 +49,19 @@ class _FavouritePageState extends State<FavouritePage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => HiringService()),
+                    MaterialPageRoute(
+                        builder: (context) => HiringService(
+                              category: data['category'],
+                              totalReviews: data['totalReviews'].toString(),
+                              uuid: data['uuid'],
+                              uid: data['uid'],
+                              totalRating: data['totalRate'].toString(),
+                              title: data['title'],
+                              price: data['price'].toString(),
+                              perHrPrice: data['pricePerHr'].toString(),
+                              photo: data['photo'],
+                              description: data['description'],
+                            )),
                   );
                 },
                 child: Card(

@@ -4,7 +4,28 @@ import 'package:kelimbo/screens/hiring/hiring_service_comment.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class HiringService extends StatefulWidget {
-  const HiringService({super.key});
+  final title;
+  final description;
+  final price;
+  final perHrPrice;
+  final totalReviews;
+  final totalRating;
+  final photo;
+  final uuid;
+  final category;
+  final uid;
+  const HiringService(
+      {super.key,
+      required this.description,
+      required this.perHrPrice,
+      required this.price,
+      required this.title,
+      required this.category,
+      required this.photo,
+      required this.totalRating,
+      required this.uid,
+      required this.uuid,
+      required this.totalReviews});
 
   @override
   State<HiringService> createState() => _HiringServiceState();
@@ -19,13 +40,13 @@ class _HiringServiceState extends State<HiringService> {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundImage: AssetImage("assets/logo.png"),
+              backgroundImage: NetworkImage(widget.photo),
               radius: 50,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Estudio juridico \nAlvarez",
+                widget.title,
                 style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold, fontSize: 28),
                 textAlign: TextAlign.center,
@@ -39,7 +60,7 @@ class _HiringServiceState extends State<HiringService> {
                   color: Colors.yellow,
                 ),
                 Text(
-                  "(15)",
+                  widget.totalRating.toString(),
                   style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold,
                       fontSize: 19,
@@ -50,7 +71,7 @@ class _HiringServiceState extends State<HiringService> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Asesoria legal y comercial",
+                widget.category,
                 style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold, fontSize: 20),
               ),
@@ -60,7 +81,7 @@ class _HiringServiceState extends State<HiringService> {
                 height: 150,
                 width: 390,
                 child: Text(
-                  "Proporcionamos apoyo integral a las empresas, ayudándolas a navegar por el complejo entorno legal y a maximizar sus oportunidades comerciales. Este enfoque proactivo y estratégico asegura que las empresas no solo cumplan con las normativas, sino que también optimicen su rendimiento y crecimiento a largo plazo.",
+                  widget.description,
                   style: GoogleFonts.inter(
                       fontWeight: FontWeight.w500, fontSize: 18),
                   textAlign: TextAlign.center,
@@ -69,8 +90,8 @@ class _HiringServiceState extends State<HiringService> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                "assets/marlet.png",
+              child: Image.network(
+                widget.photo,
                 height: 254,
               ),
             ),
