@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
@@ -13,91 +15,127 @@ class FavouritePage extends StatefulWidget {
 class _FavouritePageState extends State<FavouritePage> {
   @override
   Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
-      body: ListView.builder(itemBuilder: (index, contrxt) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => HiringService()));
-          },
-          child: Card(
-            child: Column(
-              children: [
-                ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: AssetImage("assets/logo.png"),
-                    ),
-                    title: Text(
-                      "Marketing digital",
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    subtitle: Text(
-                      "Paula Rosseti",
-                      style: GoogleFonts.inter(
-                          color: Color(0xff9C9EA2),
-                          fontWeight: FontWeight.w300,
-                          fontSize: 15),
-                    ),
-                    trailing: Icon(
-                      Icons.favorite,
-                      color: red,
-                    )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          "€50.0",
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("services")
+            .where("favorite", arrayContains: currentUserId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text(
+                "No Favorites Available",
+                style: TextStyle(color: colorBlack),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              final List<DocumentSnapshot> documents = snapshot.data!.docs;
+              final Map<String, dynamic> data =
+                  documents[index].data() as Map<String, dynamic>;
+
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HiringService()),
+                  );
+                },
+                child: Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(data['photo'] ?? "assets/logo.png"),
+                        ),
+                        title: Text(
+                          data['title'] ?? "No Title",
                           style: GoogleFonts.inter(
-                              fontWeight: FontWeight.bold, fontSize: 20),
+                              fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text(
-                          "Per Hours",
-                          style: GoogleFonts.inter(
-                              color: Color(0xff9C9EA2),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19),
-                        ),
-                      ],
-                    ),
-                    Image.asset(
-                      "assets/line.png",
-                      height: 40,
-                      width: 52,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: yellow,
-                            ),
-                            Text(
-                              "5.0",
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.bold, fontSize: 20),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "85 Reviews",
+                        subtitle: Text(
+                          data['category'] ?? "No Subtitle",
                           style: GoogleFonts.inter(
                               color: Color(0xff9C9EA2),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19),
+                              fontWeight: FontWeight.w300,
+                              fontSize: 15),
                         ),
-                      ],
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-        );
-      }),
+                        trailing: Icon(
+                          Icons.favorite,
+                          color: red,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "€${data['price'] ?? '0.0'}",
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              Text(
+                                "Per Hours",
+                                style: GoogleFonts.inter(
+                                    color: Color(0xff9C9EA2),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19),
+                              ),
+                            ],
+                          ),
+                          Image.asset(
+                            "assets/line.png",
+                            height: 40,
+                            width: 52,
+                          ),
+                          Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    color: yellow,
+                                  ),
+                                  Text(
+                                    "${data['totalRate'] ?? '0.0'}",
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                "${data['reviewCount'] ?? '0'} Reviews",
+                                style: GoogleFonts.inter(
+                                    color: Color(0xff9C9EA2),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

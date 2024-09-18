@@ -150,230 +150,281 @@ class _HomePageState extends State<HomePage> {
                 height: 250,
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("services")
-                        .where("favorite", isEqualTo: false)
-                        .where("uid",
-                            isNotEqualTo:
-                                FirebaseAuth.instance.currentUser!.uid)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      if (snapshot.data!.docs.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "No Service Available",
-                            style: TextStyle(color: colorBlack),
-                          ),
-                        );
-                      }
-                      return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (index, contrxt) {
-                            final List<DocumentSnapshot> documents =
-                                snapshot.data!.docs;
-                            final Map<String, dynamic> data = documents[contrxt]
-                                .data() as Map<String, dynamic>;
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (builder) => HiringService()));
-                              },
-                              child: SizedBox(
-                                  height: 300,
-                                  width: 300,
-                                  child: Card(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Stack(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                child: Image.network(
-                                                  fit: BoxFit.cover,
-                                                  data['photo'],
-                                                  height: 150,
-                                                  width: 300,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Align(
-                                                  alignment:
-                                                      AlignmentDirectional
-                                                          .topEnd,
-                                                  child: Container(
-                                                    child: Icon(
-                                                      Icons.favorite_outline,
-                                                      color: red,
-                                                    ),
-                                                    height: 50,
-                                                    width: 50,
-                                                    decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: colorWhite),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
+                  stream: FirebaseFirestore.instance
+                      .collection("services")
+                      .where("uid",
+                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No Service Available",
+                          style: TextStyle(color: colorBlack),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (index, context) {
+                        final List<DocumentSnapshot> documents =
+                            snapshot.data!.docs;
+                        final Map<String, dynamic> data =
+                            documents[context].data() as Map<String, dynamic>;
+
+                        bool isFavorite = (data['favorite'] as List<dynamic>)
+                            .contains(FirebaseAuth.instance.currentUser!.uid);
+
+                        return SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: Card(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.network(
+                                          fit: BoxFit.cover,
+                                          data['photo'],
+                                          height: 150,
+                                          width: 300,
                                         ),
-                                        Padding(
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final docRef = FirebaseFirestore
+                                              .instance
+                                              .collection("services")
+                                              .doc(data['uuid']);
+                                          if (isFavorite) {
+                                            // Remove from favorites
+                                            await docRef.update({
+                                              "favorite":
+                                                  FieldValue.arrayRemove([
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid
+                                              ])
+                                            });
+                                          } else {
+                                            // Add to favorites
+                                            await docRef.update({
+                                              "favorite":
+                                                  FieldValue.arrayUnion([
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid
+                                              ])
+                                            });
+                                          }
+                                        },
+                                        child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            data['title'],
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
+                                          child: Align(
+                                            alignment:
+                                                AlignmentDirectional.topEnd,
+                                            child: Container(
+                                              child: Icon(
+                                                isFavorite
+                                                    ? Icons.favorite
+                                                    : Icons.favorite_outline,
+                                                color: red,
+                                              ),
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: colorWhite),
                                             ),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.star,
-                                                    color: yellow,
-                                                  ),
-                                                  Text(
-                                                    data['totalRate']
-                                                        .toString(),
-                                                    style: GoogleFonts.inter(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text("€"),
-                                                  Text(
-                                                    data['price'].toString(),
-                                                    style: GoogleFonts.inter(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    data['title'],
+                                    style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
                                     ),
-                                  )),
-                            );
-                          });
-                    }),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: yellow,
+                                          ),
+                                          Text(
+                                            data['totalRate'].toString(),
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text("€"),
+                                          Text(
+                                            data['price'].toString(),
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             SizedBox(
               height: 300,
               width: MediaQuery.of(context).size.width,
-              child: ListView.builder(itemBuilder: (index, contrxt) {
-                return Card(
-                  child: Column(
-                    children: [
-                      ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => HiringService()));
-                          },
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage("assets/logo.png"),
-                          ),
-                          title: Text(
-                            "Marketing digital",
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          subtitle: Text(
-                            "Paula Rosseti",
-                            style: GoogleFonts.inter(
-                                color: Color(0xff9C9EA2),
-                                fontWeight: FontWeight.w300,
-                                fontSize: 15),
-                          ),
-                          trailing: Icon(
-                            Icons.favorite,
-                            color: red,
-                          )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                "€50.0",
-                                style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
-                              ),
-                              Text(
-                                "Per Hours",
-                                style: GoogleFonts.inter(
-                                    color: Color(0xff9C9EA2),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 19),
-                              ),
-                            ],
-                          ),
-                          Image.asset(
-                            "assets/line.png",
-                            height: 40,
-                            width: 52,
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: yellow,
-                                  ),
-                                  Text(
-                                    "5.0",
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "85 Reviews",
-                                style: GoogleFonts.inter(
-                                    color: Color(0xff9C9EA2),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 19),
-                              ),
-                            ],
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              }),
+              child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("services")
+                      .where("uid",
+                          isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No Service Available",
+                          style: TextStyle(color: colorBlack),
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (index, contrxt) {
+                          final List<DocumentSnapshot> documents =
+                              snapshot.data!.docs;
+                          final Map<String, dynamic> data =
+                              documents[contrxt].data() as Map<String, dynamic>;
+                          return Card(
+                            child: Column(
+                              children: [
+                                ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  HiringService()));
+                                    },
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(data['photo']),
+                                    ),
+                                    title: Text(
+                                      "Marketing digital",
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    subtitle: Text(
+                                      "Paula Rosseti",
+                                      style: GoogleFonts.inter(
+                                          color: Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 15),
+                                    ),
+                                    trailing: Icon(
+                                      Icons.favorite,
+                                      color: red,
+                                    )),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "€50.0",
+                                          style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20),
+                                        ),
+                                        Text(
+                                          "Per Hours",
+                                          style: GoogleFonts.inter(
+                                              color: Color(0xff9C9EA2),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 19),
+                                        ),
+                                      ],
+                                    ),
+                                    Image.asset(
+                                      "assets/line.png",
+                                      height: 40,
+                                      width: 52,
+                                    ),
+                                    Column(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star,
+                                              color: yellow,
+                                            ),
+                                            Text(
+                                              "5.0",
+                                              style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(
+                                          "85 Reviews",
+                                          style: GoogleFonts.inter(
+                                              color: Color(0xff9C9EA2),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 19),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  }),
             ),
           ],
         ),

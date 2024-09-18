@@ -44,7 +44,7 @@ class Database {
           totalRate: 0,
           totalReviews: 0,
           reviews: {},
-          favorite: false,
+          favorite: [],
           pricePerHr: pricePerHer,
           uid: FirebaseAuth.instance.currentUser!.uid,
           title: title,

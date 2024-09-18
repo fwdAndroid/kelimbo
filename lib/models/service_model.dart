@@ -9,7 +9,7 @@ class ServiceModel {
   String title;
   String category;
   String uid;
-  bool favorite;
+  List favorite;
   double totalRate; // Stores the total rate
   int totalReviews; // Stores the total number of reviews
   Map<String, int> reviews; // Stores reviews with corresponding ratings
