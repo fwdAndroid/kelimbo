@@ -42,37 +42,52 @@ class _MainDashboardState extends State<MainDashboard> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: _currentIndex == 0 ? mainColor : iconColor,
+                icon: Image.asset(
+                  height: 27,
+                  width: 27,
+                  _currentIndex == 0
+                      ? "assets/home_blue.png"
+                      : "assets/home_grey.png",
                 ),
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.favorite,
-                  color: _currentIndex == 1 ? mainColor : iconColor,
+                icon: Image.asset(
+                  height: 27,
+                  width: 27,
+                  _currentIndex == 1
+                      ? "assets/fav_blue.png"
+                      : "assets/fav_grey.png",
                 ),
                 label: 'Doctor',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.add_circle_outline_outlined,
-                  color: _currentIndex == 2 ? mainColor : iconColor,
+                icon: Image.asset(
+                  height: 27,
+                  width: 27,
+                  _currentIndex == 2
+                      ? "assets/add_blue.png"
+                      : "assets/add_grey.png",
                 ),
                 label: 'Medicine',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.chat_bubble,
-                  color: _currentIndex == 3 ? mainColor : iconColor,
+                icon: Image.asset(
+                  height: 27,
+                  width: 27,
+                  _currentIndex == 3
+                      ? "assets/chat_blue.png"
+                      : "assets/chat_grey.png",
                 ),
                 label: 'Appointment',
               ),
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.person_outline,
-                  color: _currentIndex == 4 ? mainColor : iconColor,
+                icon: Image.asset(
+                  height: 27,
+                  width: 27,
+                  _currentIndex == 4
+                      ? "assets/person_blue.png"
+                      : "assets/person_grey.png",
                 ),
                 label: 'History',
               ),
