@@ -342,41 +342,38 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (builder) =>
-                                                  HiringService()));
-                                    },
-                                    leading: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(data['photo']),
-                                    ),
-                                    title: Text(
-                                      "Marketing digital",
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    subtitle: Text(
-                                      "Paula Rosseti",
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 15),
-                                    ),
-                                    trailing: Icon(
-                                      Icons.favorite,
-                                      color: red,
-                                    )),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                HiringService()));
+                                  },
+                                  leading: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(data['photo']),
+                                  ),
+                                  title: Text(
+                                    data['title'],
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  subtitle: Text(
+                                    data['category'],
+                                    style: GoogleFonts.inter(
+                                        color: Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 15),
+                                  ),
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Column(
                                       children: [
                                         Text(
-                                          "€50.0",
+                                          "€" + data['pricePerHr'].toString(),
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -404,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                                               color: yellow,
                                             ),
                                             Text(
-                                              "5.0",
+                                              data['totalRate'].toString(),
                                               style: GoogleFonts.inter(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
@@ -412,7 +409,8 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                         ),
                                         Text(
-                                          "85 Reviews",
+                                          data['totalReviews'].toString() +
+                                              " Reviews",
                                           style: GoogleFonts.inter(
                                               color: Color(0xff9C9EA2),
                                               fontWeight: FontWeight.bold,
