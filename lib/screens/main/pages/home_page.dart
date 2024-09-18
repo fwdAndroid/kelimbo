@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
@@ -145,26 +147,142 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                height: 200,
+                height: 250,
                 width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (index, contrxt) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => HiringService()));
-                        },
-                        child: SizedBox(
-                            height: 300,
-                            width: 300,
-                            child: Image.asset(
-                              "assets/card.png",
-                              fit: BoxFit.cover,
-                            )),
-                      );
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("services")
+                        .where("uid",
+                            isNotEqualTo:
+                                FirebaseAuth.instance.currentUser!.uid)
+                        .where("favorite", isEqualTo: false)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No Service Available",
+                            style: TextStyle(color: colorBlack),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (index, contrxt) {
+                            final List<DocumentSnapshot> documents =
+                                snapshot.data!.docs;
+                            final Map<String, dynamic> data = documents[contrxt]
+                                .data() as Map<String, dynamic>;
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (builder) => HiringService()));
+                              },
+                              child: SizedBox(
+                                  height: 300,
+                                  width: 300,
+                                  child: Card(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.network(
+                                                  fit: BoxFit.cover,
+                                                  data['photo'],
+                                                  height: 150,
+                                                  width: 300,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Align(
+                                                  alignment:
+                                                      AlignmentDirectional
+                                                          .topEnd,
+                                                  child: Container(
+                                                    child: Icon(
+                                                      Icons.favorite_outline,
+                                                      color: red,
+                                                    ),
+                                                    height: 50,
+                                                    width: 50,
+                                                    decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: colorWhite),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            data['title'],
+                                            style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: yellow,
+                                                  ),
+                                                  Text(
+                                                    data['totalRate']
+                                                        .toString(),
+                                                    style: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text("€"),
+                                                  Text(
+                                                    data['price'].toString(),
+                                                    style: GoogleFonts.inter(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 13),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )),
+                            );
+                          });
                     }),
               ),
             ),
