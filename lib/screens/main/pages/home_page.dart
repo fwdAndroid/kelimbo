@@ -347,6 +347,9 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) => HiringService(
+                                                  userEmail: data['userEmail'],
+                                                  userImage: data['userImage'],
+                                                  userName: data['userName'],
                                                   category: data['category'],
                                                   totalReviews:
                                                       data['totalReviews']
@@ -367,10 +370,10 @@ class _HomePageState extends State<HomePage> {
                                   },
                                   leading: CircleAvatar(
                                     backgroundImage:
-                                        NetworkImage(data['photo']),
+                                        NetworkImage(data['userImage']),
                                   ),
                                   title: Text(
-                                    data['title'],
+                                    data['userName'],
                                     style: GoogleFonts.inter(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),

@@ -14,12 +14,18 @@ class HiringService extends StatefulWidget {
   final uuid;
   final category;
   final uid;
+  final userEmail;
+  final userName;
+  final userImage;
   const HiringService(
       {super.key,
       required this.description,
       required this.perHrPrice,
       required this.price,
       required this.title,
+      required this.userEmail,
+      required this.userImage,
+      required this.userName,
       required this.category,
       required this.photo,
       required this.totalRating,
@@ -40,13 +46,13 @@ class _HiringServiceState extends State<HiringService> {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(widget.photo),
+              backgroundImage: NetworkImage(widget.userImage),
               radius: 50,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                widget.title,
+                widget.userName,
                 style: GoogleFonts.inter(
                     fontWeight: FontWeight.bold, fontSize: 28),
                 textAlign: TextAlign.center,
@@ -103,7 +109,21 @@ class _HiringServiceState extends State<HiringService> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => HiringServiceComments()));
+                            builder: (builder) => HiringServiceComments(
+                                  userEmail: widget.userEmail,
+                                  userImage: widget.userImage,
+                                  userName: widget.userName,
+                                  category: widget.category,
+                                  totalReviews: widget.totalReviews.toString(),
+                                  uuid: widget.uuid,
+                                  uid: widget.uid,
+                                  totalRating: widget.totalRating.toString(),
+                                  title: widget.title,
+                                  price: widget.price.toString(),
+                                  perHrPrice: widget.perHrPrice.toString(),
+                                  photo: widget.photo,
+                                  description: widget.description,
+                                )));
                   }),
             )
           ],

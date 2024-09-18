@@ -51,6 +51,9 @@ class _FavouritePageState extends State<FavouritePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => HiringService(
+                              userEmail: data['userEmail'],
+                              userImage: data['userImage'],
+                              userName: data['userName'],
                               category: data['category'],
                               totalReviews: data['totalReviews'].toString(),
                               uuid: data['uuid'],
