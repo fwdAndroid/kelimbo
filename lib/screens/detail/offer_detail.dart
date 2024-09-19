@@ -6,6 +6,7 @@ import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
+import 'package:uuid/uuid.dart';
 
 class OfferDetail extends StatefulWidget {
   final providerEmail,
@@ -46,6 +47,7 @@ class OfferDetail extends StatefulWidget {
 }
 
 class _OfferDetailState extends State<OfferDetail> {
+  var chatId = Uuid().v4();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,9 +94,34 @@ class _OfferDetailState extends State<OfferDetail> {
                       fontSize: 18, fontWeight: FontWeight.w400),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => Messages()));
+                  onTap: () async {
+                    await FirebaseFirestore.instance
+                        .collection("chats")
+                        .doc(chatId)
+                        .set({
+                      "customerName": widget.clientName,
+                      "customerId": widget.clientId,
+                      "customerPhoto": widget.clientImage,
+                      "chatId": chatId,
+                      "providerEmail": widget.providerEmail,
+                      "providerId": widget.serviceProviderId,
+                      "providerName": widget.providerName,
+                      "providerPhoto": widget.providerImage,
+                    });
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => Messages(
+                                  chatId: chatId,
+                                  customerId: widget.clientId,
+                                  customerEmail: widget.clientEmail,
+                                  customerName: widget.clientName,
+                                  customerPhoto: widget.clientImage,
+                                  providerEmail: widget.providerEmail,
+                                  providerId: widget.serviceProviderId,
+                                  providerName: widget.providerName,
+                                  providerPhoto: widget.providerImage,
+                                )));
                   },
                   child: Icon(
                     Icons.message,

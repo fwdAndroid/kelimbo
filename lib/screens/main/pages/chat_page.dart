@@ -18,8 +18,8 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             ListTile(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Messages()));
+                // Navigator.push(context,
+                //     MaterialPageRoute(builder: (builder) => Messages()));
               },
               leading: CircleAvatar(
                 backgroundImage: AssetImage("assets/logo.png"),

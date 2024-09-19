@@ -1,34 +1,76 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
+import 'package:intl/intl.dart';
 
 class Messages extends StatefulWidget {
-  const Messages({super.key});
+  final providerId;
+  final customerId;
+  final providerName;
+  final providerEmail;
+  final providerPhoto;
+  final customerName;
+  final customerPhoto;
+  final customerEmail;
+  final chatId;
+  const Messages({
+    super.key,
+    required this.providerEmail,
+    required this.customerEmail,
+    required this.chatId,
+    required this.customerName,
+    required this.customerPhoto,
+    required this.providerId,
+    required this.providerName,
+    required this.customerId,
+    required this.providerPhoto,
+  });
 
   @override
   State<Messages> createState() => _MessagesState();
 }
 
 class _MessagesState extends State<Messages> {
-  List<ChatMessage> messages = [
-    ChatMessage(
-        messageContent:
-            "Hola! Estoy interesada/o en el aviso asesoría legal y comercial",
-        messageType: "receiver",
-        time: "12:50"),
-    ChatMessage(messageContent: "Hola!", messageType: "sender", time: "12:50"),
-    ChatMessage(
-        messageContent:
-            "Claro, estaré encantado de ayudarte. Cuéntame, ¿qué problema estás teniendo?",
-        messageType: "sender",
-        time: "12:50"),
-    ChatMessage(
-        messageContent:
-            "resulta que vivo en el apartamento hace casi un año...",
-        messageType: "receiver",
-        time: "12:50"),
-  ];
+  String groupChatId = "";
+  ScrollController scrollController = ScrollController();
+  TextEditingController messageController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (FirebaseAuth.instance.currentUser!.uid.hashCode <=
+        widget.providerId.hashCode) {
+      groupChatId =
+          "${FirebaseAuth.instance.currentUser!.uid}-${widget.customerId}";
+    } else {
+      groupChatId =
+          "${widget.customerId}-${FirebaseAuth.instance.currentUser!.uid}";
+    }
+
+    super.initState();
+  }
+
+  // List<ChatMessage> messages = [
+  //   ChatMessage(
+  //       messageContent:
+  //           "Hola! Estoy interesada/o en el aviso asesoría legal y comercial",
+  //       messageType: "receiver",
+  //       time: "12:50"),
+  //   ChatMessage(messageContent: "Hola!", messageType: "sender", time: "12:50"),
+  //   ChatMessage(
+  //       messageContent:
+  //           "Claro, estaré encantado de ayudarte. Cuéntame, ¿qué problema estás teniendo?",
+  //       messageType: "sender",
+  //       time: "12:50"),
+  //   ChatMessage(
+  //       messageContent:
+  //           "resulta que vivo en el apartamento hace casi un año...",
+  //       messageType: "receiver",
+  //       time: "12:50"),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +91,11 @@ class _MessagesState extends State<Messages> {
             CircleAvatar(
               radius: 20,
               backgroundImage:
-                  AssetImage("assets/logo.png"), // Add your image here
+                  NetworkImage(widget.customerPhoto), // Add your image here
             ),
             SizedBox(height: 4),
             Text(
-              "Ana Mansilla",
+              widget.customerName,
               style: GoogleFonts.inter(
                 fontWeight: FontWeight.w700,
                 color: colorBlack,
@@ -65,57 +107,105 @@ class _MessagesState extends State<Messages> {
       ),
       body: Stack(
         children: <Widget>[
-          ListView.builder(
-            itemCount: messages.length,
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Align(
-                  alignment: (messages[index].messageType == "receiver"
-                      ? Alignment.topLeft
-                      : Alignment.topRight),
-                  child: Column(
-                    crossAxisAlignment:
-                        messages[index].messageType == "receiver"
-                            ? CrossAxisAlignment.start
-                            : CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: (messages[index].messageType == "receiver"
-                              ? Color(0xfff0f2f9)
-                              : Color(0xff668681)),
-                        ),
-                        padding: EdgeInsets.all(12),
-                        child: Text(
-                          messages[index].messageContent,
-                          style: TextStyle(
-                              fontSize: 15,
-                              color: messages[index].messageType == "receiver"
-                                  ? colorBlack
-                                  : colorWhite),
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        messages[index].time,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("messages")
+                  .doc(groupChatId)
+                  .collection(groupChatId)
+                  .orderBy("timestamp", descending: false)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!.docs == 0
+                      ? Center(child: Text("Empty "))
+                      : Expanded(
+                          child: ListView.builder(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 14),
+                            reverse: false,
+                            controller: scrollController,
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              var ds = snapshot.data!.docs[index];
+                              return ds.get("type") == 0
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      child: Align(
+                                        alignment: (ds.get("senderId") ==
+                                                FirebaseAuth
+                                                    .instance.currentUser!.uid
+                                            ? Alignment.topLeft
+                                            : Alignment.topRight),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              (ds.get("senderId") ==
+                                                      FirebaseAuth.instance
+                                                          .currentUser!.uid
+                                                  ? CrossAxisAlignment.start
+                                                  : CrossAxisAlignment.end),
+                                          //     crossAxisAlignment:
+                                          // messages[index].messageType ==
+                                          //         "receiver"
+                                          //     ? CrossAxisAlignment.start
+                                          //     : CrossAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
+                                                color: (ds.get("senderId") ==
+                                                        FirebaseAuth.instance
+                                                            .currentUser!.uid
+                                                    ? Color(0xfff0f2f9)
+                                                    : Color(0xff668681)),
+                                              ),
+                                              padding: EdgeInsets.all(12),
+                                              child: Text(
+                                                ds.get("content"),
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: (ds.get(
+                                                                "senderId") ==
+                                                            FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                        ? colorBlack
+                                                        : colorWhite)),
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              DateFormat.jm().format(DateTime
+                                                  .fromMillisecondsSinceEpoch(
+                                                      int.parse(
+                                                          ds.get("time")))),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  : Container();
+                            },
+                          ),
+                        );
+                } else if (snapshot.hasError) {
+                  return Center(child: Icon(Icons.error_outline));
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              }),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
               height: 60,
               color: Colors.white,
               child: Row(
@@ -131,7 +221,7 @@ class _MessagesState extends State<Messages> {
                   FloatingActionButton(
                     shape: CircleBorder(),
                     onPressed: () {
-                      // Send message action
+                      sendMessage(messageController.text.trim(), 0);
                     },
                     backgroundColor: mainColor,
                     elevation: 0,
@@ -145,14 +235,59 @@ class _MessagesState extends State<Messages> {
       ),
     );
   }
-}
 
-class ChatMessage {
-  String messageContent;
-  String messageType;
-  String time;
-  ChatMessage(
-      {required this.messageContent,
-      required this.messageType,
-      required this.time});
+  void sendMessage(String content, int type) {
+    // type: 0 = text, 1 = image, 2 = sticker
+    if (content.trim() != '') {
+      messageController.clear();
+
+      var documentReference = FirebaseFirestore.instance
+          .collection('messages')
+          .doc(groupChatId)
+          .collection(groupChatId)
+          .doc(DateTime.now().millisecondsSinceEpoch.toString());
+
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference,
+          {
+            "senderId": FirebaseAuth.instance.currentUser!.uid,
+            "receiverId": widget.providerId,
+            "time": DateTime.now().millisecondsSinceEpoch.toString(),
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'content': content,
+            'type': type
+          },
+        );
+      }).then((value) {
+        if (type == 0) {
+          // Assuming type 0 is for 'note'
+          updateLastMessageByProvider(content);
+        }
+      });
+
+      scrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    } else {
+      // Fluttertoast.showToast(msg: 'Nothing to send');
+    }
+  }
+
+  void updateLastMessageByProvider(String messageContent) async {
+    final chatDocRef =
+        FirebaseFirestore.instance.collection('chats').doc(widget.chatId);
+
+    // Check if the document exists before attempting to update it
+    final chatDocSnapshot = await chatDocRef.get();
+    if (chatDocSnapshot.exists) {
+      // Document exists, update the lastMessageByProvider field
+      await chatDocRef.update({
+        'lastMessageByCustomer': messageContent,
+      }).catchError((error) {
+        print("Failed to update last message by provider: $error");
+      });
+    } else {
+      print("Document does not exist, cannot update last message by provider");
+    }
+  }
 }
