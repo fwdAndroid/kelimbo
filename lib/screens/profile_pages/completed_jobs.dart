@@ -2,19 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/detail/completed_jobs_detail.dart';
 import 'package:kelimbo/screens/detail/jobs_budgeted_detail.dart';
-import 'package:kelimbo/screens/detail/offer_detail.dart';
-import 'package:kelimbo/screens/detail/service_detail.dart';
 import 'package:kelimbo/utils/colors.dart';
 
-class JobsHired extends StatefulWidget {
-  const JobsHired({super.key});
+class CompletedJobs extends StatefulWidget {
+  const CompletedJobs({super.key});
 
   @override
-  State<JobsHired> createState() => _JobsHiredState();
+  State<CompletedJobs> createState() => _CompletedJobsState();
 }
 
-class _JobsHiredState extends State<JobsHired> {
+class _CompletedJobsState extends State<CompletedJobs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +62,7 @@ class _JobsHiredState extends State<JobsHired> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
             child: Text(
-              "Jobs Hired By Me",
+              "Completed Jobs",
               style:
                   GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 15),
             ),
@@ -75,7 +74,7 @@ class _JobsHiredState extends State<JobsHired> {
                     .collection("offers")
                     .where("clientId",
                         isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                    .where("status", isEqualTo: "start")
+                    .where("status", isEqualTo: "complete")
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
@@ -86,7 +85,7 @@ class _JobsHiredState extends State<JobsHired> {
                   if (snapshot.data!.docs.isEmpty) {
                     return Center(
                       child: Text(
-                        "No Offers Available",
+                        "No Completed Jobs",
                         style: TextStyle(color: colorBlack),
                       ),
                     );
@@ -114,7 +113,7 @@ class _JobsHiredState extends State<JobsHired> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (builder) =>
-                                              JobsBudgetedDetail(
+                                              JobsCompletedDetail(
                                                 clientName: data['clientName'],
                                                 clientEmail:
                                                     data['clientEmail'],

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/profile_pages/completed_jobs.dart';
 import 'package:kelimbo/screens/profile_pages/edit_profile.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_budget.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_hired.dart';
@@ -172,10 +173,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ListTile(
                 onTap: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (builder) => NotificationScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => CompletedJobs()));
                 },
                 title: Text(
                   "Completed Jobs",

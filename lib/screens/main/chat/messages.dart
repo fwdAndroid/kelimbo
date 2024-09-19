@@ -105,7 +105,7 @@ class _MessagesState extends State<Messages> {
           ],
         ),
       ),
-      body: Stack(
+      body: Column(
         children: <Widget>[
           StreamBuilder(
               stream: FirebaseFirestore.instance
