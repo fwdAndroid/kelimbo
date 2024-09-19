@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/detail/offer_detail.dart';
 import 'package:kelimbo/screens/detail/service_detail.dart';
+import 'package:kelimbo/screens/services/service_description.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class RecentWorks extends StatefulWidget {
@@ -18,74 +22,161 @@ class _RecentWorksState extends State<RecentWorks> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage("assets/person.png"),
-            ),
-          ),
-          const SizedBox(
-            height: 6,
-          ),
-          Center(
-            child: Text(
-              "Estudio juridico Alvarez",
-              style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.w900, fontSize: 22),
-            ),
-          ),
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("users")
+                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                  .snapshots(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return Center(child: Text('No data available'));
+                }
+                var snap = snapshot.data;
+
+                return Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            snap['image'],
+                          ),
+                          radius: 60,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      snap['fullName'],
+                      style: GoogleFonts.workSans(
+                          fontWeight: FontWeight.w900, fontSize: 22),
+                    ),
+                  ],
+                );
+              }),
           const SizedBox(
             height: 10,
           ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
             child: Text(
-              "Recent Works",
+              "Recent Offers",
               style:
                   GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 15),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8),
-            child: Divider(
-              color: iconColor,
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => ServiceDetail()));
-            },
-            title: Text(
-              "Accounting services and legal advice",
-              style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.w500, fontSize: 16),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: colorBlack,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8),
-            child: Divider(
-              color: iconColor,
-            ),
-          ),
-          ListTile(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (builder) => ServiceDetail()));
-            },
-            title: Text(
-              "Family assistance and legal advice",
-              style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.w500, fontSize: 16),
-            ),
-            trailing: Icon(
-              Icons.arrow_forward_ios,
-              color: colorBlack,
-            ),
+          SizedBox(
+            height: 300,
+            child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection("offers")
+                    .where("serviceProviderId",
+                        isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                    .where("status", isEqualTo: "send")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (snapshot.data!.docs.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "No Offers Available",
+                        style: TextStyle(color: colorBlack),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final List<DocumentSnapshot> documents =
+                            snapshot.data!.docs;
+                        final Map<String, dynamic> data =
+                            documents[index].data() as Map<String, dynamic>;
+                        return Card(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                trailing: Text(
+                                  "€" + data['priceprehr'].toString(),
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (builder) => OfferDetail(
+                                                clientName: data['clientName'],
+                                                clientEmail:
+                                                    data['clientEmail'],
+                                                clientId: data['clientId'],
+                                                clientImage:
+                                                    data['clientImage'],
+                                                status: data['status'],
+                                                totalRating: data['totalRating']
+                                                    .toString(),
+                                                providerEmail:
+                                                    data['providerEmail'],
+                                                providerImage:
+                                                    data['providerImage'],
+                                                providerName:
+                                                    data['providerName'],
+                                                priceprehr: data['pricePerHr']
+                                                    .toString()
+                                                    .toString(),
+                                                work: data['work'],
+                                                serviceDescription:
+                                                    data['serviceDescription'],
+                                                price: data['price'].toString(),
+                                                serviceProviderId:
+                                                    data['serviceProviderId'],
+                                                uuid: data['uuid'],
+                                                serviceTitle:
+                                                    data['serviceTitle'],
+                                              )));
+                                },
+                                leading: CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(data['clientImage']),
+                                ),
+                                title: Text(
+                                  data['clientName'],
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Jobs Descriptions",
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  data['work'],
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      });
+                }),
           ),
         ],
       ),

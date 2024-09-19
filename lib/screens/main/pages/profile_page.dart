@@ -113,7 +113,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => RecentWorks()));
                 },
                 title: Text(
-                  "Recent Works",
+                  "Offers",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),

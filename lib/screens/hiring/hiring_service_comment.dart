@@ -137,6 +137,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
+                                    "rating":int.parse(widget.totalRating),
                                     "uuid": uuid,
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],
