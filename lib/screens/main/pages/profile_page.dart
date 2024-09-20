@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/profile_pages/completed_jobs.dart';
 import 'package:kelimbo/screens/profile_pages/edit_profile.dart';
-import 'package:kelimbo/screens/profile_pages/jobs_budget.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_hired.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
 import 'package:kelimbo/screens/services/my_services.dart';

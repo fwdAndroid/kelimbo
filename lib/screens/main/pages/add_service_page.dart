@@ -136,32 +136,42 @@ class _AddServicePageState extends State<AddServicePage> {
                       },
                     ),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 8),
-                          child: TextFormInputField(
-                            controller: priceController,
-                            hintText: "Price",
-                            textInputType: TextInputType.number,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 8),
-                          child: TextFormInputField(
-                            controller: discountController,
-                            hintText: "Price Per Hr",
-                            textInputType: TextInputType.number,
-                          ),
-                        ),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: TextFormInputField(
+                      controller: priceController,
+                      hintText: "Price",
+                      textInputType: TextInputType.number,
+                    ),
                   ),
+
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(
+                  //             horizontal: 8.0, vertical: 8),
+                  //         child: TextFormInputField(
+                  //           controller: priceController,
+                  //           hintText: "Price",
+                  //           textInputType: TextInputType.number,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     Expanded(
+                  //       child: Padding(
+                  //         padding: const EdgeInsets.symmetric(
+                  //             horizontal: 8.0, vertical: 8),
+                  //         child: TextFormInputField(
+                  //           controller: discountController,
+                  //           hintText: "Price Per Hr",
+                  //           textInputType: TextInputType.number,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   isAdded
                       ? Center(child: CircularProgressIndicator())
                       : SaveButton(
@@ -181,8 +191,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   title: serviceNameController.text,
                                   price: int.parse(priceController.text),
                                   description: descriptionController.text,
-                                  pricePerHer:
-                                      int.parse(discountController.text),
+                                  pricePerHer: 0,
                                   file: _image!,
                                 );
 

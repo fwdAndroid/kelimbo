@@ -392,13 +392,13 @@ class _HomePageState extends State<HomePage> {
                                     Column(
                                       children: [
                                         Text(
-                                          "€" + data['pricePerHr'].toString(),
+                                          "€" + data['price'].toString(),
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
                                         ),
                                         Text(
-                                          "Per Hours",
+                                          "Price",
                                           style: GoogleFonts.inter(
                                               color: Color(0xff9C9EA2),
                                               fontWeight: FontWeight.bold,

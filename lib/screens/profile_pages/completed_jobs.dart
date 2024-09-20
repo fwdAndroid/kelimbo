@@ -108,7 +108,7 @@ class _CompletedJobsState extends State<CompletedJobs> {
                             children: [
                               ListTile(
                                 trailing: Text(
-                                  "€" + data['priceprehr'].toString(),
+                                  "€" + data['price'].toString(),
                                   style: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),

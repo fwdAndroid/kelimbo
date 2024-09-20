@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/detail/offer_detail.dart';
-import 'package:kelimbo/screens/detail/service_detail.dart';
-import 'package:kelimbo/screens/services/service_description.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class RecentWorks extends StatefulWidget {
@@ -109,7 +107,7 @@ class _RecentWorksState extends State<RecentWorks> {
                             children: [
                               ListTile(
                                 trailing: Text(
-                                  "€" + data['priceprehr'].toString(),
+                                  "€" + data['price'].toString(),
                                   style: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),

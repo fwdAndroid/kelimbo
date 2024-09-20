@@ -64,7 +64,7 @@ class _EditServiceState extends State<EditService> {
       descriptionController.text =
           (data['description'] ?? ''); // Convert int to string
       priceController.text = data['price'] ?? 0; // Convert int to string
-      discountController.text = data['pricePerHr'] ?? 0;
+//discountController.text = data['pricePerHr'] ?? 0;
       imageUrl = data['photo'];
     });
   }
@@ -169,32 +169,40 @@ class _EditServiceState extends State<EditService> {
                 },
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8),
-                    child: TextFormInputField(
-                      controller: priceController,
-                      hintText: "Price",
-                      textInputType: TextInputType.number,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8.0, vertical: 8),
-                    child: TextFormInputField(
-                      controller: discountController,
-                      hintText: "Price Per Hr",
-                      textInputType: TextInputType.number,
-                    ),
-                  ),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              child: TextFormInputField(
+                controller: priceController,
+                hintText: "Price",
+                textInputType: TextInputType.number,
+              ),
             ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 8.0, vertical: 8),
+            //         child: TextFormInputField(
+            //           controller: priceController,
+            //           hintText: "Price",
+            //           textInputType: TextInputType.number,
+            //         ),
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(
+            //             horizontal: 8.0, vertical: 8),
+            //         child: TextFormInputField(
+            //           controller: discountController,
+            //           hintText: "Price Per Hr",
+            //           textInputType: TextInputType.number,
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : SaveButton(
@@ -221,7 +229,7 @@ class _EditServiceState extends State<EditService> {
                           "price": int.parse(
                               priceController.text), // Convert string to int
                           "photo": downloadUrl,
-                          "pricePerHr": int.parse(discountController.text)
+                          // "pricePerHr": int.parse(discountController.text)
                         });
                         showMessageBar(
                             "Profile Updated Successfully ", context);

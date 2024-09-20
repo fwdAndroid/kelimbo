@@ -83,7 +83,7 @@ class _MyServicesState extends State<MyServices> {
                             Column(
                               children: [
                                 Text(
-                                  "€" + data['pricePerHr'].toString(),
+                                  "€" + data['price'].toString(),
                                   style: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
