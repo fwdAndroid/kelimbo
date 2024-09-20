@@ -82,7 +82,7 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
             showMessageBar("Account Deleted Successfully", context);
           },
           child: Text(
-            "Submit",
+            "Delete",
             style: TextStyle(color: colorWhite),
           ),
           style: ElevatedButton.styleFrom(

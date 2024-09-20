@@ -80,7 +80,7 @@ class _DeleteServiceWidgetState extends State<DeleteServiceWidget> {
             showMessageBar("Services Deleted Successfully", context);
           },
           child: Text(
-            "Submit",
+            "Delete",
             style: TextStyle(color: colorWhite),
           ),
           style: ElevatedButton.styleFrom(
