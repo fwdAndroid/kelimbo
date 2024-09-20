@@ -47,12 +47,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                snap['image'],
-                              ),
-                              radius: 60,
-                            ),
+                            child: snap['image'] != null &&
+                                    snap['image'].isNotEmpty
+                                ? CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      snap['image'],
+                                    ),
+                                    radius: 60,
+                                  )
+                                : CircleAvatar(
+                                    radius: 60,
+                                    child: Icon(Icons.person, size: 60),
+                                  ),
                           ),
                         ),
                         Text(
@@ -129,27 +135,27 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: iconColor,
                 ),
               ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => JobsBudget()));
-                },
-                title: Text(
-                  "Jobs to be Budgeted",
-                  style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: colorBlack,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8),
-                child: Divider(
-                  color: iconColor,
-                ),
-              ),
+              // ListTile(
+              //   onTap: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (builder) => JobsBudget()));
+              //   },
+              //   title: Text(
+              //     "Jobs to be Budgeted",
+              //     style: GoogleFonts.workSans(
+              //         fontWeight: FontWeight.w500, fontSize: 16),
+              //   ),
+              //   trailing: Icon(
+              //     Icons.arrow_forward_ios,
+              //     color: colorBlack,
+              //   ),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 8.0, right: 8),
+              //   child: Divider(
+              //     color: iconColor,
+              //   ),
+              // ),
               ListTile(
                 onTap: () {
                   Navigator.push(context,

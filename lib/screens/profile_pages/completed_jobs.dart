@@ -40,12 +40,17 @@ class _CompletedJobsState extends State<CompletedJobs> {
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            snap['image'],
-                          ),
-                          radius: 60,
-                        ),
+                        child: snap['image'] != null && snap['image'].isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  snap['image'],
+                                ),
+                                radius: 60,
+                              )
+                            : CircleAvatar(
+                                radius: 60,
+                                child: Icon(Icons.person, size: 60),
+                              ),
                       ),
                     ),
                     Text(
