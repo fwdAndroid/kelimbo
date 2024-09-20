@@ -62,7 +62,7 @@ class AuthMethods {
       if (email.isNotEmpty || pass.isNotEmpty) {
         await _auth.signInWithEmailAndPassword(email: email, password: pass);
 
-        res = 'successs';
+        res = 'success';
       }
     } on FirebaseException catch (e) {
       if (e == 'WrongEmail') {

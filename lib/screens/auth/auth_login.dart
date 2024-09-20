@@ -134,26 +134,22 @@ class _AuthLoginState extends State<AuthLogin> {
                         setState(() {
                           isLoading = true;
                         });
-                        String rse = await AuthMethods().loginUpUser(
+                        String result = await AuthMethods().loginUpUser(
                           email: customerEmailController.text.trim(),
                           pass: customerPassController.text.trim(),
                         );
-
+                        if (result == 'success') {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => MainDashboard()),
+                          );
+                        } else {
+                          showMessageBar(result, context);
+                        }
                         setState(() {
                           isLoading = false;
                         });
-                        if (rse == 'success') {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => MainDashboard()));
-                        } else {
-                          showMessageBar(rse, context);
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => MainDashboard()));
-                        }
                       }
                     },
                   ),
