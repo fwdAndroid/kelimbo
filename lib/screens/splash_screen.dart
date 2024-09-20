@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:kelimbo/screens/auth/auth_login.dart';
+import 'package:kelimbo/screens/auth/auth_check.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 5), () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (builder) => AuthLogin()));
+          context, MaterialPageRoute(builder: (builder) => AuthCheck()));
     });
   }
 
