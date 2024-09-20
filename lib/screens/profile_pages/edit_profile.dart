@@ -10,7 +10,6 @@ import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'package:kelimbo/widgets/text_form_field.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -96,12 +95,19 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8),
-              child: TextFormInputField(
+                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+                child: TextFormField(
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(8),
+                    fillColor: textColor,
+                    filled: true,
+                    hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                    hintText: "Nombre y apellido",
+                  ),
                   controller: nameController,
-                  hintText: "Nombre y apellido",
-                  textInputType: TextInputType.emailAddress),
-            ),
+                )),
             Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: TextFormField(
@@ -120,7 +126,7 @@ class _EditProfileState extends State<EditProfile> {
                 padding: const EdgeInsets.only(
                     left: 8.0, right: 8, top: 8, bottom: 8),
                 child: TextFormField(
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(8),
