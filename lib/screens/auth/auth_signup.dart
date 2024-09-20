@@ -166,9 +166,7 @@ class _SignUpState extends State<SignUp> {
             : SaveButton(
                 title: "Sign Up",
                 onTap: () async {
-                  if (_image == null) {
-                    showMessageBar("Photo is Required", context);
-                  } else if (providerEmailController.text.isEmpty) {
+                  if (providerEmailController.text.isEmpty) {
                     showMessageBar("Email is required", context);
                   } else if (providerPassController.text.isEmpty) {
                     showMessageBar("Password is required ", context);
@@ -176,11 +174,12 @@ class _SignUpState extends State<SignUp> {
                     setState(() {
                       isLoading = true;
                     });
+                    Uint8List imageToUpload = _image ?? Uint8List(0);
                     await AuthMethods().signUpUser(
                         email: providerEmailController.text.trim(),
                         pass: providerPassController.text.trim(),
                         name: NameController.text.trim(),
-                        file: _image!);
+                        file: imageToUpload);
                     setState(() {
                       isLoading = false;
                     });
