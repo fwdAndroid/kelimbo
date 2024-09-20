@@ -77,7 +77,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Cuentanos que necesitas)",
+                    "Cuentanos que necesitas",
                     style: GoogleFonts.inter(
                       color: colorBlack,
                       fontSize: 18,
@@ -137,7 +137,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
-                                    "rating":int.parse(widget.totalRating),
+                                    "rating": int.parse(widget.totalRating),
                                     "uuid": uuid,
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],
