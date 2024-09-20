@@ -61,7 +61,7 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
             child: Row(
               children: [
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: GoogleFonts.inter(
                       fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -95,7 +95,7 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Details",
+              "Detalles",
               style:
                   GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
             ),
@@ -117,7 +117,7 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: SaveButton(
-                  title: "Rate",
+                  title: "Tasa",
                   onTap: () async {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (builder) => ServiceRate()));

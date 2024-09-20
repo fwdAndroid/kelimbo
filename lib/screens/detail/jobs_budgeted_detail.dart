@@ -60,7 +60,7 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
             child: Row(
               children: [
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: GoogleFonts.inter(
                       fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -94,7 +94,7 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Details",
+              "Detalles",
               style:
                   GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
             ),
@@ -116,13 +116,14 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: SaveButton(
-                  title: "Marked As Completed",
+                  title: "Marcado como completado",
                   onTap: () async {
                     await FirebaseFirestore.instance
                         .collection("offers")
                         .doc(widget.uuid)
                         .update({"status": "complete"});
-                    showMessageBar("Job is Marked Completed", context);
+                    showMessageBar(
+                        "El trabajo está marcado como completado", context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

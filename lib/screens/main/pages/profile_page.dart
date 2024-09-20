@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => EditProfile()));
                 },
                 title: Text(
-                  "View Profile",
+                  "Ver perfil",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -98,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => MyServices()));
                 },
                 title: Text(
-                  "My Services",
+                  "Mis servicios",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => RecentWorks()));
                 },
                 title: Text(
-                  "Offers",
+                  "Ofrece",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => JobsHired()));
                 },
                 title: Text(
-                  "Jobs hired by Me",
+                  "Trabajos contratados por mí",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -182,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => CompletedJobs()));
                 },
                 title: Text(
-                  "Completed Jobs",
+                  "Trabajos completados",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -207,7 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
                 title: Text(
-                  "Delete account",
+                  "Eliminar cuenta",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -232,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
                 title: Text(
-                  "Go Out ",
+                  "Salir ",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -250,7 +250,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SaveButton(
-                    title: "Logout",
+                    title: "Cerrar sesión",
                     onTap: () {
                       showDialog(
                         context: context,

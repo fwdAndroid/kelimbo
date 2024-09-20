@@ -66,7 +66,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
             return Center(child: Text(""));
           }
           if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No data available'));
+            return Center(child: Text('No hay datos disponibles'));
           }
           var snap = snapshot.data;
           return Scaffold(
@@ -99,7 +99,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                           )),
                       contentPadding: EdgeInsets.all(8),
                       fillColor: Color(0xffF5F4F8),
-                      hintText: "Description",
+                      hintText: "Descripción",
                       hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                       border: InputBorder.none,
                     ),
@@ -116,7 +116,8 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                               onTap: () async {
                                 if (descriptionController.text.isEmpty) {
                                   showMessageBar(
-                                      "Description Offer is Required", context);
+                                      "Descripción Se requiere oferta",
+                                      context);
                                 } else {
                                   setState(() {
                                     isLoading = true;

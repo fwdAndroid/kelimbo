@@ -65,7 +65,7 @@ class _OfferDetailState extends State<OfferDetail> {
             child: Row(
               children: [
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: GoogleFonts.inter(
                       fontSize: 20, fontWeight: FontWeight.w700),
                 ),
@@ -134,7 +134,7 @@ class _OfferDetailState extends State<OfferDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Details",
+              "Detalles",
               style:
                   GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
             ),
@@ -161,13 +161,13 @@ class _OfferDetailState extends State<OfferDetail> {
                   child: SizedBox(
                     width: 150,
                     child: SaveButton(
-                        title: "Accepted",
+                        title: "Aceptado",
                         onTap: () async {
                           await FirebaseFirestore.instance
                               .collection("offers")
                               .doc(widget.uuid)
                               .update({"status": "start"});
-                          showMessageBar("Offer is Accepted", context);
+                          showMessageBar("Se acepta la oferta", context);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -180,13 +180,13 @@ class _OfferDetailState extends State<OfferDetail> {
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                   child: TextButton(
-                      child: Text("Cancel"),
+                      child: Text("Cancelar"),
                       onPressed: () async {
                         await FirebaseFirestore.instance
                             .collection("offers")
                             .doc(widget.uuid)
                             .update({"status": "cancel"});
-                        showMessageBar("Offer is Cancelled", context);
+                        showMessageBar("La oferta está cancelada", context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(

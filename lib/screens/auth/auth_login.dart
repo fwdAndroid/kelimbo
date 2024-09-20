@@ -42,7 +42,7 @@ class _AuthLoginState extends State<AuthLogin> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              "Let's Login",
+              "Iniciemos sesión",
               style: GoogleFonts.poppins(fontSize: 25),
             ),
           ),
@@ -70,7 +70,7 @@ class _AuthLoginState extends State<AuthLogin> {
                       color: textColor,
                     )),
                 border: InputBorder.none,
-                hintText: "Email",
+                hintText: "Correo electrónico",
                 hintStyle: GoogleFonts.nunitoSans(
                   fontSize: 16,
                   color: iconColor,
@@ -92,7 +92,7 @@ class _AuthLoginState extends State<AuthLogin> {
                   border: InputBorder.none,
                   filled: true,
                   fillColor: textColor,
-                  hintText: "Password",
+                  hintText: "Contraseña",
                   hintStyle: GoogleFonts.nunitoSans(
                     fontSize: 16,
                     color: iconColor,
@@ -124,12 +124,13 @@ class _AuthLoginState extends State<AuthLogin> {
               : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SaveButton(
-                    title: "Login",
+                    title: "Iniciar sesión",
                     onTap: () async {
                       if (customerEmailController.text.isEmpty ||
                           customerPassController.text.isEmpty) {
                         showMessageBar(
-                            "Email and Password is Required", context);
+                            "Se requiere correo electrónico y contraseña",
+                            context);
                       } else {
                         setState(() {
                           isLoading = true;
@@ -166,7 +167,7 @@ class _AuthLoginState extends State<AuthLogin> {
                           builder: (builder) => ForgotPassword()));
                 },
                 child: Text(
-                  'Forgot Password',
+                  'Olvidé mi contraseña',
                   style: GoogleFonts.workSans(
                       color: mainColor,
                       fontSize: 14,
@@ -218,17 +219,17 @@ class _AuthLoginState extends State<AuthLogin> {
                 mini: true,
                 buttonType: ButtonType.google,
               ),
-              const SizedBox(
-                width: 20,
-              ),
-              FlutterSocialButton(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => MainDashboard()));
-                },
-                mini: true,
-                buttonType: ButtonType.facebook,
-              ),
+              // const SizedBox(
+              //   width: 20,
+              // ),
+              // FlutterSocialButton(
+              //   onTap: () {
+              //     Navigator.push(context,
+              //         MaterialPageRoute(builder: (builder) => MainDashboard()));
+              //   },
+              //   mini: true,
+              //   buttonType: ButtonType.facebook,
+              // ),
             ],
           ),
           Spacer(),
@@ -241,10 +242,10 @@ class _AuthLoginState extends State<AuthLogin> {
                       MaterialPageRoute(builder: (builder) => SignUp()));
                 },
                 child: Text.rich(TextSpan(
-                    text: 'Don’t have an account? ',
+                    text: '¿No tienes una cuenta?',
                     children: <InlineSpan>[
                       TextSpan(
-                        text: 'Join Now',
+                        text: 'Únete ahora',
                         style: GoogleFonts.workSans(
                             color: mainColor,
                             fontSize: 14,

@@ -32,7 +32,7 @@ class _FavouritePageState extends State<FavouritePage> {
           if (snapshot.data!.docs.isEmpty) {
             return Center(
               child: Text(
-                "No Favorites Available",
+                "No hay favoritos disponibles",
                 style: TextStyle(color: colorBlack),
               ),
             );

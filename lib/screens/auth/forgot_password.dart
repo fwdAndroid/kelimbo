@@ -51,7 +51,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       color: textColor,
                     )),
                 border: InputBorder.none,
-                hintText: "Email",
+                hintText: "Correo electrónico",
                 hintStyle: GoogleFonts.nunitoSans(
                   fontSize: 16,
                   color: iconColor,
@@ -69,7 +69,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SaveButton(
-                      title: "Reset Password",
+                      title: "Restablecer contraseña",
                       onTap: () async {
                         setState(() {
                           isLoading = true;
@@ -84,7 +84,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           isLoading = false;
                         });
                         showMessageBar(
-                            "Check Your Account To Retrieve Your Password",
+                            "Verifique su cuenta para recuperar su contraseña",
                             context);
                         Navigator.pushReplacement(
                             context,

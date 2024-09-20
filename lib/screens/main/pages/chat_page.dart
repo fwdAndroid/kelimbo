@@ -31,7 +31,7 @@ class _ChatPageState extends State<ChatPage> {
             } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
               return Center(
                 child: Text(
-                  "No Chat Started Yet",
+                  "Todavía no se ha iniciado el chat",
                   style: TextStyle(color: colorBlack),
                 ),
               );

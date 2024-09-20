@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
         padding: const EdgeInsets.only(left: 8.0, right: 8),
         child: TextFormInputField(
             controller: NameController,
-            hintText: "Full Name",
+            hintText: "Nombre completo",
             IconSuffix: Icons.email,
             textInputType: TextInputType.emailAddress),
       ),
@@ -97,7 +97,7 @@ class _SignUpState extends State<SignUp> {
         padding: const EdgeInsets.only(left: 8.0, right: 8),
         child: TextFormInputField(
             controller: providerEmailController,
-            hintText: "Email Address",
+            hintText: "Dirección de correo electrónico",
             IconSuffix: Icons.email,
             textInputType: TextInputType.emailAddress),
       ),
@@ -123,7 +123,7 @@ class _SignUpState extends State<SignUp> {
               fillColor: textColor,
               filled: true,
               hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-              hintText: "New Password",
+              hintText: "Nueva contraseña",
             ),
             controller: providerPassController,
           )),
@@ -151,7 +151,7 @@ class _SignUpState extends State<SignUp> {
               fillColor: textColor,
               filled: true,
               hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-              hintText: "Confirm Password",
+              hintText: "Confirmar contraseña",
             ),
             controller: providerFullNameContoller,
           )),
@@ -164,12 +164,12 @@ class _SignUpState extends State<SignUp> {
                 ),
               )
             : SaveButton(
-                title: "Sign Up",
+                title: "Únete",
                 onTap: () async {
                   if (providerEmailController.text.isEmpty) {
-                    showMessageBar("Email is required", context);
+                    showMessageBar("Se requiere correo electrónico", context);
                   } else if (providerPassController.text.isEmpty) {
-                    showMessageBar("Password is required ", context);
+                    showMessageBar("Se requiere contraseña ", context);
                   } else {
                     setState(() {
                       isLoading = true;
@@ -183,7 +183,7 @@ class _SignUpState extends State<SignUp> {
                     setState(() {
                       isLoading = false;
                     });
-                    showMessageBar("Registration Complete", context);
+                    showMessageBar("Inscripción completa", context);
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -232,14 +232,14 @@ class _SignUpState extends State<SignUp> {
           mini: true,
           buttonType: ButtonType.google,
         ),
-        const SizedBox(
-          width: 20,
-        ),
-        FlutterSocialButton(
-          onTap: () {},
-          mini: true,
-          buttonType: ButtonType.facebook,
-        ),
+        // const SizedBox(
+        //   width: 20,
+        // ),
+        // FlutterSocialButton(
+        //   onTap: () {},
+        //   mini: true,
+        //   buttonType: ButtonType.facebook,
+        // ),
       ]),
       Padding(
         padding: const EdgeInsets.all(8.0),
@@ -249,17 +249,16 @@ class _SignUpState extends State<SignUp> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (builder) => AuthLogin()));
             },
-            child: Text.rich(TextSpan(
-                text: 'Already Have an account ',
-                children: <InlineSpan>[
-                  TextSpan(
-                    text: 'Sign IN',
-                    style: GoogleFonts.workSans(
-                        color: mainColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700),
-                  )
-                ])),
+            child: Text.rich(
+                TextSpan(text: 'Ya tienes una cuenta ', children: <InlineSpan>[
+              TextSpan(
+                text: 'Inicia sesión',
+                style: GoogleFonts.workSans(
+                    color: mainColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700),
+              )
+            ])),
           ),
         ),
       )

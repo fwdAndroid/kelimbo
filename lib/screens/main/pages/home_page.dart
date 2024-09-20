@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  "Popular Services",
+                  "Servicios Populares",
                   style: GoogleFonts.poppins(
                       fontWeight: FontWeight.w600, fontSize: 16),
                   textAlign: TextAlign.center,
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.data!.docs.isEmpty) {
                       return Center(
                         child: Text(
-                          "No Service Available",
+                          "No hay servicio disponible",
                           style: TextStyle(color: colorBlack),
                         ),
                       );
@@ -326,7 +326,7 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.data!.docs.isEmpty) {
                       return Center(
                         child: Text(
-                          "No Service Available",
+                          "No hay servicio disponible",
                           style: TextStyle(color: colorBlack),
                         ),
                       );

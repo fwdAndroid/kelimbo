@@ -118,7 +118,7 @@ class _MessagesState extends State<Messages> {
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data!.docs == 0
-                      ? Center(child: Text("Empty "))
+                      ? Center(child: Text("Vacía "))
                       : Expanded(
                           child: ListView.builder(
                             padding: EdgeInsets.symmetric(

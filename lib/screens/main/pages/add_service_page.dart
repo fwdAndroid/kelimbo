@@ -48,7 +48,7 @@ class _AddServicePageState extends State<AddServicePage> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Text(
-          "Add Service",
+          "Agregar servicio",
           style: GoogleFonts.workSans(
             color: colorBlack,
             fontSize: 18,
@@ -66,7 +66,7 @@ class _AddServicePageState extends State<AddServicePage> {
               return Center(child: CircularProgressIndicator());
             }
             if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('No data available'));
+              return Center(child: Text('No hay datos disponibles'));
             }
             var snap = snapshot.data;
             return SingleChildScrollView(
@@ -78,7 +78,7 @@ class _AddServicePageState extends State<AddServicePage> {
                     child: TextFormInputField(
                       maxLenght: 30,
                       controller: serviceNameController,
-                      hintText: "Title Name",
+                      hintText: "Nombre del título",
                       textInputType: TextInputType.text,
                     ),
                   ),
@@ -97,7 +97,7 @@ class _AddServicePageState extends State<AddServicePage> {
                             )),
                         contentPadding: EdgeInsets.all(8),
                         fillColor: Color(0xffF6F7F9),
-                        hintText: "Description",
+                        hintText: "Descripción",
                         hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                         border: InputBorder.none,
                       ),
@@ -141,7 +141,7 @@ class _AddServicePageState extends State<AddServicePage> {
                         horizontal: 8.0, vertical: 8),
                     child: TextFormInputField(
                       controller: priceController,
-                      hintText: "Price",
+                      hintText: "Precio",
                       textInputType: TextInputType.number,
                     ),
                   ),
@@ -175,7 +175,7 @@ class _AddServicePageState extends State<AddServicePage> {
                   isAdded
                       ? Center(child: CircularProgressIndicator())
                       : SaveButton(
-                          title: "Publish",
+                          title: "Publicar",
                           onTap: () async {
                             if (validateInputs(context)) {
                               setState(() {
@@ -202,7 +202,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   ),
                                 );
                                 showMessageBar(
-                                    "Services Added Successfully".toString(),
+                                    "Servicios agregados con éxito".toString(),
                                     context);
                               } catch (e) {
                                 showMessageBar(e.toString(), context);
@@ -218,19 +218,16 @@ class _AddServicePageState extends State<AddServicePage> {
 
   bool validateInputs(BuildContext context) {
     if (serviceNameController.text.isEmpty) {
-      showMessageBar("Title is Required", context);
+      showMessageBar("El título es obligatorio", context);
       return false;
     } else if (descriptionController.text.isEmpty) {
-      showMessageBar("Description is Required", context);
+      showMessageBar("La descripción es obligatoria", context);
       return false;
     } else if (_image == null) {
-      showMessageBar("Image is Required", context);
+      showMessageBar("La imagen es obligatoria", context);
       return false;
     } else if (priceController.text.isEmpty) {
-      showMessageBar("Price is Required", context);
-      return false;
-    } else if (discountController.text.isEmpty) {
-      showMessageBar("Price Per Hr is Required", context);
+      showMessageBar("El precio es obligatorio", context);
       return false;
     }
     return true;

@@ -110,7 +110,7 @@ class _ServiceRateState extends State<ServiceRate> {
                     )),
                 contentPadding: EdgeInsets.all(8),
                 fillColor: Color(0xffF5F4F8),
-                hintText: "Description",
+                hintText: "Descripción",
                 hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                 border: InputBorder.none,
               ),
@@ -121,7 +121,7 @@ class _ServiceRateState extends State<ServiceRate> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SaveButton(
-                  title: "Publish",
+                  title: "Publicar",
                   onTap: () {
                     Navigator.push(
                         context,
