@@ -82,7 +82,7 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
                   SizedBox(
                       width: 160,
                       child: SaveButton(
-                          title: "Edit Service",
+                          title: "Servicio de edición",
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -97,7 +97,7 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
                   SizedBox(
                     width: 160,
                     child: SaveButton(
-                        title: "Delete Service",
+                        title: "Eliminar servicio",
                         onTap: () {
                           showDialog(
                             context: context,

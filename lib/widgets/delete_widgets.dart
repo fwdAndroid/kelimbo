@@ -36,7 +36,7 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Delete Account",
+                      "Eliminar cuenta",
                       style: GoogleFonts.workSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
@@ -48,7 +48,7 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Are you sure you want to delete this account",
+                      "¿Estás segura de que quieres eliminar esta cuenta?",
                       style: GoogleFonts.workSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -70,7 +70,7 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text("Cancel")),
+            child: Text("Cancelar")),
         ElevatedButton(
           onPressed: () async {
             await FirebaseFirestore.instance
@@ -79,10 +79,10 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
                 .delete();
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (builder) => AuthLogin()));
-            showMessageBar("Account Deleted Successfully", context);
+            showMessageBar("Cuenta eliminada con éxito", context);
           },
           child: Text(
-            "Delete",
+            "Borrar",
             style: TextStyle(color: colorWhite),
           ),
           style: ElevatedButton.styleFrom(

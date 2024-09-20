@@ -34,7 +34,7 @@ class _DeleteServiceWidgetState extends State<DeleteServiceWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Delete Service",
+                      "Eliminar servicio",
                       style: GoogleFonts.workSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
@@ -46,7 +46,7 @@ class _DeleteServiceWidgetState extends State<DeleteServiceWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Are you sure you want to delete this Service",
+                      "¿Está segura de que desea eliminar este servicio?",
                       style: GoogleFonts.workSans(
                           fontWeight: FontWeight.w500,
                           fontSize: 14,
@@ -68,7 +68,7 @@ class _DeleteServiceWidgetState extends State<DeleteServiceWidget> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text("Cancel")),
+            child: Text("Cancelar")),
         ElevatedButton(
           onPressed: () async {
             await FirebaseFirestore.instance
@@ -77,10 +77,10 @@ class _DeleteServiceWidgetState extends State<DeleteServiceWidget> {
                 .delete();
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (builder) => MainDashboard()));
-            showMessageBar("Services Deleted Successfully", context);
+            showMessageBar("Servicios eliminados con éxito", context);
           },
           child: Text(
-            "Delete",
+            "Borrar",
             style: TextStyle(color: colorWhite),
           ),
           style: ElevatedButton.styleFrom(

@@ -31,7 +31,7 @@ class _MyServicesState extends State<MyServices> {
             if (snapshot.data!.docs.isEmpty) {
               return Center(
                 child: Text(
-                  "No Service Available",
+                  "No hay servicio disponible",
                   style: TextStyle(color: colorBlack),
                 ),
               );
@@ -89,7 +89,7 @@ class _MyServicesState extends State<MyServices> {
                                       fontSize: 20),
                                 ),
                                 Text(
-                                  "Per Hours",
+                                  "Precio",
                                   style: GoogleFonts.inter(
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.bold,

@@ -73,7 +73,7 @@ class _EditProfileState extends State<EditProfile> {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text("Edit Profile"),
+          title: Text("Editar perfil"),
         ),
         body: Column(
           children: [
@@ -147,7 +147,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     )
                   : SaveButton(
-                      title: "Edit Profile",
+                      title: "Editar Perfil",
                       onTap: () async {
                         setState(() {
                           _isLoading = true;
@@ -174,11 +174,12 @@ class _EditProfileState extends State<EditProfile> {
                             "image": downloadUrl,
                           });
                           showMessageBar(
-                              "Profile Updated Successfully ", context);
+                              "Perfil actualizado con éxito ", context);
                         } catch (e) {
                           // Handle errors here
                           print("Error updating service: $e");
-                          showMessageBar("Failed to update service", context);
+                          showMessageBar(
+                              "No se pudo actualizar el servicio", context);
                         } finally {
                           setState(() {
                             _isLoading = false;

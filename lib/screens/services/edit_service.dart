@@ -92,7 +92,7 @@ class _EditServiceState extends State<EditService> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Edit Service",
+          "Servicio de edición",
           style: GoogleFonts.workSans(
             color: colorBlack,
             fontSize: 18,
@@ -108,7 +108,7 @@ class _EditServiceState extends State<EditService> {
               child: TextFormInputField(
                 maxLenght: 30,
                 controller: serviceNameController,
-                hintText: "Title Name",
+                hintText: "Nombre del título",
                 textInputType: TextInputType.text,
               ),
             ),
@@ -127,7 +127,7 @@ class _EditServiceState extends State<EditService> {
                       )),
                   contentPadding: EdgeInsets.all(8),
                   fillColor: Color(0xffF6F7F9),
-                  hintText: "Description",
+                  hintText: "Descripción",
                   hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                   border: InputBorder.none,
                 ),
@@ -173,7 +173,7 @@ class _EditServiceState extends State<EditService> {
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
               child: TextFormInputField(
                 controller: priceController,
-                hintText: "Price",
+                hintText: "Precio",
                 textInputType: TextInputType.number,
               ),
             ),
@@ -206,7 +206,7 @@ class _EditServiceState extends State<EditService> {
             _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : SaveButton(
-                    title: "Publish",
+                    title: "Publicar",
                     onTap: () async {
                       setState(() {
                         _isLoading = true;
@@ -232,11 +232,12 @@ class _EditServiceState extends State<EditService> {
                           // "pricePerHr": int.parse(discountController.text)
                         });
                         showMessageBar(
-                            "Profile Updated Successfully ", context);
+                            "Servicio actualizado con éxito ", context);
                       } catch (e) {
                         // Handle errors here
                         print("Error updating service: $e");
-                        showMessageBar("Failed to update service", context);
+                        showMessageBar(
+                            "No se pudo actualizar el servicio", context);
                       } finally {
                         setState(() {
                           _isLoading = false;

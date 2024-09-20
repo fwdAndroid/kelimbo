@@ -22,7 +22,7 @@ class LogoutWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Oh No, You are leaving",
+                      "Oh No, te vas",
                       style: GoogleFonts.workSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
@@ -35,7 +35,7 @@ class LogoutWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Are you sure you want to logout?",
+                      "¿Estás segura de que quieres cerrar la sesión?",
                       style: GoogleFonts.workSans(
                         fontWeight: FontWeight.w500,
                         fontSize: 14,
@@ -79,10 +79,10 @@ class LogoutWidget extends StatelessWidget {
                 );
 
                 // Show snack bar message
-                showMessageBar("Logged out successfully", context);
+                showMessageBar("Se ha cerrado la sesión con éxito", context);
               },
               child: Text(
-                "Yes",
+                "Sí",
                 style: TextStyle(color: colorWhite),
               ),
               style: ElevatedButton.styleFrom(

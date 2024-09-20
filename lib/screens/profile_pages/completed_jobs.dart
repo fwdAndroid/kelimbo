@@ -67,7 +67,7 @@ class _CompletedJobsState extends State<CompletedJobs> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
             child: Text(
-              "Completed Jobs",
+              "Trabajos completados",
               style:
                   GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 15),
             ),
@@ -90,7 +90,7 @@ class _CompletedJobsState extends State<CompletedJobs> {
                   if (snapshot.data!.docs.isEmpty) {
                     return Center(
                       child: Text(
-                        "No Completed Jobs",
+                        "No hay trabajos completados",
                         style: TextStyle(color: colorBlack),
                       ),
                     );
@@ -162,7 +162,7 @@ class _CompletedJobsState extends State<CompletedJobs> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Jobs Descriptions",
+                                  "Descripciones de puestos de trabajo",
                                   style: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),

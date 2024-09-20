@@ -66,7 +66,7 @@ class _RecentWorksState extends State<RecentWorks> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
             child: Text(
-              "Recent Offers",
+              "Ofertas recientes",
               style:
                   GoogleFonts.inter(fontWeight: FontWeight.w700, fontSize: 15),
             ),
@@ -89,7 +89,7 @@ class _RecentWorksState extends State<RecentWorks> {
                   if (snapshot.data!.docs.isEmpty) {
                     return Center(
                       child: Text(
-                        "No Offers Available",
+                        "No hay ofertas disponibles",
                         style: TextStyle(color: colorBlack),
                       ),
                     );
@@ -160,7 +160,7 @@ class _RecentWorksState extends State<RecentWorks> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Jobs Descriptions",
+                                  "Descripciones de puestos de trabajo",
                                   style: GoogleFonts.inter(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
