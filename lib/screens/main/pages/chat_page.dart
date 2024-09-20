@@ -72,7 +72,7 @@ class _ChatPageState extends State<ChatPage> {
                               fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         subtitle: Text(
-                          data['lastMessageByCustomer'],
+                          data['lastMessageByCustomer'] ?? "No Message",
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w300, fontSize: 14),
                         ),
