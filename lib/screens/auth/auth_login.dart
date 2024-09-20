@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/auth/auth_signup.dart';
+import 'package:kelimbo/screens/auth/forgot_password.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -157,22 +158,30 @@ class _AuthLoginState extends State<AuthLogin> {
                     },
                   ),
                 ),
-          // GestureDetector(
-          //   onTap: () {
-          //     Navigator.push(context,
-          //         MaterialPageRoute(builder: (builder) => ForgotPassword()));
-          //   },
-          //   child: Text(
-          //     'Forgot Password',
-          //     style: GoogleFonts.workSans(
-          //         color: mainColor, fontSize: 14, fontWeight: FontWeight.w700),
-          //   ),
-          // ),
-
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => ForgotPassword()));
+                },
+                child: Text(
+                  'Forgot Password',
+                  style: GoogleFonts.workSans(
+                      color: mainColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(
             height: 20,
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

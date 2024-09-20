@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -19,12 +20,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            "assets/logo.png",
-            height: 100,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              "assets/logo.png",
+              height: 100,
+            ),
           ),
           const SizedBox(
             height: 50,
@@ -78,6 +83,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         setState(() {
                           isLoading = false;
                         });
+                        showMessageBar(
+                            "Check Your Account To Retrieve Your Password",
+                            context);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
