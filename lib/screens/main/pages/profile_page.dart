@@ -119,7 +119,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => RecentWorks()));
                 },
                 title: Text(
-                  "Ofrece",
+                  "Realiza una oferta",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
