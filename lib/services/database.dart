@@ -23,7 +23,7 @@ class Database {
     required int price,
     required String description,
     required int pricePerHer,
-    required Uint8List file,
+    Uint8List? file, // Make the image optional
     required String userEmail,
     required String userName,
     required String userImage,
@@ -31,14 +31,19 @@ class Database {
     String res = 'Some error occurred';
     try {
       if (title.isNotEmpty && category.isNotEmpty) {
-        // Compress image before upload
-        Uint8List compressedFile = await compressImage(file);
+        String photoURL = "";
 
-        // Upload compressed image to Firestore storage
-        String photoURL = await StorageMethods().uploadImageToStorage(
-          'servicesImages',
-          compressedFile,
-        );
+        // Check if an image is provided
+        if (file != null) {
+          // Compress image before upload
+          Uint8List compressedFile = await compressImage(file);
+
+          // Upload compressed image to Firestore storage
+          photoURL = await StorageMethods().uploadImageToStorage(
+            'servicesImages',
+            compressedFile,
+          );
+        }
 
         var uuid = Uuid().v4();
 
@@ -58,7 +63,7 @@ class Database {
           uuid: uuid,
           price: price,
           category: category,
-          photo: photoURL,
+          photo: photoURL, // Use empty string if no image is provided
         );
 
         // Add service to Firestore

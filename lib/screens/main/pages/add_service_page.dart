@@ -23,13 +23,12 @@ class _AddServicePageState extends State<AddServicePage> {
   TextEditingController serviceNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
-  TextEditingController discountController = TextEditingController();
 
   String dropdownvalue = 'Eventos';
 
   var items = [
-    'Eventos'
-        'Limpieza',
+    'Eventos',
+    'Limpieza',
     'Acompañamiento',
     'Recados',
     'Esoterismo',
@@ -150,33 +149,6 @@ class _AddServicePageState extends State<AddServicePage> {
                       textInputType: TextInputType.number,
                     ),
                   ),
-
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             horizontal: 8.0, vertical: 8),
-                  //         child: TextFormInputField(
-                  //           controller: priceController,
-                  //           hintText: "Price",
-                  //           textInputType: TextInputType.number,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       child: Padding(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             horizontal: 8.0, vertical: 8),
-                  //         child: TextFormInputField(
-                  //           controller: discountController,
-                  //           hintText: "Price Per Hr",
-                  //           textInputType: TextInputType.number,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   isAdded
                       ? Center(child: CircularProgressIndicator())
                       : SaveButton(
@@ -188,7 +160,7 @@ class _AddServicePageState extends State<AddServicePage> {
                               });
 
                               try {
-                                Database().addService(
+                                await Database().addService(
                                   userName: snap['fullName'],
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
@@ -197,7 +169,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   price: int.parse(priceController.text),
                                   description: descriptionController.text,
                                   pricePerHer: 0,
-                                  file: _image!,
+                                  file: _image, // Image is now optional
                                 );
 
                                 Navigator.push(
@@ -227,9 +199,6 @@ class _AddServicePageState extends State<AddServicePage> {
       return false;
     } else if (descriptionController.text.isEmpty) {
       showMessageBar("La descripción es obligatoria", context);
-      return false;
-    } else if (_image == null) {
-      showMessageBar("La imagen es obligatoria", context);
       return false;
     } else if (priceController.text.isEmpty) {
       showMessageBar("El precio es obligatorio", context);
