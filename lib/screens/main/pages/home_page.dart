@@ -172,23 +172,16 @@ class _HomePageState extends State<HomePage> {
                       );
                     }
 
-                    // Filter out items marked as favorites by the current user
-                    final filteredDocs = snapshot.data!.docs.where((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      final favorites =
-                          data['favorite'] as List<dynamic>? ?? [];
-                      return !favorites.contains(currentUserId);
-                    }).toList();
-
                     return ListView.builder(
-                      itemCount: filteredDocs.length,
+                      itemCount: snapshot.data!.docs.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
-                        final data =
-                            filteredDocs[index].data() as Map<String, dynamic>;
+                        final data = snapshot.data!.docs[index].data()
+                            as Map<String, dynamic>;
 
-                        bool isFavorite = (data['favorite'] as List<dynamic>)
-                            .contains(currentUserId);
+                        bool isFavorite = (data['favorite'] as List<dynamic>?)
+                                ?.contains(currentUserId) ??
+                            false;
 
                         return SizedBox(
                           height: 300,
@@ -298,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
