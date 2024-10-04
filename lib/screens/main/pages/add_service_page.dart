@@ -25,6 +25,11 @@ class _AddServicePageState extends State<AddServicePage> {
   TextEditingController priceController = TextEditingController();
 
   String dropdownvalue = 'Eventos';
+  String currencyType = "Euro";
+  String drop = "Per Hore";
+
+  var PriceType = ['Per Hore', 'Per Servico'];
+  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
 
   var items = [
     'Eventos',
@@ -140,13 +145,61 @@ class _AddServicePageState extends State<AddServicePage> {
                       },
                     ),
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8),
+                          child: TextFormInputField(
+                            controller: priceController,
+                            hintText: "Precio",
+                            textInputType: TextInputType.number,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8),
+                          child: DropdownButton(
+                            value: drop,
+                            isExpanded: true,
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            items: PriceType.map((String PriceType) {
+                              return DropdownMenuItem(
+                                value: PriceType,
+                                child: Text(PriceType),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                drop = newValue!;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 8),
-                    child: TextFormInputField(
-                      controller: priceController,
-                      hintText: "Precio",
-                      textInputType: TextInputType.number,
+                    child: DropdownButton(
+                      value: currencyType,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: currency.map((String currency) {
+                        return DropdownMenuItem(
+                          value: currency,
+                          child: Text(currency),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          currencyType = newValue!;
+                        });
+                      },
                     ),
                   ),
                   isAdded
