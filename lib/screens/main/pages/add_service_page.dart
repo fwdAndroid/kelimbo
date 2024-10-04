@@ -25,17 +25,22 @@ class _AddServicePageState extends State<AddServicePage> {
   TextEditingController priceController = TextEditingController();
   TextEditingController discountController = TextEditingController();
 
-  String dropdownvalue = 'Hogar';
+  String dropdownvalue = 'Eventos';
 
   var items = [
-    'Hogar',
-    'Salud',
-    'Turismo',
-    'Entrenamiento personal',
-    'Vehículos',
-    'Mascotas',
-    'Fotografía y vídeo',
-    'Belleza'
+    'Eventos'
+        'Limpieza',
+    'Acompañamiento',
+    'Recados',
+    'Esoterismo',
+    'Costura',
+    'Asesoramiento',
+    'Enseñanzas',
+    'Crecimiento Personal',
+    'Gestiones',
+    'Tecnología',
+    'Arte y Artesanía',
+    'Grupos temáticos',
   ];
 
   Uint8List? _image;
