@@ -17,17 +17,18 @@ class Database {
   }
 
   // Function to add a service to Firestore
-  Future<String> addService({
-    required String title,
-    required String category,
-    required int price,
-    required String description,
-    required int pricePerHer,
-    Uint8List? file, // Make the image optional
-    required String userEmail,
-    required String userName,
-    required String userImage,
-  }) async {
+  Future<String> addService(
+      {required String title,
+      required String category,
+      required int price,
+      required String description,
+      required int pricePerHer,
+      Uint8List? file, // Make the image optional
+      required String userEmail,
+      required String userName,
+      required String userImage,
+      required String currency,
+      required String priceType}) async {
     String res = 'Some error occurred';
     try {
       if (title.isNotEmpty && category.isNotEmpty) {
@@ -49,6 +50,8 @@ class Database {
 
         // Create ServiceModel object
         ServiceModel serviceModel = ServiceModel(
+          currency: currency,
+          priceType: priceType,
           userEmail: userEmail,
           userImage: userImage,
           userName: userName,

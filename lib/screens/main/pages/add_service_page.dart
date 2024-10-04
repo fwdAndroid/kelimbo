@@ -218,6 +218,8 @@ class _AddServicePageState extends State<AddServicePage> {
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
                                   category: dropdownvalue,
+                                  currency: currencyType,
+                                  priceType: drop,
                                   title: serviceNameController.text,
                                   price: int.parse(priceController.text),
                                   description: descriptionController.text,

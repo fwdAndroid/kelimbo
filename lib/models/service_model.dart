@@ -16,6 +16,8 @@ class ServiceModel {
   String userName;
   String userImage;
   String userEmail;
+  String currency;
+  String priceType;
 
   ServiceModel(
       {required this.uid,
@@ -32,6 +34,8 @@ class ServiceModel {
       required this.userImage,
       required this.userEmail,
       required this.totalReviews,
+      required this.currency,
+      required this.priceType,
       required this.uuid});
 
   Map<String, dynamic> toJson() => {
@@ -46,6 +50,8 @@ class ServiceModel {
         'category': category,
         'title': title,
         'favorite': favorite,
+        'currency': currency,
+        'priceType': priceType,
         'uuid': uuid,
         'totalRate': totalRate, // Include in toJson
         'totalReviews': totalReviews, // Include in toJson
@@ -57,6 +63,8 @@ class ServiceModel {
     return ServiceModel(
         photo: snapshot['photo'],
         uid: snapshot['uid'],
+        priceType: snapshot['priceType'],
+        currency: snapshot['currency'],
         favorite: snapshot['favorite'],
         title: snapshot['title'],
         description: snapshot['description'],
