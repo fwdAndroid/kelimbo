@@ -92,7 +92,7 @@ class _EditServiceState extends State<EditService> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Servicio de edición",
+          "Editar servicio",
           style: GoogleFonts.workSans(
             color: colorBlack,
             fontSize: 18,

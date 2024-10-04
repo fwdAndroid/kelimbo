@@ -82,7 +82,7 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
                   SizedBox(
                       width: 160,
                       child: SaveButton(
-                          title: "Servicio de edición",
+                          title: "Editar servicio",
                           onTap: () {
                             Navigator.push(
                                 context,
