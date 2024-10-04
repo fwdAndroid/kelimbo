@@ -89,7 +89,7 @@ class _MyServicesState extends State<MyServices> {
                                       fontSize: 20),
                                 ),
                                 Text(
-                                  "Precio",
+                                  data['priceType'],
                                   style: GoogleFonts.inter(
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.bold,

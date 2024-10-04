@@ -391,7 +391,7 @@ class _HomePageState extends State<HomePage> {
                                               fontSize: 20),
                                         ),
                                         Text(
-                                          "Price",
+                                          data['priceType'],
                                           style: GoogleFonts.inter(
                                               color: Color(0xff9C9EA2),
                                               fontWeight: FontWeight.bold,
