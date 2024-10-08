@@ -24,15 +24,23 @@ class _AddServicePageState extends State<AddServicePage> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
 
-  String dropdownvalue = 'Eventos';
+  String dropdownvalue = 'Hogar';
   String currencyType = "Euro";
-  String drop = "Per Hore";
+  String drop = "Por Hora";
 
-  var PriceType = ['Per Hore', 'Per Servico'];
+  var PriceType = ['Por Hora', 'Por Servicio'];
   var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
 
   var items = [
+    'Hogar',
+    'Salud',
+    'Turismo',
+    'Entrenamiento',
+    'Vehículos',
+    'Mascotas',
+    'Fotografía y video',
     'Eventos',
+    'Belleza',
     'Limpieza',
     'Acompañamiento',
     'Recados',
@@ -45,6 +53,7 @@ class _AddServicePageState extends State<AddServicePage> {
     'Tecnología',
     'Arte y Artesanía',
     'Grupos temáticos',
+    'Otros'
   ];
 
   Uint8List? _image;

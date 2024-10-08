@@ -32,11 +32,25 @@ class _EditServiceState extends State<EditService> {
     'Hogar',
     'Salud',
     'Turismo',
-    'Entrenamiento personal',
+    'Entrenamiento',
     'Vehículos',
     'Mascotas',
-    'Fotografía y vídeo',
-    'Belleza'
+    'Fotografía y video',
+    'Eventos',
+    'Belleza',
+    'Limpieza',
+    'Acompañamiento',
+    'Recados',
+    'Esoterismo',
+    'Costura',
+    'Asesoramiento',
+    'Enseñanzas',
+    'Crecimiento Personal',
+    'Gestiones',
+    'Tecnología',
+    'Arte y Artesanía',
+    'Grupos temáticos',
+    'Otros'
   ];
 
   bool _isLoading = false;
