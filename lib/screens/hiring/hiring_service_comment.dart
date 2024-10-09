@@ -48,8 +48,6 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print(widget.uid);
-    print(FirebaseAuth.instance.currentUser!.uid);
   }
 
   var uuid = Uuid().v4();
@@ -77,7 +75,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Cuentanos que necesitas",
+                    "Qué necesitas",
                     style: GoogleFonts.inter(
                       color: colorBlack,
                       fontSize: 18,
@@ -138,7 +136,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
-                                    "rating": int.parse(widget.totalRating),
+                                    "rating": widget.totalRating,
                                     "uuid": uuid,
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],
@@ -147,6 +145,8 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                   setState(() {
                                     isLoading = false;
                                   });
+                                  showMessageBar(
+                                      "Envío de oferta al proveedor", context);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

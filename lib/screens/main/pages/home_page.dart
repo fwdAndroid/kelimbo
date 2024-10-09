@@ -194,15 +194,18 @@ class _HomePageState extends State<HomePage> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Stack(
                                     children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.network(
-                                          fit: BoxFit.cover,
-                                          data['photo'],
-                                          height: 150,
-                                          width: 300,
-                                        ),
-                                      ),
+                                      data['photo'] == ""
+                                          ? Container()
+                                          : ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: Image.network(
+                                                fit: BoxFit.cover,
+                                                data['photo'],
+                                                height: 150,
+                                                width: 300,
+                                              ),
+                                            ),
                                       GestureDetector(
                                         onTap: () async {
                                           final docRef = FirebaseFirestore

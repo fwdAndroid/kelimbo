@@ -177,7 +177,7 @@ class _HiringServiceState extends State<HiringService> {
                                         price: widget.price.toString(),
                                         perHrPrice:
                                             widget.perHrPrice.toString(),
-                                        photo: widget.photo,
+                                        photo: widget.photo ?? "",
                                         description: widget.description,
                                       )));
                         }),
