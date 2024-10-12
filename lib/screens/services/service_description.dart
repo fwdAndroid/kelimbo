@@ -94,7 +94,7 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
                       ),
                     ),
                   ),
-                  Padding(
+                widget.photo == "" ? Container() :  Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.network(
                       widget.photo,

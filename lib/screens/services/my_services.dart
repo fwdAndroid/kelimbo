@@ -61,9 +61,11 @@ class _MyServicesState extends State<MyServices> {
                                           category: data['category'],
                                         )));
                           },
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(data['photo']),
-                          ),
+                          leading: data['photo'] == ""
+                              ? CircleAvatar()
+                              : CircleAvatar(
+                                  backgroundImage: NetworkImage(data['photo']),
+                                ),
                           title: Text(
                             data['title'],
                             style: GoogleFonts.inter(
