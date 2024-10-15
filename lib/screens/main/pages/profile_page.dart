@@ -143,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           builder: (builder) => PremiumFeature()));
                 },
                 title: Text(
-                  "Premium Feature",
+                  "Función Premium",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),

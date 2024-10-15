@@ -52,8 +52,8 @@ class _PremiumFeatureState extends State<PremiumFeature> {
 
   // Share message on WhatsApp to unlock PRO
   Future<void> shareOnWhatsApp() async {
-    String message = "I am using a new app, it is called Kelimbo. "
-        "Download it here (app download link) or visit (landing page link).";
+    String message = "Estoy usando una nueva aplicación, se llama Kelimbo."
+        "Descárguelo aquí (enlace de descarga de la aplicación) o visite (enlace a la página de inicio).";
     String whatsappUrl = "whatsapp://send?text=${Uri.encodeComponent(message)}";
 
     if (await canLaunch(whatsappUrl)) {
@@ -65,7 +65,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                "WhatsApp is not installed on this device. Redirecting to install.")),
+                "WhatsApp no está instalado en este dispositivo. Redireccionamiento a la instalación.")),
       );
 
       String playStoreUrl =
@@ -112,22 +112,22 @@ class _PremiumFeatureState extends State<PremiumFeature> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Upgrade to Premium"),
+          title: Text("Actualizar a Premium"),
           content: Text(
-              "This feature requires a premium subscription. Share the app to unlock the PRO level."),
+              "Esta función requiere una suscripción premium. Comparte la aplicación para desbloquear el nivel PRO."),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
                 shareOnWhatsApp();
               },
-              child: Text("Share on WhatsApp"),
+              child: Text("Compartir en WhatsApp"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("Cancel"),
+              child: Text("Cancelar"),
             ),
           ],
         );
@@ -141,26 +141,29 @@ class _PremiumFeatureState extends State<PremiumFeature> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Kelimbo Subscription"),
+        title: Text("Suscripción a Kelimbo"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset("assets/logo.png"),
-            Text("Subscription: $subscription"),
-            if (subscriptionExpiry != null)
-              Text("Expires on: ${subscriptionExpiry!.toLocal()}"),
-            SizedBox(height: 20),
-            buildSubscriptionBenefits(),
-            ElevatedButton(
-              onPressed: subscription == "basic" ? showUpgradeMessage : null,
-              child: Text("Use Premium Feature"),
-            ),
-            if (shareCount >= 20)
-              Text("You have unlocked the PRO level! Enjoy premium features."),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Image.asset("assets/logo.png"),
+              Text("Subscription: $subscription"),
+              if (subscriptionExpiry != null)
+                Text("Expires on: ${subscriptionExpiry!.toLocal()}"),
+              SizedBox(height: 10),
+              buildSubscriptionBenefits(),
+              ElevatedButton(
+                onPressed: subscription == "basic" ? showUpgradeMessage : null,
+                child: Text("Usar la función Premium"),
+              ),
+              if (shareCount >= 20)
+                Text(
+                    "¡Has desbloqueado el nivel PRO! Disfruta de funciones premium."),
+            ],
+          ),
         ),
       ),
     );
@@ -171,31 +174,36 @@ class _PremiumFeatureState extends State<PremiumFeature> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Subscription Benefits",
+          "Beneficios de la suscripción",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
         Text(
-          "BASIC (Free):",
+          "BÁSICO (Gratis):",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        Text("- Publish up to 1 listing per year."),
-        Text("- Ads will be visible."),
-        Text("- Cannot view received messages."),
-        Text("- Cannot view ratings and comments."),
-        Text("- 'Work Completed' button is inactive."),
-        Text("- Receive requests but cannot send quotes."),
+        Text("- Puede publicar hasta 1 anuncio al año.."),
+        Text("- Los anuncios serán visibles."),
+        Text("- No Puede ver la cantidad de mensajes recibidos."),
+        Text("- No Puede ver la cantidad de mensajes recibidos."),
+        Text("- El acceso al botón Trabajo completado está inactivo."),
+        Text(
+            "- Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
         SizedBox(height: 10),
         Text(
-          "PREMIUM (Paid):",
+          "PREMIUM (Pago):",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        Text("- Publish unlimited listings per year."),
-        Text("- Ad-free experience."),
-        Text("- View and respond to received messages."),
-        Text("- View ratings and comments from users."),
-        Text("- 'Work Completed' button is fully enabled."),
-        Text("- Provide and send quotes for requests."),
+        Text("- Puede publicar anuncios ilimitados al año."),
+        Text("- Experiencia sin anuncios."),
+        Text(
+            "- Capacidad para ver los mensajes recibidos y chatear con los clientes."),
+        Text(
+            "- Puede ver y recibir valoraciones y comentarios de los usuarios."),
+        Text(
+            "- El acceso al botón Trabajo completado está completamente habilitado'"),
+        Text(
+            "- Puede proporcionar presupuestos y enviar respuestas detalladas a las solicitudes de servicios."),
       ],
     );
   }
