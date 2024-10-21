@@ -52,8 +52,8 @@ class _PremiumFeatureState extends State<PremiumFeature> {
 
   // Share message on WhatsApp to unlock PRO
   Future<void> shareOnWhatsApp() async {
-    String message = "Estoy usando una nueva aplicación, se llama Kelimbo."
-        "Descárguelo aquí (enlace de descarga de la aplicación) o visite (enlace a la página de inicio).";
+    String message =
+        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí (enlace a la página web)";
     String whatsappUrl = "whatsapp://send?text=${Uri.encodeComponent(message)}";
 
     if (await canLaunch(whatsappUrl)) {
@@ -184,14 +184,14 @@ class _PremiumFeatureState extends State<PremiumFeature> {
         ),
         Text("- Puede publicar hasta 1 anuncio al año.."),
         Text("- Los anuncios serán visibles."),
-        Text("- No Puede ver la cantidad de mensajes recibidos."),
-        Text("- No Puede ver la cantidad de mensajes recibidos."),
+        Text(
+            "- en el básico pueden leer los mensajes que reciben, pero no pueden contestar "),
         Text("- El acceso al botón Trabajo completado está inactivo."),
         Text(
             "- Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
         SizedBox(height: 10),
         Text(
-          "PREMIUM (Pago):",
+          "PREMIUM (Compartiendo):",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         Text("- Puede publicar anuncios ilimitados al año."),

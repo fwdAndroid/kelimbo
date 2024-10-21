@@ -36,41 +36,20 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   String groupChatId = "";
   ScrollController scrollController = ScrollController();
-  TextEditingController messageController = TextEditingController();
+  bool show = false;
 
+  TextEditingController messageController = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
-    if (FirebaseAuth.instance.currentUser!.uid.hashCode <=
-        widget.providerId.hashCode) {
-      groupChatId =
-          "${FirebaseAuth.instance.currentUser!.uid}-${widget.customerId}";
+    if (widget.customerId.hashCode <= widget.providerId.hashCode) {
+      groupChatId = "${widget.customerId}-${widget.providerId}";
     } else {
-      groupChatId =
-          "${widget.customerId}-${FirebaseAuth.instance.currentUser!.uid}";
+      groupChatId = "${widget.providerId}-${widget.customerId}";
     }
 
     super.initState();
   }
-
-  // List<ChatMessage> messages = [
-  //   ChatMessage(
-  //       messageContent:
-  //           "Hola! Estoy interesada/o en el aviso asesoría legal y comercial",
-  //       messageType: "receiver",
-  //       time: "12:50"),
-  //   ChatMessage(messageContent: "Hola!", messageType: "sender", time: "12:50"),
-  //   ChatMessage(
-  //       messageContent:
-  //           "Claro, estaré encantado de ayudarte. Cuéntame, ¿qué problema estás teniendo?",
-  //       messageType: "sender",
-  //       time: "12:50"),
-  //   ChatMessage(
-  //       messageContent:
-  //           "resulta que vivo en el apartamento hace casi un año...",
-  //       messageType: "receiver",
-  //       time: "12:50"),
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +230,7 @@ class _MessagesState extends State<Messages> {
         await transaction.set(
           documentReference,
           {
-            "senderId": FirebaseAuth.instance.currentUser!.uid,
+            "senderId": widget.customerId,
             "receiverId": widget.providerId,
             "time": DateTime.now().millisecondsSinceEpoch.toString(),
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),

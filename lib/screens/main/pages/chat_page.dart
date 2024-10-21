@@ -16,52 +16,107 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
+    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection("chats")
-              .where("providerId",
-                  isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(
-                child: Text(
-                  "Todavía no se ha iniciado el chat",
-                  style: TextStyle(color: colorBlack),
-                ),
-              );
-            }
-            return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (index, contrxt) {
-                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("chats")
+            .where("providerId", isEqualTo: currentUserId)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> providerSnapshot) {
+          // Check if the providerSnapshot has data and no errors
+          if (providerSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (providerSnapshot.hasError) {
+            return Center(
+              child: Text("Error: ${providerSnapshot.error}"),
+            );
+          } else if (!providerSnapshot.hasData ||
+              providerSnapshot.data == null) {
+            return Center(
+              child: Text("No data available for providers."),
+            );
+          }
+
+          var prods = providerSnapshot
+              .data!; // This is safe because we've checked for null
+
+          return StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection("chats")
+                .where("customerId", isEqualTo: currentUserId)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> customerSnapshot) {
+              if (customerSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (customerSnapshot.hasError) {
+                return Center(
+                  child: Text("Error: ${customerSnapshot.error}"),
+                );
+              } else if (!customerSnapshot.hasData ||
+                  customerSnapshot.data == null) {
+                return Center(
+                  child: Text("No data available for customers."),
+                );
+              }
+
+              // Combine the two snapshots
+              List<DocumentSnapshot> documents = [];
+              if (providerSnapshot.hasData) {
+                documents.addAll(providerSnapshot.data!.docs);
+              }
+              if (customerSnapshot.hasData) {
+                documents.addAll(customerSnapshot.data!.docs);
+              }
+
+              if (documents.isEmpty) {
+                return Center(
+                  child: Text(
+                    "Todavía no se ha iniciado el chat",
+                    style: TextStyle(color: colorBlack),
+                  ),
+                );
+              }
+
+              return ListView.builder(
+                itemCount: documents.length,
+                itemBuilder: (context, index) {
                   final Map<String, dynamic> data =
-                      documents[contrxt].data() as Map<String, dynamic>;
-                  // DateTime date = (data['chatTime'] as Timestamp).toDate();
-                  // String formattedTime = DateFormat.jm().format(date);
+                      documents[index].data() as Map<String, dynamic>;
+
+                  final prodData =
+                      prods.docs.isNotEmpty && index < prods.docs.length
+                          ? prods.docs[index].data() as Map<String, dynamic>
+                          : null;
+
                   return Column(
                     children: [
                       ListTile(
                         onTap: () {
-                          Navigator.push(
+                          if (prodData != null) {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (builder) => Messages(
-                                        providerEmail: data['providerEmail'],
-                                        providerId: data['providerId'],
-                                        providerName: data['providerName'],
-                                        providerPhoto: data['providerPhoto'],
-                                        customerPhoto: data['customerPhoto'],
-                                        customerEmail: data['customerEmail'],
-                                        customerId: data['customerId'],
-                                        chatId: data['chatId'],
-                                        customerName: data['customerName'],
-                                      )));
+                                builder: (builder) => Messages(
+                                  providerEmail: data['providerEmail'],
+                                  providerId: prodData[
+                                      'providerId'], // Use prodData safely
+                                  providerName: prodData['providerName'],
+                                  providerPhoto: prodData['providerPhoto'],
+                                  customerPhoto: data['customerPhoto'],
+                                  customerEmail: data['customerEmail'],
+                                  customerId: data['customerId'],
+                                  chatId: data['chatId'],
+                                  customerName: data['customerName'],
+                                ),
+                              ),
+                            );
+                          }
                         },
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(data['customerPhoto']),
@@ -76,17 +131,16 @@ class _ChatPageState extends State<ChatPage> {
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w300, fontSize: 14),
                         ),
-                        // trailing: Text(
-                        //   "12:00",
-                        //   style: GoogleFonts.poppins(
-                        //       fontWeight: FontWeight.w300, fontSize: 14),
-                        // ),
                       ),
-                      Divider()
+                      Divider(),
                     ],
                   );
-                });
-          }),
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

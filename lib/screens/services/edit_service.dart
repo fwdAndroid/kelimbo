@@ -27,6 +27,11 @@ class _EditServiceState extends State<EditService> {
   TextEditingController discountController = TextEditingController();
 
   String dropdownvalue = 'Hogar';
+  String currencyType = "Euro";
+  String drop = "Por Hora";
+
+  var PriceType = ['Por Hora', 'Por Servicio'];
+  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
 
   var items = [
     'Hogar',
@@ -78,7 +83,7 @@ class _EditServiceState extends State<EditService> {
       descriptionController.text =
           (data['description'] ?? ''); // Convert int to string
       priceController.text = data['price'] ?? 0; // Convert int to string
-//discountController.text = data['pricePerHr'] ?? 0;
+      discountController.text = data['pricePerHr'] ?? 0;
       imageUrl = data['photo'];
     });
   }
@@ -147,22 +152,18 @@ class _EditServiceState extends State<EditService> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () => selectImage(),
-                child: _image != null
-                    ? CircleAvatar(
-                        radius: 59, backgroundImage: MemoryImage(_image!))
-                    : imageUrl != null
-                        ? CircleAvatar(
-                            radius: 59,
-                            backgroundImage: NetworkImage(imageUrl!))
-                        : Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset("assets/profilephoto.png"),
-                          ),
-              ),
+            GestureDetector(
+              onTap: () => selectImage(),
+              child: _image != null
+                  ? CircleAvatar(
+                      radius: 59, backgroundImage: MemoryImage(_image!))
+                  : GestureDetector(
+                      onTap: () => selectImage(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset("assets/Choose Image.png"),
+                      ),
+                    ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
@@ -183,40 +184,62 @@ class _EditServiceState extends State<EditService> {
                 },
               ),
             ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: TextFormInputField(
+                      controller: priceController,
+                      hintText: "Precio",
+                      textInputType: TextInputType.number,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: DropdownButton(
+                      value: drop,
+                      isExpanded: true,
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: PriceType.map((String PriceType) {
+                        return DropdownMenuItem(
+                          value: PriceType,
+                          child: Text(PriceType),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          drop = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-              child: TextFormInputField(
-                controller: priceController,
-                hintText: "Precio",
-                textInputType: TextInputType.number,
+              child: DropdownButton(
+                value: currencyType,
+                isExpanded: true,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: currency.map((String currency) {
+                  return DropdownMenuItem(
+                    value: currency,
+                    child: Text(currency),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    currencyType = newValue!;
+                  });
+                },
               ),
             ),
-            // Row(
-            //   children: [
-            //     Expanded(
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(
-            //             horizontal: 8.0, vertical: 8),
-            //         child: TextFormInputField(
-            //           controller: priceController,
-            //           hintText: "Price",
-            //           textInputType: TextInputType.number,
-            //         ),
-            //       ),
-            //     ),
-            //     Expanded(
-            //       child: Padding(
-            //         padding: const EdgeInsets.symmetric(
-            //             horizontal: 8.0, vertical: 8),
-            //         child: TextFormInputField(
-            //           controller: discountController,
-            //           hintText: "Price Per Hr",
-            //           textInputType: TextInputType.number,
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
                 : SaveButton(
@@ -243,7 +266,9 @@ class _EditServiceState extends State<EditService> {
                           "price": int.parse(
                               priceController.text), // Convert string to int
                           "photo": downloadUrl,
-                          // "pricePerHr": int.parse(discountController.text)
+                          "pricePerHr": int.parse(discountController.text),
+                          "priceType": drop,
+                          "currency": currencyType
                         });
                         showMessageBar(
                             "Servicio actualizado con éxito ", context);

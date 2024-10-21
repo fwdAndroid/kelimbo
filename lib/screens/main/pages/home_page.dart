@@ -183,119 +183,145 @@ class _HomePageState extends State<HomePage> {
                                 ?.contains(currentUserId) ??
                             false;
 
-                        return SizedBox(
-                          height: 300,
-                          width: 300,
-                          child: Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Stack(
-                                    children: [
-                                      data['photo'] == ""
-                                          ? Container()
-                                          : ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: Image.network(
-                                                fit: BoxFit.cover,
-                                                data['photo'],
-                                                height: 150,
-                                                width: 300,
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => HiringService(
+                                          userEmail: data['userEmail'],
+                                          userImage: data['userImage'],
+                                          userName: data['userName'],
+                                          category: data['category'],
+                                          totalReviews:
+                                              data['totalReviews'].toString(),
+                                          uuid: data['uuid'],
+                                          uid: data['uid'],
+                                          totalRating:
+                                              data['totalRate'].toString(),
+                                          title: data['title'],
+                                          price: data['price'].toString(),
+                                          perHrPrice:
+                                              data['pricePerHr'].toString(),
+                                          photo: data['photo'],
+                                          description: data['description'],
+                                        )));
+                          },
+                          child: SizedBox(
+                            height: 300,
+                            width: 300,
+                            child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Stack(
+                                      children: [
+                                        data['photo'] == ""
+                                            ? Container()
+                                            : ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.network(
+                                                  fit: BoxFit.cover,
+                                                  data['photo'],
+                                                  height: 150,
+                                                  width: 300,
+                                                ),
                                               ),
-                                            ),
-                                      GestureDetector(
-                                        onTap: () async {
-                                          final docRef = FirebaseFirestore
-                                              .instance
-                                              .collection("services")
-                                              .doc(data['uuid']);
-                                          if (isFavorite) {
-                                            // Remove from favorites
-                                            await docRef.update({
-                                              "favorite":
-                                                  FieldValue.arrayRemove(
-                                                      [currentUserId])
-                                            });
-                                          } else {
-                                            // Add to favorites
-                                            await docRef.update({
-                                              "favorite": FieldValue.arrayUnion(
-                                                  [currentUserId])
-                                            });
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Align(
-                                            alignment:
-                                                AlignmentDirectional.topEnd,
-                                            child: Container(
-                                              child: Icon(
-                                                isFavorite
-                                                    ? Icons.favorite
-                                                    : Icons.favorite_outline,
-                                                color: red,
+                                        GestureDetector(
+                                          onTap: () async {
+                                            final docRef = FirebaseFirestore
+                                                .instance
+                                                .collection("services")
+                                                .doc(data['uuid']);
+                                            if (isFavorite) {
+                                              // Remove from favorites
+                                              await docRef.update({
+                                                "favorite":
+                                                    FieldValue.arrayRemove(
+                                                        [currentUserId])
+                                              });
+                                            } else {
+                                              // Add to favorites
+                                              await docRef.update({
+                                                "favorite":
+                                                    FieldValue.arrayUnion(
+                                                        [currentUserId])
+                                              });
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Align(
+                                              alignment:
+                                                  AlignmentDirectional.topEnd,
+                                              child: Container(
+                                                child: Icon(
+                                                  isFavorite
+                                                      ? Icons.favorite
+                                                      : Icons.favorite_outline,
+                                                  color: red,
+                                                ),
+                                                height: 50,
+                                                width: 50,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: colorWhite),
                                               ),
-                                              height: 50,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: colorWhite),
                                             ),
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    data['title'],
-                                    style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
+                                        )
+                                      ],
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(3.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: yellow,
-                                          ),
-                                          Text(
-                                            data['totalRate'].toString(),
-                                            style: GoogleFonts.inter(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13),
-                                          ),
-                                        ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      data['title'],
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text("€"),
-                                          Text(
-                                            data['price'].toString(),
-                                            style: GoogleFonts.inter(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 13),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star,
+                                              color: yellow,
+                                            ),
+                                            Text(
+                                              data['totalRate'].toString(),
+                                              style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text("€"),
+                                            Text(
+                                              data['price'].toString(),
+                                              style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 13),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         );
