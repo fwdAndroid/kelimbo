@@ -54,7 +54,6 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController messageController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
