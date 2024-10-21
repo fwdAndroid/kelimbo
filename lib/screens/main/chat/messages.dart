@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/main/other/other_user_profile.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:intl/intl.dart';
@@ -65,23 +66,39 @@ class _MessagesState extends State<Messages> {
           },
         ),
         centerTitle: true,
-        title: Column(
-          children: [
-            CircleAvatar(
-              radius: 20,
-              backgroundImage:
-                  NetworkImage(widget.customerPhoto), // Add your image here
-            ),
-            SizedBox(height: 4),
-            Text(
-              widget.customerName,
-              style: GoogleFonts.inter(
-                fontWeight: FontWeight.w700,
-                color: colorBlack,
-                fontSize: 16,
+        title: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (builder) => OtherUserProfile(
+                          userImage: widget.providerPhoto,
+                          userName: widget.providerName,
+                          userEmail: widget.providerEmail,
+                          customerEmail: widget.customerEmail,
+                          customerName: widget.customerName,
+                          customerPhoto: widget.customerPhoto,
+                          uid: widget.customerId,
+                        )));
+          },
+          child: Column(
+            children: [
+              CircleAvatar(
+                radius: 20,
+                backgroundImage:
+                    NetworkImage(widget.customerPhoto), // Add your image here
               ),
-            ),
-          ],
+              SizedBox(height: 4),
+              Text(
+                widget.customerName,
+                style: GoogleFonts.inter(
+                  fontWeight: FontWeight.w700,
+                  color: colorBlack,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       body: Column(
