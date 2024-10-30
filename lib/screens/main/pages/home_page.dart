@@ -2,7 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/categories/bellaza.dart';
+import 'package:kelimbo/screens/categories/entermiato.dart';
+import 'package:kelimbo/screens/categories/hogar.dart';
+import 'package:kelimbo/screens/categories/mascotas.dart';
+import 'package:kelimbo/screens/categories/photography.dart';
+import 'package:kelimbo/screens/categories/salud.dart';
+import 'package:kelimbo/screens/categories/turismo.dart';
+import 'package:kelimbo/screens/categories/vehiclescat.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
+import 'package:kelimbo/screens/search/search_screen.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,13 +42,6 @@ class _HomePageState extends State<HomePage> {
                 top: 30.0), // Add padding to position the search bar
             child: Column(
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.tune, color: Colors.black),
-                  ),
-                ),
                 Center(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16),
@@ -53,6 +55,12 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Expanded(
                           child: TextField(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => SearchScreen()));
+                            },
                             decoration: InputDecoration(
                               hintText: '¿Como podemos ayudarte?',
                               border: InputBorder.none,
@@ -92,45 +100,103 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image.asset(
-                      "assets/home category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => HogarClass()));
+                      },
+                      child: Image.asset(
+                        "assets/home category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/health category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (builder) => Salud()));
+                      },
+                      child: Image.asset(
+                        "assets/health category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/turism category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (builder) => Turismo()));
+                      },
+                      child: Image.asset(
+                        "assets/turism category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/trainning category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => Entermiato()));
+                      },
+                      child: Image.asset(
+                        "assets/trainning category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/pets category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => Mascotas()));
+                      },
+                      child: Image.asset(
+                        "assets/pets category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/vehicle category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => Vehiclescat()));
+                      },
+                      child: Image.asset(
+                        "assets/vehicle category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/photography category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => Photography()));
+                      },
+                      child: Image.asset(
+                        "assets/photography category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
-                    Image.asset(
-                      "assets/beauty category.png",
-                      width: 100,
-                      height: 100,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (builder) => Bellaza()));
+                      },
+                      child: Image.asset(
+                        "assets/beauty category.png",
+                        width: 100,
+                        height: 100,
+                      ),
                     ),
                   ],
                 ),
