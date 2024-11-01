@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/hiring/hiring_service_comment.dart';
+import 'package:kelimbo/screens/hiring/hiring_price.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
@@ -162,7 +162,7 @@ class _HiringServiceState extends State<HiringService> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (builder) => HiringServiceComments(
+                                  builder: (builder) => HiringPrice(
                                         userEmail: widget.userEmail,
                                         userImage: widget.userImage,
                                         userName: widget.userName,
@@ -174,7 +174,6 @@ class _HiringServiceState extends State<HiringService> {
                                         totalRating:
                                             widget.totalRating.toString(),
                                         title: widget.title,
-                                        price: widget.price.toString(),
                                         perHrPrice:
                                             widget.perHrPrice.toString(),
                                         photo: widget.photo ?? "",

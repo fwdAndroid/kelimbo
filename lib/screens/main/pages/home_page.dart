@@ -10,6 +10,7 @@ import 'package:kelimbo/screens/categories/photography.dart';
 import 'package:kelimbo/screens/categories/salud.dart';
 import 'package:kelimbo/screens/categories/turismo.dart';
 import 'package:kelimbo/screens/categories/vehiclescat.dart';
+import 'package:kelimbo/screens/hiring/hiring_price.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/search/search_screen.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -435,6 +436,8 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) => HiringService(
+                                                  price:
+                                                      data['price'].toString(),
                                                   userEmail: data['userEmail'],
                                                   userImage: data['userImage'],
                                                   userName: data['userName'],
@@ -447,8 +450,6 @@ class _HomePageState extends State<HomePage> {
                                                   totalRating: data['totalRate']
                                                       .toString(),
                                                   title: data['title'],
-                                                  price:
-                                                      data['price'].toString(),
                                                   perHrPrice: data['pricePerHr']
                                                       .toString(),
                                                   photo: data['photo'],

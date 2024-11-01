@@ -8,10 +8,9 @@ import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
 
-class HiringServiceComments extends StatefulWidget {
+class HiringPrice extends StatefulWidget {
   final title;
   final description;
-  final price;
   final perHrPrice;
   final totalReviews;
   final totalRating;
@@ -22,81 +21,109 @@ class HiringServiceComments extends StatefulWidget {
   final userEmail;
   final userName;
   final userImage;
-  const HiringServiceComments(
+  HiringPrice(
       {super.key,
-      required this.category,
       required this.description,
       required this.perHrPrice,
-      required this.photo,
-      required this.price,
       required this.title,
-      required this.totalRating,
-      required this.totalReviews,
-      required this.uid,
       required this.userEmail,
       required this.userImage,
       required this.userName,
-      required this.uuid});
+      required this.category,
+      required this.photo,
+      required this.totalRating,
+      required this.uid,
+      required this.uuid,
+      required this.totalReviews});
 
   @override
-  State<HiringServiceComments> createState() => _HiringServiceCommentsState();
+  State<HiringPrice> createState() => _HiringPriceState();
 }
 
-class _HiringServiceCommentsState extends State<HiringServiceComments> {
+class _HiringPriceState extends State<HiringPrice> {
+  TextEditingController customerEmailController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  var uuid = Uuid().v4();
+  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
+  String currencyType = "Euro";
   bool isLoading = false;
+  var uuid = Uuid().v4();
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(FirebaseAuth.instance.currentUser!.uid)
-            .snapshots(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: Text(""));
-          }
-          if (!snapshot.hasData || snapshot.data == null) {
-            return Center(child: Text('No hay datos disponibles'));
-          }
-          var snap = snapshot.data;
-          return Scaffold(
-              body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: Text(""));
+            }
+            if (!snapshot.hasData || snapshot.data == null) {
+              return Center(child: Text('No hay datos disponibles'));
+            }
+            var snap = snapshot.data;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text("Solicitar a: ${widget.userName}"),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Qué necesitas",
-                    style: GoogleFonts.inter(
-                      color: colorBlack,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  child: TextFormField(
+                    controller: customerEmailController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: textColor,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          borderSide: BorderSide(
+                            color: textColor,
+                          )),
+                      border: InputBorder.none,
+                      hintText: "1000\€",
+                      hintStyle: GoogleFonts.nunitoSans(
+                        fontSize: 16,
+                        color: iconColor,
+                      ),
                     ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+                  child: DropdownButton(
+                    value: currencyType,
+                    isExpanded: true,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: currency.map((String currency) {
+                      return DropdownMenuItem(
+                        value: currency,
+                        child: Text(currency),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        currencyType = newValue!;
+                      });
+                    },
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    maxLength: 30,
                     controller: descriptionController,
                     maxLines: 4,
                     decoration: InputDecoration(
                       filled: true,
                       enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(28)),
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
                           borderSide: BorderSide(
                             color: textColor,
                           )),
                       contentPadding: EdgeInsets.all(8),
-                      fillColor: Color(0xffF5F4F8),
+                      fillColor: Color(0xffF6F7F9),
                       hintText: "Descripción",
                       hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                       border: InputBorder.none,
@@ -132,7 +159,8 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                     "providerName": widget.userName,
                                     "providerEmail": widget.userEmail,
                                     "providerImage": widget.userImage,
-                                    "price": int.parse(widget.price),
+                                    "price":
+                                        int.parse(customerEmailController.text),
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
@@ -141,6 +169,7 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],
                                     "clientImage": snap['image'],
+                                    "currencyType": currencyType
                                   });
                                   setState(() {
                                     isLoading = false;
@@ -157,8 +186,8 @@ class _HiringServiceCommentsState extends State<HiringServiceComments> {
                         ),
                       )
               ],
-            ),
-          ));
-        });
+            );
+          }),
+    );
   }
 }
