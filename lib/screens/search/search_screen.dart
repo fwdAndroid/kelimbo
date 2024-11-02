@@ -15,6 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   String _searchText = '';
+
   @override
   void initState() {
     super.initState();
@@ -45,12 +46,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   Expanded(
                     child: TextField(
                       controller: _searchController,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => SearchScreen()));
-                      },
                       decoration: InputDecoration(
                         hintText: '¿Como podemos ayudarte?',
                         border: InputBorder.none,
@@ -76,153 +71,167 @@ class _SearchScreenState extends State<SearchScreen> {
           SizedBox(
             height: 300,
             width: MediaQuery.of(context).size.width,
-            child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("services")
-                    .where("uid",
-                        isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  if (snapshot.data!.docs.isEmpty) {
-                    return Center(
-                      child: Text(
-                        "No hay servicio disponible",
-                        style: TextStyle(color: colorBlack),
-                      ),
-                    );
-                  }
+            child: _searchText.isEmpty
+                ? Center(
+                    child: Text(
+                      "Por favor ingresa un término de búsqueda",
+                      style: TextStyle(color: colorBlack),
+                    ),
+                  )
+                : StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("services")
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No hay servicio disponible",
+                            style: TextStyle(color: colorBlack),
+                          ),
+                        );
+                      }
 
-                  final filteredDocs = snapshot.data!.docs.where((doc) {
-                    final fullName = (doc.data()
-                        as Map<String, dynamic>)['description'] as String;
-                    return fullName.toLowerCase().contains(
-                        _searchText.toLowerCase()); // Convert both to lowercase
-                  }).toList();
+                      final filteredDocs = snapshot.data!.docs.where((doc) {
+                        final description = (doc.data()
+                            as Map<String, dynamic>)['description'] as String;
+                        return description
+                            .toLowerCase()
+                            .contains(_searchText.toLowerCase());
+                      }).toList();
 
-                  if (filteredDocs.isEmpty) {
-                    return Center(
-                      child: Text(
-                        "No se han encontrado resultados",
-                        style: TextStyle(
-                            color: const Color.fromARGB(255, 150, 146, 146)),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                      itemCount: filteredDocs.length,
-                      itemBuilder: (index, contrxt) {
-                        final Map<String, dynamic> data = filteredDocs[contrxt]
-                            .data() as Map<String, dynamic>;
-                        return Card(
-                          child: Column(
-                            children: [
-                              ListTile(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (builder) => HiringService(
-                                                userEmail: data['userEmail'],
-                                                userImage: data['userImage'],
-                                                userName: data['userName'],
-                                                category: data['category'],
-                                                totalReviews:
-                                                    data['totalReviews']
-                                                        .toString(),
-                                                uuid: data['uuid'],
-                                                uid: data['uid'],
-                                                totalRating: data['totalRate']
-                                                    .toString(),
-                                                title: data['title'],
-                                                price: data['price'].toString(),
-                                                perHrPrice: data['pricePerHr']
-                                                    .toString(),
-                                                photo: data['photo'],
-                                                description:
-                                                    data['description'],
-                                              )));
-                                },
-                                leading: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(data['userImage']),
-                                ),
-                                title: Text(
-                                  data['userName'],
-                                  style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                subtitle: Text(
-                                  data['category'],
-                                  style: GoogleFonts.inter(
-                                      color: Color(0xff9C9EA2),
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 15),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                      if (filteredDocs.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No se han encontrado resultados",
+                            style: TextStyle(
+                                color:
+                                    const Color.fromARGB(255, 150, 146, 146)),
+                          ),
+                        );
+                      }
+                      return ListView.builder(
+                          itemCount: filteredDocs.length,
+                          itemBuilder: (context, index) {
+                            final Map<String, dynamic> data =
+                                filteredDocs[index].data()
+                                    as Map<String, dynamic>;
+                            return Card(
+                              child: Column(
                                 children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "€" + data['price'].toString(),
-                                        style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
-                                      ),
-                                      Text(
-                                        data['priceType'],
-                                        style: GoogleFonts.inter(
-                                            color: Color(0xff9C9EA2),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 19),
-                                      ),
-                                    ],
+                                  ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  HiringService(
+                                                    userEmail:
+                                                        data['userEmail'],
+                                                    userImage:
+                                                        data['userImage'],
+                                                    userName: data['userName'],
+                                                    category: data['category'],
+                                                    totalReviews:
+                                                        data['totalReviews']
+                                                            .toString(),
+                                                    uuid: data['uuid'],
+                                                    uid: data['uid'],
+                                                    totalRating:
+                                                        data['totalRate']
+                                                            .toString(),
+                                                    title: data['title'],
+                                                    price: data['price']
+                                                        .toString(),
+                                                    perHrPrice:
+                                                        data['pricePerHr']
+                                                            .toString(),
+                                                    photo: data['photo'],
+                                                    description:
+                                                        data['description'],
+                                                  )));
+                                    },
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(data['userImage']),
+                                    ),
+                                    title: Text(
+                                      data['userName'],
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                    subtitle: Text(
+                                      data['category'],
+                                      style: GoogleFonts.inter(
+                                          color: Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 15),
+                                    ),
                                   ),
-                                  Image.asset(
-                                    "assets/line.png",
-                                    height: 40,
-                                    width: 52,
-                                  ),
-                                  Column(
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Row(
+                                      Column(
                                         children: [
-                                          Icon(
-                                            Icons.star,
-                                            color: yellow,
-                                          ),
                                           Text(
-                                            data['totalRate'].toString(),
+                                            "€" + data['price'].toString(),
                                             style: GoogleFonts.inter(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20),
                                           ),
+                                          Text(
+                                            data['priceType'],
+                                            style: GoogleFonts.inter(
+                                                color: Color(0xff9C9EA2),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 19),
+                                          ),
                                         ],
                                       ),
-                                      Text(
-                                        data['totalReviews'].toString() +
-                                            " Reviews",
-                                        style: GoogleFonts.inter(
-                                            color: Color(0xff9C9EA2),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 19),
+                                      Image.asset(
+                                        "assets/line.png",
+                                        height: 40,
+                                        width: 52,
                                       ),
+                                      Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                color: yellow,
+                                              ),
+                                              Text(
+                                                data['totalRate'].toString(),
+                                                style: GoogleFonts.inter(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 20),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            data['totalReviews'].toString() +
+                                                " Reviews",
+                                            style: GoogleFonts.inter(
+                                                color: Color(0xff9C9EA2),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 19),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   )
                                 ],
-                              )
-                            ],
-                          ),
-                        );
-                      });
-                }),
+                              ),
+                            );
+                          });
+                    }),
           ),
         ],
       ),
