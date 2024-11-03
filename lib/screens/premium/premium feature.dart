@@ -182,10 +182,10 @@ class _PremiumFeatureState extends State<PremiumFeature> {
           "BÁSICO (Gratis):",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        Text("- Puede publicar hasta 1 anuncio al año.."),
+        Text("- Puede publicar hasta 1 anuncio al año."),
         Text("- Los anuncios serán visibles."),
         Text(
-            "- en el básico pueden leer los mensajes que reciben, pero no pueden contestar "),
+            "- En el básico pueden leer los mensajes que reciben, pero no pueden contestar."),
         Text("- El acceso al botón Trabajo completado está inactivo."),
         Text(
             "- Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
@@ -201,7 +201,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
         Text(
             "- Puede ver y recibir valoraciones y comentarios de los usuarios."),
         Text(
-            "- El acceso al botón Trabajo completado está completamente habilitado'"),
+            "- El acceso al botón Trabajo completado está completamente habilitado"),
         Text(
             "- Puede proporcionar presupuestos y enviar respuestas detalladas a las solicitudes de servicios."),
       ],
