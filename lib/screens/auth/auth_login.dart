@@ -188,31 +188,37 @@ class _AuthLoginState extends State<AuthLogin> {
                     setState(() {
                       isGoogle = true;
                     });
+
                     User? user = FirebaseAuth.instance.currentUser;
 
-                    // Check if user data exists in Firestore
+                    if (user != null) {
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(user.uid)
+                            .set({
+                          "image": user.photoURL ?? "",
+                          "email": user.email,
+                          "fullName": user.displayName,
+                          "uid": user.uid,
+                          "password": "Auto Take Password",
+                          "confirmPassword": "Auto Take Password"
+                        });
 
-                    // If user data doesn't exist, store it
-
-                    // Set user data in Firestore
-                    await FirebaseFirestore.instance
-                        .collection("users")
-                        .doc(user?.uid)
-                        .set({
-                      "image": user?.photoURL?.toString(),
-                      "email": user?.email,
-                      "fullName": user?.displayName,
-                      "uid": user?.uid,
-                      "password": "Auto Take Password",
-                      "confrimPassword": "Auto Take Password"
-                    });
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainDashboard()),
+                        );
+                      } catch (e) {
+                        print("Error storing user data: $e");
+                      }
+                    } else {
+                      print("No user signed in.");
+                    }
 
                     setState(() {
                       isGoogle = false;
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => MainDashboard()));
                     });
                   });
                 },

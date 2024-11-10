@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
@@ -10,6 +11,8 @@ class LogoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       content: Column(
@@ -69,6 +72,7 @@ class LogoutWidget extends StatelessWidget {
               onPressed: () async {
                 // Sign out from Firebase
                 await FirebaseAuth.instance.signOut();
+                await _googleSignIn.signOut();
 
                 // Sign out from Google
 
