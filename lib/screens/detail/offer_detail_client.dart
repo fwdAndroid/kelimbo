@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/chat/messages.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
-import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
@@ -123,7 +121,7 @@ class _OfferDetailClientState extends State<OfferDetailClient> {
                   child: SizedBox(
                     width: 150,
                     child: SaveButton(
-                        title: "Aceptado",
+                        title: "Aceptar Cotización",
                         onTap: () async {
                           await FirebaseFirestore.instance
                               .collection("offers")
