@@ -193,18 +193,29 @@ class _AuthLoginState extends State<AuthLogin> {
 
                     if (user != null) {
                       try {
-                        await FirebaseFirestore.instance
+                        // Check if the user document already exists
+                        DocumentSnapshot userDoc = await FirebaseFirestore
+                            .instance
                             .collection("users")
                             .doc(user.uid)
-                            .set({
-                          "image": user.photoURL ?? "",
-                          "email": user.email,
-                          "fullName": user.displayName,
-                          "uid": user.uid,
-                          "password": "Auto Take Password",
-                          "confirmPassword": "Auto Take Password"
-                        });
+                            .get();
 
+                        if (!userDoc.exists) {
+                          // If it doesn't exist, create a new user document
+                          await FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(user.uid)
+                              .set({
+                            "image": user.photoURL ?? "",
+                            "email": user.email,
+                            "fullName": user.displayName,
+                            "uid": user.uid,
+                            "password": "Auto Take Password",
+                            "confirmPassword": "Auto Take Password"
+                          });
+                        }
+
+                        // Navigate to MainDashboard regardless of document existence
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -225,6 +236,7 @@ class _AuthLoginState extends State<AuthLogin> {
                 mini: true,
                 buttonType: ButtonType.google,
               ),
+
               // const SizedBox(
               //   width: 20,
               // ),
