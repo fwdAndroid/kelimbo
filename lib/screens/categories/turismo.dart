@@ -56,6 +56,7 @@ class _TurismoState extends State<Turismo> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (builder) => HiringService(
+                                          currencyType: data['currency'],
                                           userEmail: data['userEmail'],
                                           userImage: data['userImage'],
                                           userName: data['userName'],

@@ -64,6 +64,7 @@ class _VehiclescatState extends State<Vehiclescat> {
                                               data['totalReviews'].toString(),
                                           uuid: data['uuid'],
                                           uid: data['uid'],
+                                          currencyType: data['currency'],
                                           totalRating:
                                               data['totalRate'].toString(),
                                           title: data['title'],

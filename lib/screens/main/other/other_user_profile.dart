@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:kelimbo/screens/services/service_description.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class OtherUserProfile extends StatefulWidget {
@@ -94,6 +93,8 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) => HiringService(
+                                                  currencyType:
+                                                      data['currency'],
                                                   totalReviews:
                                                       data['totalReviews']
                                                           .toString(),

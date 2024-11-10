@@ -8,7 +8,7 @@ import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
 
-class OfferDetail extends StatefulWidget {
+class OfferDetailClient extends StatefulWidget {
   final providerEmail,
       providerImage,
       providerName,
@@ -23,7 +23,7 @@ class OfferDetail extends StatefulWidget {
   final totalRating;
   final clientEmail, clientId, clientImage, clientName;
 
-  OfferDetail(
+  OfferDetailClient(
       {super.key,
       required this.price,
       required this.priceprehr,
@@ -43,10 +43,10 @@ class OfferDetail extends StatefulWidget {
       required this.work});
 
   @override
-  State<OfferDetail> createState() => _OfferDetailState();
+  State<OfferDetailClient> createState() => _OfferDetailClientState();
 }
 
-class _OfferDetailState extends State<OfferDetail> {
+class _OfferDetailClientState extends State<OfferDetailClient> {
   TextEditingController customerPassController = TextEditingController();
   var chatId = Uuid().v4();
   @override
@@ -112,45 +112,6 @@ class _OfferDetailState extends State<OfferDetail> {
                     fontSize: 18, fontWeight: FontWeight.w400),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              controller: customerPassController,
-              decoration: InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(22)),
-                    borderSide: BorderSide(
-                      color: textColor,
-                    )),
-                border: InputBorder.none,
-                filled: true,
-                fillColor: textColor,
-                hintText: "Introducir precio",
-                hintStyle: GoogleFonts.nunitoSans(
-                  fontSize: 16,
-                  color: iconColor,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SaveButton(
-                title: "Enviar nueva cotización",
-                onTap: () async {
-                  await FirebaseFirestore.instance
-                      .collection("offers")
-                      .doc(widget.uuid)
-                      .update({
-                    "status": "newQuote",
-                    "price": int.parse(customerPassController.text)
-                  });
-                  showMessageBar("Enviar nueva cotización", context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => MainDashboard()));
-                }),
           ),
           Spacer(),
           Row(

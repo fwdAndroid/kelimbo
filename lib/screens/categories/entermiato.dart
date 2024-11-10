@@ -56,6 +56,7 @@ class _EntermiatoState extends State<Entermiato> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (builder) => HiringService(
+                                          currencyType: data['currency'],
                                           userEmail: data['userEmail'],
                                           userImage: data['userImage'],
                                           userName: data['userName'],

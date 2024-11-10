@@ -18,17 +18,21 @@ class HiringPrice extends StatefulWidget {
   final uuid;
   final category;
   final uid;
+  final price;
   final userEmail;
   final userName;
   final userImage;
+  final currencyType;
   HiringPrice(
       {super.key,
       required this.description,
       required this.perHrPrice,
       required this.title,
       required this.userEmail,
+      required this.price,
       required this.userImage,
       required this.userName,
+      required this.currencyType,
       required this.category,
       required this.photo,
       required this.totalRating,
@@ -41,10 +45,7 @@ class HiringPrice extends StatefulWidget {
 }
 
 class _HiringPriceState extends State<HiringPrice> {
-  TextEditingController customerEmailController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
-  String currencyType = "Euro";
   bool isLoading = false;
   var uuid = Uuid().v4();
   @override
@@ -68,47 +69,6 @@ class _HiringPriceState extends State<HiringPrice> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Solicitar a: ${widget.userName}"),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: customerEmailController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: textColor,
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(22)),
-                          borderSide: BorderSide(
-                            color: textColor,
-                          )),
-                      border: InputBorder.none,
-                      hintText: "1000\€",
-                      hintStyle: GoogleFonts.nunitoSans(
-                        fontSize: 16,
-                        color: iconColor,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
-                  child: DropdownButton(
-                    value: currencyType,
-                    isExpanded: true,
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    items: currency.map((String currency) {
-                      return DropdownMenuItem(
-                        value: currency,
-                        child: Text(currency),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        currencyType = newValue!;
-                      });
-                    },
-                  ),
-                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
@@ -156,11 +116,9 @@ class _HiringPriceState extends State<HiringPrice> {
                                         FirebaseAuth.instance.currentUser!.uid,
                                     "serviceProviderId": widget.uid,
                                     "status": "send",
+                                    "price": int.parse(widget.price),
                                     "providerName": widget.userName,
                                     "providerEmail": widget.userEmail,
-                                    "providerImage": widget.userImage,
-                                    "price":
-                                        int.parse(customerEmailController.text),
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
@@ -169,7 +127,7 @@ class _HiringPriceState extends State<HiringPrice> {
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],
                                     "clientImage": snap['image'],
-                                    "currencyType": currencyType
+                                    "currencyType": widget.currencyType
                                   });
                                   setState(() {
                                     isLoading = false;

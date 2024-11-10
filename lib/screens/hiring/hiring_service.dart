@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 
 class HiringService extends StatefulWidget {
   final title;
+  final currencyType;
   final description;
   final price;
   final perHrPrice;
@@ -34,6 +35,7 @@ class HiringService extends StatefulWidget {
       required this.photo,
       required this.totalRating,
       required this.uid,
+      required this.currencyType,
       required this.uuid,
       required this.totalReviews});
 
@@ -163,6 +165,8 @@ class _HiringServiceState extends State<HiringService> {
                               context,
                               MaterialPageRoute(
                                   builder: (builder) => HiringPrice(
+                                        price: widget.price.toString(),
+                                        currencyType: widget.currencyType,
                                         userEmail: widget.userEmail,
                                         userImage: widget.userImage,
                                         userName: widget.userName,
