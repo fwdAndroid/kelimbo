@@ -4,9 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'package:uuid/uuid.dart';
 
-class OfferDetailClient extends StatefulWidget {
+class JobsAwardedToMeDetail extends StatefulWidget {
   final providerEmail,
       providerImage,
       providerName,
@@ -20,8 +19,7 @@ class OfferDetailClient extends StatefulWidget {
   final priceprehr;
   final totalRating;
   final clientEmail, clientId, clientImage, clientName;
-
-  OfferDetailClient(
+  const JobsAwardedToMeDetail(
       {super.key,
       required this.price,
       required this.priceprehr,
@@ -41,12 +39,10 @@ class OfferDetailClient extends StatefulWidget {
       required this.work});
 
   @override
-  State<OfferDetailClient> createState() => _OfferDetailClientState();
+  State<JobsAwardedToMeDetail> createState() => _JobsAwardedToMeDetailState();
 }
 
-class _OfferDetailClientState extends State<OfferDetailClient> {
-  TextEditingController customerPassController = TextEditingController();
-  var chatId = Uuid().v4();
+class _JobsAwardedToMeDetailState extends State<JobsAwardedToMeDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,17 +74,21 @@ class _OfferDetailClientState extends State<OfferDetailClient> {
           ),
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(widget.providerImage),
+              backgroundImage: NetworkImage(widget.clientImage),
             ),
             title: Text(
-              widget.providerName,
+              widget.clientName,
               style:
                   GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
             ),
-            subtitle: Text(
-              widget.serviceTitle,
-              style:
-                  GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w400),
+            subtitle: Row(
+              children: [
+                Text(
+                  widget.serviceTitle,
+                  style: GoogleFonts.inter(
+                      fontSize: 18, fontWeight: FontWeight.w400),
+                ),
+              ],
             ),
           ),
           Padding(
@@ -112,49 +112,18 @@ class _OfferDetailClientState extends State<OfferDetailClient> {
             ),
           ),
           Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: SizedBox(
-                    width: 150,
-                    child: SaveButton(
-                        title: "Aceptar Cotización",
-                        onTap: () async {
-                          await FirebaseFirestore.instance
-                              .collection("offers")
-                              .doc(widget.uuid)
-                              .update({"status": "start"});
-                          showMessageBar("Se acepta la oferta", context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (builder) => MainDashboard()));
-                        }),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: TextButton(
-                      child: Text("Cancelar"),
-                      onPressed: () async {
-                        await FirebaseFirestore.instance
-                            .collection("offers")
-                            .doc(widget.uuid)
-                            .update({"status": "cancel"});
-                        showMessageBar("La oferta está cancelada", context);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => MainDashboard()));
-                      }),
-                ),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: SaveButton(
+                  title: "Panel de control en Go",
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => MainDashboard()));
+                  }),
+            ),
           )
         ],
       ),

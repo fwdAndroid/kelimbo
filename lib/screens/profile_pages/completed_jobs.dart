@@ -79,7 +79,7 @@ class _CompletedJobsState extends State<CompletedJobs> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("offers")
-                      .where("clientId",
+                      .where("serviceProviderId",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                       .where("status", isEqualTo: "complete")
                       .snapshots(),

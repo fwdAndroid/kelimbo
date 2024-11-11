@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/detail/jobs_awarded_to_me_detail.dart';
 import 'package:kelimbo/screens/detail/jobs_budgeted_detail.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -119,7 +120,7 @@ class _JobsAwardedToMeState extends State<JobsAwardedToMe> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) =>
-                                                JobsBudgetedDetail(
+                                                JobsAwardedToMeDetail(
                                                   clientName:
                                                       data['clientName'],
                                                   clientEmail:
@@ -154,10 +155,10 @@ class _JobsAwardedToMeState extends State<JobsAwardedToMe> {
                                   },
                                   leading: CircleAvatar(
                                     backgroundImage:
-                                        NetworkImage(data['providerImage']),
+                                        NetworkImage(data['clientImage']),
                                   ),
                                   title: Text(
-                                    data['providerName'],
+                                    data['clientName'],
                                     style: GoogleFonts.inter(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16),

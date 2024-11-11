@@ -119,6 +119,7 @@ class _HiringPriceState extends State<HiringPrice> {
                                     "price": int.parse(widget.price),
                                     "providerName": widget.userName,
                                     "providerEmail": widget.userEmail,
+                                    "providerImage": widget.userImage,
                                     "priceprehr": int.parse(widget.perHrPrice),
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
