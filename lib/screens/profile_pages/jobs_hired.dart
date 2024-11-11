@@ -120,7 +120,7 @@ class _JobsHiredState extends State<JobsHired> {
                                         MaterialPageRoute(
                                             builder: (builder) =>
                                                 JobsBudgetedDetail(
-                                                  serviceId: data['uuid'],
+                                                  serviceId: data['serviceId'],
                                                   clientName:
                                                       data['clientName'],
                                                   clientEmail:

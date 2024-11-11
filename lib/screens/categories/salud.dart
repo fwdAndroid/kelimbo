@@ -126,7 +126,7 @@ class _SaludState extends State<Salud> {
                                       color: yellow,
                                     ),
                                     Text(
-                                      data['totalRate'].toString(),
+                                      data['totalReviews'].toString(),
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
@@ -134,7 +134,7 @@ class _SaludState extends State<Salud> {
                                   ],
                                 ),
                                 Text(
-                                  data['totalReviews'].toString() + " Reviews",
+                                  data['ratingCount'].toString() + " Reviews",
                                   style: GoogleFonts.inter(
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.bold,

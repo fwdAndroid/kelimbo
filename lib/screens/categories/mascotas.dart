@@ -127,7 +127,7 @@ class _MascotasState extends State<Mascotas> {
                                       color: yellow,
                                     ),
                                     Text(
-                                      data['totalRate'].toString(),
+                                      data['totalReviews'].toString(),
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 20),
@@ -135,7 +135,7 @@ class _MascotasState extends State<Mascotas> {
                                   ],
                                 ),
                                 Text(
-                                  data['totalReviews'].toString() + " Reviews",
+                                  data['ratingCount'].toString() + " Reviews",
                                   style: GoogleFonts.inter(
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.bold,

@@ -173,7 +173,7 @@ class _FavouritePageState extends State<FavouritePage> {
                                           color: yellow,
                                         ),
                                         Text(
-                                          "${data['totalRate'] ?? '0.0'}",
+                                          "${data['totalReviews'] ?? '0.0'}",
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -181,7 +181,7 @@ class _FavouritePageState extends State<FavouritePage> {
                                       ],
                                     ),
                                     Text(
-                                      "${data['reviewCount'] ?? '0'} Reviews",
+                                      "${data['ratingCount'] ?? '0'} Reviews",
                                       style: GoogleFonts.inter(
                                           color: Color(0xff9C9EA2),
                                           fontWeight: FontWeight.bold,

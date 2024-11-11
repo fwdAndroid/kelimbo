@@ -18,11 +18,13 @@ class ServiceModel {
   String userEmail;
   String currency;
   String priceType;
+  int ratingCount;
 
   ServiceModel(
       {required this.uid,
       required this.title,
       required this.price,
+      required this.ratingCount,
       required this.pricePerHr,
       required this.description,
       required this.photo,
@@ -52,6 +54,7 @@ class ServiceModel {
         'favorite': favorite,
         'currency': currency,
         'priceType': priceType,
+        'ratingCount': ratingCount,
         'uuid': uuid,
         'totalRate': totalRate, // Include in toJson
         'totalReviews': totalReviews, // Include in toJson
@@ -67,6 +70,7 @@ class ServiceModel {
         currency: snapshot['currency'],
         favorite: snapshot['favorite'],
         title: snapshot['title'],
+        ratingCount: snapshot['ratingCount'],
         description: snapshot['description'],
         price: snapshot['price'],
         userName: snapshot['userName'],

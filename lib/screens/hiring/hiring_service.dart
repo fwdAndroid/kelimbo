@@ -89,7 +89,7 @@ class _HiringServiceState extends State<HiringService> {
                         color: Colors.yellow,
                       ),
                       Text(
-                        widget.totalRating.toString(),
+                        widget.totalReviews.toString(),
                         style: GoogleFonts.inter(
                             fontWeight: FontWeight.bold,
                             fontSize: 19,

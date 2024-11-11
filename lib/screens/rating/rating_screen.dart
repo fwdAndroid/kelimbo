@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -94,11 +95,49 @@ class _RatingScreenState extends State<RatingScreen> {
             ),
           ),
           SaveButton(
-              title: "Give",
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => MainDashboard()));
-              })
+            title: "Submit Rating",
+            onTap: () async {
+              try {
+                // Reference to the specific service document
+                DocumentReference serviceDocRef = FirebaseFirestore.instance
+                    .collection("services")
+                    .doc(widget.serviceId);
+
+                // Retrieve the current rating data from the document
+                DocumentSnapshot docSnapshot = await serviceDocRef.get();
+                if (docSnapshot.exists) {
+                  int currentTotalRate = docSnapshot['totalRate'] ?? 0;
+                  int ratingCount = docSnapshot['ratingCount'] ?? 0;
+
+                  // Convert the rating to an integer, if necessary
+                  int intRating = rating.toInt();
+
+                  // Add new rating to the total rate and increment the rating count
+                  int newTotalRate = currentTotalRate + intRating;
+                  int newRatingCount = ratingCount + 1;
+
+                  // Calculate the new average rating (as a double for precision)
+                  double newAverageRating = newTotalRate / newRatingCount;
+
+                  // Update Firestore with new total rate, rating count, and average rating
+                  await serviceDocRef.update({
+                    "totalRate": newTotalRate,
+                    "ratingCount": newRatingCount,
+                    "totalReviews":
+                        newAverageRating, // store as double for precision
+                  });
+
+                  // Navigate to the main dashboard or show a success message
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => MainDashboard()));
+                } else {
+                  print("Service document does not exist.");
+                }
+              } catch (e) {
+                print("Error updating rating: $e");
+              }
+            },
+          ),
         ],
       ),
     );

@@ -396,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                                                     color: yellow,
                                                   ),
                                                   Text(
-                                                    data['totalRate']
+                                                    data['totalReviews']
                                                         .toString(),
                                                     style: GoogleFonts.inter(
                                                         fontWeight:
@@ -616,7 +616,7 @@ class _HomePageState extends State<HomePage> {
                                                       color: yellow,
                                                     ),
                                                     Text(
-                                                      data['totalRate']
+                                                      data['totalReviews']
                                                           .toString(),
                                                       style: GoogleFonts.inter(
                                                           fontWeight:
@@ -626,7 +626,7 @@ class _HomePageState extends State<HomePage> {
                                                   ],
                                                 ),
                                                 Text(
-                                                  data['totalReviews']
+                                                  data['ratingCount']
                                                           .toString() +
                                                       " Reviews",
                                                   style: GoogleFonts.inter(

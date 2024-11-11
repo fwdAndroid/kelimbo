@@ -57,6 +57,7 @@ class Database {
           userName: userName,
           totalRate: 0,
           totalReviews: 0,
+          ratingCount: 0,
           reviews: {},
           favorite: [],
           pricePerHr: pricePerHer,

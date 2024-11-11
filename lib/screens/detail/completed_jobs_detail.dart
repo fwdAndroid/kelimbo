@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/detail/service_rate.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class JobsCompletedDetail extends StatefulWidget {
@@ -113,12 +112,7 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
-              child: SaveButton(
-                  title: "Tasa",
-                  onTap: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => ServiceRate()));
-                  }),
+              child: SaveButton(title: "Tasa", onTap: () async {}),
             ),
           )
         ],
