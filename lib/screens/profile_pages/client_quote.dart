@@ -78,7 +78,7 @@ class _ClientQuoteState extends State<ClientQuote> {
               child: StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection("offers")
-                      .where("serviceProviderId",
+                      .where("clientId",
                           isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                       .where("status", isEqualTo: "newQuote")
                       .snapshots(),

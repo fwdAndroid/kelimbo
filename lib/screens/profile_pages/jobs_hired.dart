@@ -153,8 +153,8 @@ class _JobsHiredState extends State<JobsHired> {
                                                 )));
                                   },
                                   leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(data['providerImage']),
+                                    backgroundImage: NetworkImage(
+                                        data['providerImage'] ?? ""),
                                   ),
                                   title: Text(
                                     data['providerName'],
