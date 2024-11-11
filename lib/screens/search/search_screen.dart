@@ -134,6 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                         data['currency'],
                                                     userEmail:
                                                         data['userEmail'],
+                                                    serviceId: data['uuid'],
                                                     userImage:
                                                         data['userImage'],
                                                     userName: data['userName'],

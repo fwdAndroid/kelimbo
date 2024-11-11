@@ -19,6 +19,7 @@ class OfferDetailClient extends StatefulWidget {
   final price;
   final priceprehr;
   final totalRating;
+  final serviceId;
   final clientEmail, clientId, clientImage, clientName;
 
   OfferDetailClient(
@@ -28,6 +29,7 @@ class OfferDetailClient extends StatefulWidget {
       required this.providerEmail,
       required this.clientName,
       required this.providerImage,
+      required this.serviceId,
       required this.providerName,
       required this.serviceDescription,
       required this.serviceProviderId,

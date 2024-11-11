@@ -125,6 +125,7 @@ class _ClientQuoteState extends State<ClientQuote> {
                                                   clientEmail:
                                                       data['clientEmail'],
                                                   clientId: data['clientId'],
+                                                  serviceId: data['serviceId'],
                                                   clientImage:
                                                       data['clientImage'],
                                                   status: data['status'],

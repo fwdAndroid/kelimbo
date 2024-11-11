@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/screens/rating/rating_screen.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
@@ -15,6 +15,7 @@ class JobsBudgetedDetail extends StatefulWidget {
       status,
       uuid,
       work;
+  final serviceId;
   final price;
   final priceprehr;
   final totalRating;
@@ -32,6 +33,7 @@ class JobsBudgetedDetail extends StatefulWidget {
       required this.serviceTitle,
       required this.clientEmail,
       required this.clientId,
+      required this.serviceId,
       required this.clientImage,
       required this.status,
       required this.totalRating,
@@ -74,10 +76,10 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
           ),
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(widget.clientImage),
+              backgroundImage: NetworkImage(widget.providerImage),
             ),
             title: Text(
-              widget.clientName,
+              widget.providerName,
               style:
                   GoogleFonts.inter(fontSize: 20, fontWeight: FontWeight.w700),
             ),
@@ -127,7 +129,15 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => MainDashboard()));
+                            builder: (builder) => RatingScreen(
+                                  providerId: widget.serviceProviderId,
+                                  jobid: widget.uuid,
+                                  clientId: widget.clientId,
+                                  clientImage: widget.clientImage,
+                                  clientName: widget.clientName,
+                                  rating: widget.totalRating,
+                                  serviceId: widget.serviceId,
+                                )));
                   }),
             ),
           )

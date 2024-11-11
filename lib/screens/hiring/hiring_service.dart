@@ -12,6 +12,7 @@ class HiringService extends StatefulWidget {
   final currencyType;
   final description;
   final price;
+  final serviceId;
   final perHrPrice;
   final totalReviews;
   final totalRating;
@@ -27,6 +28,7 @@ class HiringService extends StatefulWidget {
       required this.description,
       required this.perHrPrice,
       required this.price,
+      required this.serviceId,
       required this.title,
       required this.userEmail,
       required this.userImage,
@@ -165,6 +167,7 @@ class _HiringServiceState extends State<HiringService> {
                               context,
                               MaterialPageRoute(
                                   builder: (builder) => HiringPrice(
+                                        serviceId: widget.serviceId,
                                         price: widget.price.toString(),
                                         currencyType: widget.currencyType,
                                         userEmail: widget.userEmail,

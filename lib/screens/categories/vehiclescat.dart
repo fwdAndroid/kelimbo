@@ -72,6 +72,7 @@ class _VehiclescatState extends State<Vehiclescat> {
                                           perHrPrice:
                                               data['pricePerHr'].toString(),
                                           photo: data['photo'],
+                                          serviceId: data['uuid'],
                                           description: data['description'],
                                         )));
                           },

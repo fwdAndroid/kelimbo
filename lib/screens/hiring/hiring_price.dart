@@ -22,6 +22,7 @@ class HiringPrice extends StatefulWidget {
   final userEmail;
   final userName;
   final userImage;
+  final serviceId;
   final currencyType;
   HiringPrice(
       {super.key,
@@ -34,6 +35,7 @@ class HiringPrice extends StatefulWidget {
       required this.userName,
       required this.currencyType,
       required this.category,
+      required this.serviceId,
       required this.photo,
       required this.totalRating,
       required this.uid,
@@ -124,6 +126,7 @@ class _HiringPriceState extends State<HiringPrice> {
                                     "serviceDescription": widget.description,
                                     "serviceTitle": widget.title,
                                     "rating": widget.totalRating,
+                                    "serviceId": widget.serviceId,
                                     "uuid": uuid,
                                     "clientEmail": snap['email'],
                                     "clientName": snap['fullName'],

@@ -68,6 +68,7 @@ class _SaludState extends State<Salud> {
                                           totalRating:
                                               data['totalRate'].toString(),
                                           title: data['title'],
+                                          serviceId: data['uuid'],
                                           price: data['price'].toString(),
                                           perHrPrice:
                                               data['pricePerHr'].toString(),

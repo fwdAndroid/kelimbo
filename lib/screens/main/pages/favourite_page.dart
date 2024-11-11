@@ -63,6 +63,7 @@ class _FavouritePageState extends State<FavouritePage> {
                               totalRating: data['totalRate'].toString(),
                               title: data['title'],
                               price: data['price'].toString(),
+                              serviceId: data['uuid'],
                               perHrPrice: data['pricePerHr'].toString(),
                               photo: data['photo'],
                               description: data['description'],

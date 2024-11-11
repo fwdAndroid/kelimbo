@@ -71,6 +71,7 @@ class _HogarClassState extends State<HogarClass>
                                 context,
                                 MaterialPageRoute(
                                     builder: (builder) => HiringService(
+                                          serviceId: data['uuid'],
                                           currencyType: data['currency'],
                                           userEmail: data['userEmail'],
                                           userImage: data['userImage'],

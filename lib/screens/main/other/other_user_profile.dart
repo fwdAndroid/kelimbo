@@ -95,6 +95,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                             builder: (builder) => HiringService(
                                                   currencyType:
                                                       data['currency'],
+                                                  serviceId: data['uuid'],
                                                   totalReviews:
                                                       data['totalReviews']
                                                           .toString(),

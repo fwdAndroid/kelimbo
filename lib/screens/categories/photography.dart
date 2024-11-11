@@ -64,6 +64,7 @@ class _PhotographyState extends State<Photography> {
                                           totalReviews:
                                               data['totalReviews'].toString(),
                                           uuid: data['uuid'],
+                                          serviceId: data['uuid'],
                                           uid: data['uid'],
                                           totalRating:
                                               data['totalRate'].toString(),

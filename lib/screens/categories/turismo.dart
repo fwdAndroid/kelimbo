@@ -58,6 +58,7 @@ class _TurismoState extends State<Turismo> {
                                     builder: (builder) => HiringService(
                                           currencyType: data['currency'],
                                           userEmail: data['userEmail'],
+                                          serviceId: data['uuid'],
                                           userImage: data['userImage'],
                                           userName: data['userName'],
                                           category: data['category'],
