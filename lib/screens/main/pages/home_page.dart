@@ -44,43 +44,8 @@ class _HomePageState extends State<HomePage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    PopupMenuButton<int>(
-                      itemBuilder: (context) => [
-                        // popupmenu item 1
-                        PopupMenuItem(
-                          value: 1,
-                          // row has two child icon and text.
-                          child: Row(
-                            children: [
-                              Icon(Icons.star),
-                              SizedBox(
-                                // sized box with width 10
-                                width: 10,
-                              ),
-                              Text("Get The App")
-                            ],
-                          ),
-                        ),
-                        // popupmenu item 2
-                        PopupMenuItem(
-                          value: 2,
-                          // row has two child icon and text
-                          child: Row(
-                            children: [
-                              Icon(Icons.chrome_reader_mode),
-                              SizedBox(
-                                // sized box with width 10
-                                width: 10,
-                              ),
-                              Text("About")
-                            ],
-                          ),
-                        ),
-                      ],
-                      offset: Offset(0, 100),
-                      color: Colors.grey,
-                      elevation: 2,
-                    );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (builder) => Filters()));
                   },
                   child: Align(
                     alignment: AlignmentDirectional.topEnd,
