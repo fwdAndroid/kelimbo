@@ -172,7 +172,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                               color: yellow,
                                             ),
                                             Text(
-                                              data['totalRate'].toString(),
+                                              data['totalReviews'].toString(),
                                               style: GoogleFonts.inter(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
@@ -180,7 +180,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                           ],
                                         ),
                                         Text(
-                                          data['totalReviews'].toString() +
+                                          data['ratingCount'].toString() +
                                               " Reviews",
                                           style: GoogleFonts.inter(
                                               color: Color(0xff9C9EA2),

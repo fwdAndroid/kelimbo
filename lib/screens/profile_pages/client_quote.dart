@@ -103,86 +103,80 @@ class _ClientQuoteState extends State<ClientQuote> {
                               snapshot.data!.docs;
                           final Map<String, dynamic> data =
                               documents[index].data() as Map<String, dynamic>;
-                          return Card(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  trailing: Text(
-                                    "€" + data['price'].toString(),
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => OfferDetailClient(
+                                            clientName: data['clientName'],
+                                            clientEmail: data['clientEmail'],
+                                            clientId: data['clientId'],
+                                            serviceId: data['serviceId'],
+                                            clientImage: data['clientImage'],
+                                            status: data['status'],
+                                            totalRating:
+                                                data['totalRating'].toString(),
+                                            providerEmail:
+                                                data['providerEmail'],
+                                            providerImage:
+                                                data['providerImage'],
+                                            providerName: data['providerName'],
+                                            priceprehr: data['pricePerHr']
+                                                .toString()
+                                                .toString(),
+                                            work: data['work'],
+                                            serviceDescription:
+                                                data['serviceDescription'],
+                                            price: data['price'].toString(),
+                                            serviceProviderId:
+                                                data['serviceProviderId'],
+                                            uuid: data['uuid'],
+                                            serviceTitle: data['serviceTitle'],
+                                          )));
+                            },
+                            child: Card(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    trailing: Text(
+                                      "€" + data['price'].toString(),
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(data['providerImage']),
+                                    ),
+                                    title: Text(
+                                      data['providerName'],
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
                                   ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (builder) =>
-                                                OfferDetailClient(
-                                                  clientName:
-                                                      data['clientName'],
-                                                  clientEmail:
-                                                      data['clientEmail'],
-                                                  clientId: data['clientId'],
-                                                  serviceId: data['serviceId'],
-                                                  clientImage:
-                                                      data['clientImage'],
-                                                  status: data['status'],
-                                                  totalRating:
-                                                      data['totalRating']
-                                                          .toString(),
-                                                  providerEmail:
-                                                      data['providerEmail'],
-                                                  providerImage:
-                                                      data['providerImage'],
-                                                  providerName:
-                                                      data['providerName'],
-                                                  priceprehr: data['pricePerHr']
-                                                      .toString()
-                                                      .toString(),
-                                                  work: data['work'],
-                                                  serviceDescription: data[
-                                                      'serviceDescription'],
-                                                  price:
-                                                      data['price'].toString(),
-                                                  serviceProviderId:
-                                                      data['serviceProviderId'],
-                                                  uuid: data['uuid'],
-                                                  serviceTitle:
-                                                      data['serviceTitle'],
-                                                )));
-                                  },
-                                  leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(data['providerImage']),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      "Descripciones de puestos de trabajo",
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
                                   ),
-                                  title: Text(
-                                    data['providerName'],
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      data['work'],
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                    ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Descripciones de puestos de trabajo",
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    data['work'],
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 13),
-                                  ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           );
                         });

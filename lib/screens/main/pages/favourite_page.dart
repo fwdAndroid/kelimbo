@@ -85,113 +85,112 @@ class _FavouritePageState extends State<FavouritePage> {
                           return Center(child: Text('No data available'));
                         }
                         var snap = snapshot.data;
-                        return Column(
-                          children: [
-                            ListTile(
-                              leading: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (builder) =>
-                                              OtherUserProfile(
-                                                  customerEmail:
-                                                      data['userEmail'],
-                                                  customerName:
-                                                      data['userName'],
-                                                  customerPhoto:
-                                                      data['userImage'],
-                                                  userEmail: snap?['email'],
-                                                  userName: snap?['fullName'],
-                                                  userImage: snap?['image'],
-                                                  uid: data['uid'])));
-                                },
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      data['photo'] ?? "assets/logo.png"),
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => OtherUserProfile(
+                                        customerEmail: data['userEmail'],
+                                        customerName: data['userName'],
+                                        customerPhoto: data['userImage'],
+                                        userEmail: snap?['email'],
+                                        userName: snap?['fullName'],
+                                        userImage: snap?['image'],
+                                        uid: data['uid'])));
+                          },
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: GestureDetector(
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        data['photo'] ?? "assets/logo.png"),
+                                  ),
+                                ),
+                                title: Text(
+                                  data['title'] ?? "No Title",
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                subtitle: Text(
+                                  data['category'] ?? "No Subtitle",
+                                  style: GoogleFonts.inter(
+                                      color: Color(0xff9C9EA2),
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 15),
+                                ),
+                                trailing: GestureDetector(
+                                  onTap: () async {
+                                    final docRef = FirebaseFirestore.instance
+                                        .collection("services")
+                                        .doc(data['uuid']);
+                                    await docRef.update({
+                                      "favorite": FieldValue.arrayRemove(
+                                          [currentUserId])
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.favorite,
+                                    color: red,
+                                  ),
                                 ),
                               ),
-                              title: Text(
-                                data['title'] ?? "No Title",
-                                style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              subtitle: Text(
-                                data['category'] ?? "No Subtitle",
-                                style: GoogleFonts.inter(
-                                    color: Color(0xff9C9EA2),
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 15),
-                              ),
-                              trailing: GestureDetector(
-                                onTap: () async {
-                                  final docRef = FirebaseFirestore.instance
-                                      .collection("services")
-                                      .doc(data['uuid']);
-                                  await docRef.update({
-                                    "favorite":
-                                        FieldValue.arrayRemove([currentUserId])
-                                  });
-                                },
-                                child: Icon(
-                                  Icons.favorite,
-                                  color: red,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "€${data['price'] ?? '0.0'}",
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                    Text(
-                                      "Price",
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19),
-                                    ),
-                                  ],
-                                ),
-                                Image.asset(
-                                  "assets/line.png",
-                                  height: 40,
-                                  width: 52,
-                                ),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: yellow,
-                                        ),
-                                        Text(
-                                          "${data['totalReviews'] ?? '0.0'}",
-                                          style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${data['ratingCount'] ?? '0'} Reviews",
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "€${data['price'] ?? '0.0'}",
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      Text(
+                                        "Price",
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xff9C9EA2),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19),
+                                      ),
+                                    ],
+                                  ),
+                                  Image.asset(
+                                    "assets/line.png",
+                                    height: 40,
+                                    width: 52,
+                                  ),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: yellow,
+                                          ),
+                                          Text(
+                                            "${data['totalReviews'] ?? '0.0'}",
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "${data['ratingCount'] ?? '0'} Reviews",
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xff9C9EA2),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         );
                       }),
                 ),

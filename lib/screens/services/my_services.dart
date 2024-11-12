@@ -42,96 +42,98 @@ class _MyServicesState extends State<MyServices> {
                   final List<DocumentSnapshot> documents = snapshot.data!.docs;
                   final Map<String, dynamic> data =
                       documents[index].data() as Map<String, dynamic>;
-                  return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => ServiceDescription(
-                                          photo: data['photo'],
-                                          perpriceHr:
-                                              data['pricePerHr'].toString(),
-                                          description: data['description'],
-                                          price: data['price'].toString(),
-                                          title: data['title'],
-                                          uuid: data['uuid'],
-                                          category: data['category'],
-                                        )));
-                          },
-                          leading: data['photo'] == ""
-                              ? CircleAvatar()
-                              : CircleAvatar(
-                                  backgroundImage: NetworkImage(data['photo']),
-                                ),
-                          title: Text(
-                            data['title'],
-                            style: GoogleFonts.inter(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          subtitle: Text(
-                            data['description'],
-                            style: GoogleFonts.inter(
-                                color: Color(0xff9C9EA2),
-                                fontWeight: FontWeight.w300,
-                                fontSize: 15),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  "€" + data['price'].toString(),
-                                  style: GoogleFonts.inter(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                Text(
-                                  data['priceType'],
-                                  style: GoogleFonts.inter(
-                                      color: Color(0xff9C9EA2),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 19),
-                                ),
-                              ],
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => ServiceDescription(
+                                    photo: data['photo'],
+                                    perpriceHr: data['pricePerHr'].toString(),
+                                    description: data['description'],
+                                    price: data['price'].toString(),
+                                    title: data['title'],
+                                    uuid: data['uuid'],
+                                    category: data['category'],
+                                  )));
+                    },
+                    child: Card(
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: data['photo'] == ""
+                                ? CircleAvatar()
+                                : CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(data['photo']),
+                                  ),
+                            title: Text(
+                              data['title'],
+                              style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                            Image.asset(
-                              "assets/line.png",
-                              height: 40,
-                              width: 52,
+                            subtitle: Text(
+                              data['description'],
+                              style: GoogleFonts.inter(
+                                  color: Color(0xff9C9EA2),
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 15),
                             ),
-                            Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.star,
-                                      color: yellow,
-                                    ),
-                                    Text(
-                                      data['totalRate'].toString(),
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  data['totalReviews'].toString() + " Reviews",
-                                  style: GoogleFonts.inter(
-                                      color: Color(0xff9C9EA2),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 19),
-                                ),
-                              ],
-                            )
-                          ],
-                        )
-                      ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    "€" + data['price'].toString(),
+                                    style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  Text(
+                                    data['priceType'],
+                                    style: GoogleFonts.inter(
+                                        color: Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19),
+                                  ),
+                                ],
+                              ),
+                              Image.asset(
+                                "assets/line.png",
+                                height: 40,
+                                width: 52,
+                              ),
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: yellow,
+                                      ),
+                                      Text(
+                                        data['totalReviews'].toString(),
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    data['ratingCount'].toString() + " Reviews",
+                                    style: GoogleFonts.inter(
+                                        color: Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   );
                 });

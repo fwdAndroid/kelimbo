@@ -107,13 +107,7 @@ class _RecentWorksState extends State<RecentWorks> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                ListTile(
-                                  trailing: Text(
-                                    "€" + data['price'].toString(),
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
-                                  ),
+                                GestureDetector(
                                   onTap: () {
                                     Navigator.push(
                                         context,
@@ -151,15 +145,23 @@ class _RecentWorksState extends State<RecentWorks> {
                                                       data['serviceTitle'],
                                                 )));
                                   },
-                                  leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(data['clientImage']),
-                                  ),
-                                  title: Text(
-                                    data['clientName'],
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
+                                  child: ListTile(
+                                    trailing: Text(
+                                      "€" + data['price'].toString(),
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    leading: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(data['clientImage']),
+                                    ),
+                                    title: Text(
+                                      data['clientName'],
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
                                   ),
                                 ),
                                 Padding(
