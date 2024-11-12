@@ -12,6 +12,7 @@ import 'package:kelimbo/screens/categories/turismo.dart';
 import 'package:kelimbo/screens/categories/vehiclescat.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/other/other_user_profile.dart';
+import 'package:kelimbo/screens/search/filters.dart';
 import 'package:kelimbo/screens/search/search_screen.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -28,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(130), // Adjust the height as needed
@@ -42,6 +42,58 @@ class _HomePageState extends State<HomePage> {
                 top: 30.0), // Add padding to position the search bar
             child: Column(
               children: [
+                GestureDetector(
+                  onTap: () {
+                    PopupMenuButton<int>(
+                      itemBuilder: (context) => [
+                        // popupmenu item 1
+                        PopupMenuItem(
+                          value: 1,
+                          // row has two child icon and text.
+                          child: Row(
+                            children: [
+                              Icon(Icons.star),
+                              SizedBox(
+                                // sized box with width 10
+                                width: 10,
+                              ),
+                              Text("Get The App")
+                            ],
+                          ),
+                        ),
+                        // popupmenu item 2
+                        PopupMenuItem(
+                          value: 2,
+                          // row has two child icon and text
+                          child: Row(
+                            children: [
+                              Icon(Icons.chrome_reader_mode),
+                              SizedBox(
+                                // sized box with width 10
+                                width: 10,
+                              ),
+                              Text("About")
+                            ],
+                          ),
+                        ),
+                      ],
+                      offset: Offset(0, 100),
+                      color: Colors.grey,
+                      elevation: 2,
+                    );
+                  },
+                  child: Align(
+                    alignment: AlignmentDirectional.topEnd,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 8.0, right: 20, bottom: 8),
+                      child: Image.asset(
+                        "assets/filters.png",
+                        height: 20,
+                      ),
+                    ),
+                  ),
+                ),
                 Center(
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 16),
