@@ -15,7 +15,6 @@ class Filters extends StatefulWidget {
 }
 
 class _FiltersState extends State<Filters> {
-  // Filter options
   List<String> specialSituations = [
     "Precio más alto",
     "Precio más bajo",
@@ -25,8 +24,8 @@ class _FiltersState extends State<Filters> {
     "Menos trabajo realizado",
   ];
 
-  List<String> selectedFilters = []; // Holds currently selected filter options
-  List<String> appliedFilters = []; // Holds applied filters for list display
+  List<String> selectedFilters = [];
+  List<String> appliedFilters = [];
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -63,13 +62,13 @@ class _FiltersState extends State<Filters> {
               onSelected: (value, index, isSelected) {
                 setState(() {
                   if (isSelected) {
-                    selectedFilters.add(value); // Add to selected filters
+                    selectedFilters.add(value);
                   } else {
-                    selectedFilters.remove(value); // Remove if deselected
+                    selectedFilters.remove(value);
                   }
                 });
               },
-              isRadio: false, // Allows multiple selections
+              isRadio: false,
               buttons: specialSituations,
             ),
           ),
@@ -83,7 +82,6 @@ class _FiltersState extends State<Filters> {
               child: SaveButton(
                 title: "Ordenar",
                 onTap: () {
-                  // Apply the selected filters
                   setState(() {
                     appliedFilters = List.from(selectedFilters);
                   });
@@ -95,7 +93,7 @@ class _FiltersState extends State<Filters> {
             child: appliedFilters.isEmpty
                 ? Center(
                     child: Text(
-                      "No filters selected. Please select a filter.",
+                      "No se han seleccionado filtros. Seleccione un filtro.",
                       style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   )
@@ -110,8 +108,8 @@ class _FiltersState extends State<Filters> {
                       if (snapshot.data!.docs.isEmpty) {
                         return Center(
                           child: Text(
-                            "No hay servicios disponibles para los filtros seleccionados.",
-                            style: TextStyle(color: Colors.black),
+                            "Resultado no encontrado",
+                            style: TextStyle(color: Colors.black, fontSize: 16),
                           ),
                         );
                       }
@@ -124,7 +122,6 @@ class _FiltersState extends State<Filters> {
                           final List<dynamic> favorites =
                               data['favorite'] ?? [];
 
-                          // Check if the current user has marked this service as favorite
                           bool isFavorite = favorites.contains(currentUserId);
 
                           return GestureDetector(
@@ -274,13 +271,11 @@ class _FiltersState extends State<Filters> {
         FirebaseFirestore.instance.collection("services");
 
     if (appliedFilters.isEmpty) {
-      // No filters applied, return an empty stream
       return Stream<QuerySnapshot>.empty();
     }
 
     Query query = servicesCollection;
 
-    // Apply sorting based on the selected filters
     for (String filter in appliedFilters) {
       if (filter == "Precio más alto") {
         query = query.orderBy("price", descending: true);
