@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(130), // Adjust the height as needed
+        preferredSize: Size.fromHeight(100), // Adjust the height as needed
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor:
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 250,
+                      height: 200,
                       width: MediaQuery.of(context).size.width,
                       child: StreamBuilder(
                         stream: FirebaseFirestore.instance
@@ -449,7 +449,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   SizedBox(
-                    height: 300,
+                    height: 400,
                     width: MediaQuery.of(context).size.width,
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance

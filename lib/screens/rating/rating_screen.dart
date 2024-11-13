@@ -138,6 +138,21 @@ class _RatingScreenState extends State<RatingScreen> {
               }
             },
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "OR",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
+          TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => MainDashboard()));
+              },
+              child: Text("Skip")),
         ],
       ),
     );

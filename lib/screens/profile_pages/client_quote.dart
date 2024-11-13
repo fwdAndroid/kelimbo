@@ -148,10 +148,10 @@ class _ClientQuoteState extends State<ClientQuote> {
                                     ),
                                     leading: CircleAvatar(
                                       backgroundImage:
-                                          NetworkImage(data['providerImage']),
+                                          NetworkImage(data['clientImage']),
                                     ),
                                     title: Text(
-                                      data['providerName'],
+                                      data['clientName'],
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),

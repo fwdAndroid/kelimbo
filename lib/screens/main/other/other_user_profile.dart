@@ -93,29 +93,28 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) => HiringService(
-                                                  currencyType:
-                                                      data['currency'],
-                                                  serviceId: data['uuid'],
+                                                  userEmail: data['userEmail'],
+                                                  userImage: data['userImage'],
+                                                  userName: data['userName'],
+                                                  category: data['category'],
                                                   totalReviews:
                                                       data['totalReviews']
                                                           .toString(),
-                                                  userEmail: widget.userEmail,
-                                                  userImage: widget.userImage,
-                                                  userName: widget.userName,
-                                                  uid: FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                  photo: data['photo'],
-                                                  perHrPrice: data['pricePerHr']
-                                                      .toString(),
+                                                  uuid: data['uuid'],
+                                                  uid: data['uid'],
+                                                  currencyType:
+                                                      data['currency'],
                                                   totalRating: data['totalRate']
                                                       .toString(),
-                                                  description:
-                                                      data['description'],
+                                                  title: data['title'],
                                                   price:
                                                       data['price'].toString(),
-                                                  title: data['title'],
-                                                  uuid: data['uuid'],
-                                                  category: data['category'],
+                                                  serviceId: data['uuid'],
+                                                  perHrPrice: data['pricePerHr']
+                                                      .toString(),
+                                                  photo: data['photo'],
+                                                  description:
+                                                      data['description'],
                                                 )));
                                   },
                                   leading: data['photo'] == ""

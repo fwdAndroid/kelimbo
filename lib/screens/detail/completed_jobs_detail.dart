@@ -109,12 +109,6 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
             ),
           ),
           Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: SaveButton(title: "Tasa", onTap: () async {}),
-            ),
-          )
         ],
       ),
     );

@@ -148,10 +148,10 @@ class _CompletedJobsState extends State<CompletedJobs> {
                                     ),
                                     leading: CircleAvatar(
                                       backgroundImage:
-                                          NetworkImage(data['providerImage']),
+                                          NetworkImage(data['clientImage']),
                                     ),
                                     title: Text(
-                                      data['providerName'],
+                                      data['clientName'],
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),
