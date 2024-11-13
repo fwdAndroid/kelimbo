@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
@@ -14,6 +15,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _searchController = TextEditingController();
   String _searchText = '';
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   void initState() {
@@ -97,13 +99,14 @@ class _SearchScreenState extends State<SearchScreen> {
                       }
 
                       final filteredDocs = snapshot.data!.docs.where((doc) {
-                        final description = (doc.data()
-                            as Map<String, dynamic>)['description'] as String;
-                        return description
-                            .toLowerCase()
-                            .contains(_searchText.toLowerCase());
-                      }).toList();
+                        final data = doc.data() as Map<String, dynamic>;
 
+                        // Check if _searchText exists in any field of the document
+                        return data.values.any((value) => value
+                            .toString()
+                            .toLowerCase()
+                            .contains(_searchText.toLowerCase()));
+                      }).toList();
                       if (filteredDocs.isEmpty) {
                         return Center(
                           child: Text(
@@ -120,116 +123,161 @@ class _SearchScreenState extends State<SearchScreen> {
                             final Map<String, dynamic> data =
                                 filteredDocs[index].data()
                                     as Map<String, dynamic>;
-                            return Card(
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (builder) =>
-                                                  HiringService(
-                                                    currencyType:
-                                                        data['currency'],
-                                                    userEmail:
-                                                        data['userEmail'],
-                                                    serviceId: data['uuid'],
-                                                    userImage:
-                                                        data['userImage'],
-                                                    userName: data['userName'],
-                                                    category: data['category'],
-                                                    totalReviews:
-                                                        data['totalReviews']
-                                                            .toString(),
-                                                    uuid: data['uuid'],
-                                                    uid: data['uid'],
-                                                    totalRating:
-                                                        data['totalRate']
-                                                            .toString(),
-                                                    title: data['title'],
-                                                    price: data['price']
-                                                        .toString(),
-                                                    perHrPrice:
-                                                        data['pricePerHr']
-                                                            .toString(),
-                                                    photo: data['photo'],
-                                                    description:
-                                                        data['description'],
-                                                  )));
-                                    },
-                                    leading: CircleAvatar(
-                                      backgroundImage:
-                                          NetworkImage(data['userImage']),
-                                    ),
-                                    title: Text(
-                                      data['userName'],
-                                      style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    subtitle: Text(
-                                      data['category'],
-                                      style: GoogleFonts.inter(
-                                          color: Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.w300,
-                                          fontSize: 15),
+                            final List<dynamic> favorites =
+                                data['favorite'] ?? [];
+
+                            bool isFavorite = favorites.contains(currentUserId);
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (builder) => HiringService(
+                                      serviceId: data['uuid'],
+                                      currencyType: data['currency'],
+                                      price: data['price'].toString(),
+                                      userEmail: data['userEmail'],
+                                      userImage: data['userImage'],
+                                      userName: data['userName'],
+                                      category: data['category'],
+                                      totalReviews:
+                                          data['totalReviews'].toString(),
+                                      uuid: data['uuid'],
+                                      uid: data['uid'],
+                                      totalRating: data['totalRate'].toString(),
+                                      title: data['title'],
+                                      perHrPrice: data['pricePerHr'].toString(),
+                                      photo: data['photo'],
+                                      description: data['description'],
                                     ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "€" + data['price'].toString(),
-                                            style: GoogleFonts.inter(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20),
-                                          ),
-                                          Text(
-                                            data['priceType'],
-                                            style: GoogleFonts.inter(
-                                                color: Color(0xff9C9EA2),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 19),
-                                          ),
-                                        ],
+                                );
+                              },
+                              child: Card(
+                                child: Column(
+                                  children: [
+                                    ListTile(
+                                      trailing: IconButton(
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color: isFavorite
+                                              ? Colors.red
+                                              : Colors.grey,
+                                        ),
+                                        onPressed: () async {},
                                       ),
-                                      Image.asset(
-                                        "assets/line.png",
-                                        height: 40,
-                                        width: 52,
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (builder) =>
+                                                    HiringService(
+                                                      currencyType:
+                                                          data['currency'],
+                                                      userEmail:
+                                                          data['userEmail'],
+                                                      serviceId: data['uuid'],
+                                                      userImage:
+                                                          data['userImage'],
+                                                      userName:
+                                                          data['userName'],
+                                                      category:
+                                                          data['category'],
+                                                      totalReviews:
+                                                          data['totalReviews']
+                                                              .toString(),
+                                                      uuid: data['uuid'],
+                                                      uid: data['uid'],
+                                                      totalRating:
+                                                          data['totalRate']
+                                                              .toString(),
+                                                      title: data['title'],
+                                                      price: data['price']
+                                                          .toString(),
+                                                      perHrPrice:
+                                                          data['pricePerHr']
+                                                              .toString(),
+                                                      photo: data['photo'],
+                                                      description:
+                                                          data['description'],
+                                                    )));
+                                      },
+                                      leading: CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(data['userImage']),
                                       ),
-                                      Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.star,
-                                                color: yellow,
-                                              ),
-                                              Text(
-                                                data['totalRate'].toString(),
-                                                style: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20),
-                                              ),
-                                            ],
-                                          ),
-                                          Text(
-                                            data['totalReviews'].toString() +
-                                                " Reviews",
-                                            style: GoogleFonts.inter(
-                                                color: Color(0xff9C9EA2),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 19),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ],
+                                      title: Text(
+                                        data['userName'],
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      subtitle: Text(
+                                        data['category'],
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xff9C9EA2),
+                                            fontWeight: FontWeight.w300,
+                                            fontSize: 15),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              "€" + data['price'].toString(),
+                                              style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20),
+                                            ),
+                                            Text(
+                                              data['priceType'],
+                                              style: GoogleFonts.inter(
+                                                  color: Color(0xff9C9EA2),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 19),
+                                            ),
+                                          ],
+                                        ),
+                                        Image.asset(
+                                          "assets/line.png",
+                                          height: 40,
+                                          width: 52,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.star,
+                                                  color: yellow,
+                                                ),
+                                                Text(
+                                                  data['totalReviews']
+                                                      .toString(),
+                                                  style: GoogleFonts.inter(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 20),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              data['ratingCount'].toString() +
+                                                  " Reviews",
+                                              style: GoogleFonts.inter(
+                                                  color: Color(0xff9C9EA2),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 19),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           });

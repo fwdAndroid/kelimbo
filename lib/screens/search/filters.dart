@@ -95,6 +95,7 @@ class _FiltersState extends State<Filters> {
                     child: Text(
                       "No se han seleccionado filtros. Seleccione un filtro.",
                       style: TextStyle(color: Colors.black, fontSize: 16),
+                      textAlign: TextAlign.center,
                     ),
                   )
                 : StreamBuilder(
