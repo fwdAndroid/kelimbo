@@ -197,48 +197,42 @@ class _SignUpState extends State<SignUp> {
             )),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: isLoading
-              ? Center(
-                  child: CircularProgressIndicator(
-                    color: mainColor,
-                  ),
-                )
-              : SaveButton(
-                  title: "Únete",
-                  onTap: () async {
-                    if (NameController.text.isEmpty) {
-                      showMessageBar("el nombre es requerido", context);
-                    }
-                    if (providerEmailController.text.isEmpty) {
-                      showMessageBar("Se requiere correo electrónico", context);
-                    } else if (providerPassController.text.isEmpty) {
-                      showMessageBar("Se requiere contraseña ", context);
-                    } else if (reenter.text.isEmpty) {
-                      showMessageBar(
-                          "Se requiere confirmar la contraseña ", context);
-                    } else {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      if (_formKey.currentState?.validate() ?? false) {
-                        Uint8List imageToUpload = _image ?? Uint8List(0);
-                        await AuthMethods().signUpUser(
-                            email: providerEmailController.text.trim(),
-                            pass: providerPassController.text.trim(),
-                            name: NameController.text.trim(),
-                            file: imageToUpload);
-                        setState(() {
-                          isLoading = false;
-                        });
-                        showMessageBar("Inscripción completa", context);
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => MainDashboard()));
-                      }
-                    }
-                  },
-                ),
+          child: SaveButton(
+            title: "Únete",
+            onTap: () async {
+              if (NameController.text.isEmpty) {
+                showMessageBar("el nombre es requerido", context);
+              }
+              if (providerEmailController.text.isEmpty) {
+                showMessageBar("Se requiere correo electrónico", context);
+              } else if (providerPassController.text.isEmpty) {
+                showMessageBar("Se requiere contraseña ", context);
+              } else if (reenter.text.isEmpty) {
+                showMessageBar("Se requiere confirmar la contraseña ", context);
+              } else {
+                setState(() {
+                  isLoading = true;
+                });
+                if (_formKey.currentState?.validate() ?? false) {
+                  Uint8List imageToUpload = _image ?? Uint8List(0);
+                  await AuthMethods().signUpUser(
+                      email: providerEmailController.text.trim(),
+                      pass: providerPassController.text.trim(),
+                      name: NameController.text.trim(),
+                      file: imageToUpload);
+                  setState(() {
+                    isLoading = false;
+                  });
+                  showMessageBar("Inscripción completa", context);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (builder) => MainDashboard()));
+                }
+                setState(() {
+                  isLoading = false;
+                });
+              }
+            },
+          ),
         ),
         const SizedBox(
           height: 20,
