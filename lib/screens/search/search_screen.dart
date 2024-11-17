@@ -70,7 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           SizedBox(
-            height: 300,
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             child: _searchText.isEmpty
                 ? Center(

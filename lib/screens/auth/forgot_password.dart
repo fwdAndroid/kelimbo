@@ -14,37 +14,10 @@ class ForgotPassword extends StatefulWidget {
 
 class _ForgotPasswordState extends State<ForgotPassword> {
   TextEditingController customerEmailController = TextEditingController();
-  TextEditingController currentPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
+
   bool isLoading = false;
 
   // Function to reauthenticate the user
-  Future<void> reauthenticateUser(String email, String currentPassword) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      AuthCredential credential =
-          EmailAuthProvider.credential(email: email, password: currentPassword);
-
-      // Re-authenticate the user
-      await user!.reauthenticateWithCredential(credential);
-      print('Re-authentication successful');
-    } catch (e) {
-      print('Re-authentication failed: $e');
-    }
-  }
-
-  // Function to update the user's password
-  Future<void> updatePassword(String newPassword) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-
-      // Update the user's password
-      await user!.updatePassword(newPassword);
-      print('Password updated successfully');
-    } catch (e) {
-      print('Password update failed: $e');
-    }
-  }
 
   void showMessageBar(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -56,28 +29,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   }
 
   // Function to reset the password
-  void resetPassword() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    String email = customerEmailController.text.trim();
-    String currentPassword = currentPasswordController.text.trim();
-    String newPassword = newPasswordController.text.trim();
-
-    // Re-authenticate and then update the password
-    await reauthenticateUser(email, currentPassword);
-    await updatePassword(newPassword);
-
-    setState(() {
-      isLoading = false;
-    });
-
-    // Show a message and navigate to the login screen
-    showMessageBar("Password has been updated successfully", context);
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (builder) => AuthLogin()));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,54 +64,29 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: currentPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock, color: iconColor),
-                filled: true,
-                fillColor: textColor,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(22)),
-                  borderSide: BorderSide(color: textColor),
-                ),
-                border: InputBorder.none,
-                hintText: "Current Password",
-                hintStyle:
-                    GoogleFonts.nunitoSans(fontSize: 16, color: iconColor),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              controller: newPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.lock, color: iconColor),
-                filled: true,
-                fillColor: textColor,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(22)),
-                  borderSide: BorderSide(color: textColor),
-                ),
-                border: InputBorder.none,
-                hintText: "New Password",
-                hintStyle:
-                    GoogleFonts.nunitoSans(fontSize: 16, color: iconColor),
-              ),
-            ),
-          ),
           const SizedBox(height: 25),
           isLoading
               ? Center(child: CircularProgressIndicator())
               : Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SaveButton(
-                    title: "Reset Password",
-                    onTap: resetPassword, // Call the resetPassword function
+                    title: "Restablecer Contraseña",
+                    onTap: () async {
+                      if (customerEmailController.text.isEmpty) {
+                        showMessageBar(
+                            "Se requiere correo electrónico", context);
+                      } else {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(
+                            email: customerEmailController.text);
+                        showMessageBar(
+                            "El enlace de restablecimiento de contraseña se envía a su dirección de correo electrónico restablezca su contraseña",
+                            context);
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => AuthLogin()));
+                      }
+                    }, // Call the resetPassword function
                   ),
                 ),
         ],
