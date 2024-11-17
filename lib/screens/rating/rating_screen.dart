@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,6 +16,7 @@ class RatingScreen extends StatefulWidget {
   final clientName;
   final clientImage;
   final rating;
+
   RatingScreen(
       {super.key,
       required this.clientImage,
@@ -35,6 +38,9 @@ class _RatingScreenState extends State<RatingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -49,7 +55,7 @@ class _RatingScreenState extends State<RatingScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Pro favor cuentanos como fue tu experiencia con nuestro proveedor",
+              "Por favor cuéntanos cómo fue tu experiencia con nuestro proveedor",
               style: GoogleFonts.inter(color: Color(0xff240F51), fontSize: 18),
               textAlign: TextAlign.center,
             ),
@@ -60,7 +66,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 initialRating: rating,
                 minRating: 1,
                 direction: Axis.horizontal,
-                allowHalfRating: true,
+                allowHalfRating: false,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                 itemBuilder: (context, _) => Icon(
@@ -76,7 +82,6 @@ class _RatingScreenState extends State<RatingScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              maxLength: 30,
               controller: descriptionController,
               maxLines: 4,
               decoration: InputDecoration(
@@ -95,7 +100,7 @@ class _RatingScreenState extends State<RatingScreen> {
             ),
           ),
           SaveButton(
-            title: "Submit Rating",
+            title: "Enviar calificación",
             onTap: () async {
               try {
                 // Reference to the specific service document
@@ -106,25 +111,27 @@ class _RatingScreenState extends State<RatingScreen> {
                 // Retrieve the current rating data from the document
                 DocumentSnapshot docSnapshot = await serviceDocRef.get();
                 if (docSnapshot.exists) {
-                  int currentTotalRate = docSnapshot['totalRate'] ?? 0;
+                  double currentTotalRate =
+                      (docSnapshot['totalRate'] ?? 0).toDouble();
                   int ratingCount = docSnapshot['ratingCount'] ?? 0;
 
-                  // Convert the rating to an integer, if necessary
-                  int intRating = rating.toInt();
-
-                  // Add new rating to the total rate and increment the rating count
-                  int newTotalRate = currentTotalRate + intRating;
+                  // Add the new rating as a double
+                  double newTotalRate = currentTotalRate + rating;
                   int newRatingCount = ratingCount + 1;
 
-                  // Calculate the new average rating (as a double for precision)
-                  double newAverageRating = newTotalRate / newRatingCount;
+                  // Calculate the new average rating and clamp to a max of 5
+                  double newAverageRating =
+                      min(newTotalRate / newRatingCount, 5.0);
 
-                  // Update Firestore with new total rate, rating count, and average rating
+                  // Format the rating to two decimal places
+                  String formattedRating = newAverageRating.toStringAsFixed(2);
+
+                  // Update Firestore with new total rate, rating count, and formatted average rating
                   await serviceDocRef.update({
                     "totalRate": newTotalRate,
                     "ratingCount": newRatingCount,
-                    "totalReviews":
-                        newAverageRating, // store as double for precision
+                    "totalReviews": double.parse(
+                        formattedRating), // store as rounded double
                   });
 
                   // Navigate to the main dashboard or show a success message
@@ -152,7 +159,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (builder) => MainDashboard()));
               },
-              child: Text("Skip")),
+              child: Text("Navío")),
         ],
       ),
     );
