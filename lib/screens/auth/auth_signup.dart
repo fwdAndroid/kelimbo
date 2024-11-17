@@ -100,7 +100,11 @@ class _SignUpState extends State<SignUp> {
               textInputType: TextInputType.emailAddress),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8),
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            right: 8,
+            top: 8,
+          ),
           child: TextFormField(
             validator: RegisterFunctions().validateEmail,
             decoration: InputDecoration(
@@ -139,7 +143,12 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
         Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
+            padding: const EdgeInsets.only(
+              left: 8.0,
+              right: 8,
+              bottom: 8,
+              top: 8,
+            ),
             child: TextFormField(
               validator: RegisterFunctions().validatePassword,
               obscureText: passwordVisible,
