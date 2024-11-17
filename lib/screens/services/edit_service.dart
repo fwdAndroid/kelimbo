@@ -134,7 +134,6 @@ class _EditServiceState extends State<EditService> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                maxLength: 30,
                 controller: descriptionController,
                 maxLines: 4,
                 decoration: InputDecoration(
