@@ -33,6 +33,7 @@ class _MainDashboardState extends State<MainDashboard> {
         child: Scaffold(
           body: _screens[_currentIndex],
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             selectedLabelStyle: TextStyle(color: mainColor),
             unselectedLabelStyle: TextStyle(color: iconColor),
             onTap: (index) {
@@ -49,7 +50,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ? "assets/home_blue.png"
                       : "assets/home_grey.png",
                 ),
-                label: 'Home',
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -59,7 +60,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ? "assets/fav_blue.png"
                       : "assets/fav_grey.png",
                 ),
-                label: 'Doctor',
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -69,7 +70,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ? "assets/add_blue.png"
                       : "assets/add_grey.png",
                 ),
-                label: 'Medicine',
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -79,7 +80,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ? "assets/chat_blue.png"
                       : "assets/chat_grey.png",
                 ),
-                label: 'Appointment',
+                label: '',
               ),
               BottomNavigationBarItem(
                 icon: Image.asset(
@@ -89,7 +90,7 @@ class _MainDashboardState extends State<MainDashboard> {
                       ? "assets/person_blue.png"
                       : "assets/person_grey.png",
                 ),
-                label: 'History',
+                label: '',
               ),
             ],
           ),
