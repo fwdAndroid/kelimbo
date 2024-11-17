@@ -80,10 +80,9 @@ class _EditServiceState extends State<EditService> {
     // Update the controllers with the fetched data
     setState(() {
       serviceNameController.text = data['title'] ?? '';
-      descriptionController.text =
-          (data['description'] ?? ''); // Convert int to string
-      priceController.text = data['price'] ?? 0; // Convert int to string
-      discountController.text = data['pricePerHr'] ?? 0;
+      descriptionController.text = data['description'] ?? '';
+      priceController.text = (data['price'] ?? 0).toString();
+      discountController.text = (data['pricePerHr'] ?? 0).toString();
       imageUrl = data['photo'];
     });
   }
@@ -156,14 +155,20 @@ class _EditServiceState extends State<EditService> {
               onTap: () => selectImage(),
               child: _image != null
                   ? CircleAvatar(
-                      radius: 59, backgroundImage: MemoryImage(_image!))
-                  : GestureDetector(
-                      onTap: () => selectImage(),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset("assets/Choose Image.png"),
-                      ),
-                    ),
+                      radius: 59,
+                      backgroundImage: MemoryImage(_image!),
+                    )
+                  : (imageUrl != null && imageUrl!.isNotEmpty)
+                      ? CircleAvatar(
+                          radius: 59,
+                          backgroundImage: NetworkImage(imageUrl!),
+                        )
+                      : Image.asset(
+                          "assets/Choose Image.png",
+                          width: 118,
+                          height: 118,
+                          fit: BoxFit.cover,
+                        ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
@@ -286,35 +291,6 @@ class _EditServiceState extends State<EditService> {
                             MaterialPageRoute(
                                 builder: (builder) => MainDashboard()));
                       }
-
-                      // if (validateInputs(context)) {
-                      //   setState(() {
-                      //     _isLoading = true;
-                      //   });
-
-                      //   try {
-                      //     Database().addService(
-                      //       category: dropdownvalue,
-                      //       title: serviceNameController.text,
-                      //       price: int.parse(priceController.text),
-                      //       description: descriptionController.text,
-                      //       pricePerHer: int.parse(discountController.text),
-                      //       file: _image!,
-                      //     );
-
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (builder) => MainDashboard(),
-                      //       ),
-                      //     );
-                      //     showMessageBar(
-                      //         "Services Added Successfully".toString(),
-                      //         context);
-                      //   } catch (e) {
-                      //     showMessageBar(e.toString(), context);
-                      //   }
-                      // }
                     }),
           ],
         ),

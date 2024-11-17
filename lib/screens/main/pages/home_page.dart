@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(
-                      height: 200,
+                      height: 250,
                       width: MediaQuery.of(context).size.width,
                       child: StreamBuilder(
                         stream: FirebaseFirestore.instance

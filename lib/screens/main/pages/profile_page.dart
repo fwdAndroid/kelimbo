@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/premium/premium%20feature.dart';
-import 'package:kelimbo/screens/profile_pages/client_quote.dart';
 import 'package:kelimbo/screens/profile_pages/completed_jobs.dart';
 import 'package:kelimbo/screens/profile_pages/edit_profile.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_awarded_to_me.dart';
@@ -123,27 +122,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 title: Text(
                   "Realiza una oferta",
-                  style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: colorBlack,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8),
-                child: Divider(
-                  color: iconColor,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => ClientQuote()));
-                },
-                title: Text(
-                  "Ver cotización del cliente",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
