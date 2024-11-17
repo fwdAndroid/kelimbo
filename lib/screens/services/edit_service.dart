@@ -84,6 +84,7 @@ class _EditServiceState extends State<EditService> {
       priceController.text = (data['price'] ?? 0).toString();
       discountController.text = (data['pricePerHr'] ?? 0).toString();
       imageUrl = data['photo'];
+      dropdownvalue = data['category'] ?? 'Hogar'; // Set dropdown value
     });
   }
 
@@ -176,10 +177,10 @@ class _EditServiceState extends State<EditService> {
                 value: dropdownvalue,
                 isExpanded: true,
                 icon: const Icon(Icons.keyboard_arrow_down),
-                items: items.map((String items) {
+                items: items.map((String item) {
                   return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
+                    value: item,
+                    child: Text(item),
                   );
                 }).toList(),
                 onChanged: (String? newValue) {
@@ -273,7 +274,9 @@ class _EditServiceState extends State<EditService> {
                           "photo": downloadUrl,
                           "pricePerHr": int.parse(discountController.text),
                           "priceType": drop,
-                          "currency": currencyType
+                          "currency": currencyType,
+                          "category":
+                              dropdownvalue, // Save the selected category
                         });
                         showMessageBar(
                             "Servicio actualizado con éxito ", context);
