@@ -70,7 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height / 1.4,
             width: MediaQuery.of(context).size.width,
             child: _searchText.isEmpty
                 ? Center(
@@ -204,10 +204,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       },
                                       leading: CircleAvatar(
                                         backgroundImage:
-                                            NetworkImage(data['userImage']),
+                                            NetworkImage(data['photo']),
                                       ),
                                       title: Text(
-                                        data['userName'],
+                                        data['title'],
                                         style: GoogleFonts.inter(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16),
