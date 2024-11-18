@@ -6,13 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class RatingScreen extends StatefulWidget {
-  final providerId;
-  final serviceId;
-  final jobid;
-  final clientId;
+  final providerId; // Client ID which service will be listed
+  final serviceId; //Service ID
+  final jobid; // current JOb
+  final clientId; // user id
   final clientName;
   final clientImage;
   final rating;
@@ -102,38 +103,54 @@ class _RatingScreenState extends State<RatingScreen> {
           SaveButton(
             title: "Enviar calificación",
             onTap: () async {
+              print(widget.serviceId);
               try {
                 // Reference to the specific service document
                 DocumentReference serviceDocRef = FirebaseFirestore.instance
                     .collection("services")
                     .doc(widget.serviceId);
 
-                // Retrieve the current rating data from the document
+                // Retrieve the current document data
                 DocumentSnapshot docSnapshot = await serviceDocRef.get();
+
                 if (docSnapshot.exists) {
+                  // Extract current ratings and reviews data
                   double currentTotalRate =
                       (docSnapshot['totalRate'] ?? 0).toDouble();
                   int ratingCount = docSnapshot['ratingCount'] ?? 0;
+                  List<dynamic> finalReviews =
+                      List.from(docSnapshot['finalreviews'] ?? []);
 
-                  // Add the new rating as a double
+                  // Calculate new rating stats
                   double newTotalRate = currentTotalRate + rating;
                   int newRatingCount = ratingCount + 1;
-
-                  // Calculate the new average rating and clamp to a max of 5
                   double newAverageRating =
                       min(newTotalRate / newRatingCount, 5.0);
-
-                  // Format the rating to two decimal places
                   String formattedRating = newAverageRating.toStringAsFixed(2);
 
-                  // Update Firestore with new total rate, rating count, and formatted average rating
+                  // Create the new review object
+                  Map<String, dynamic> newReview = {
+                    "jobId": widget.jobid,
+                    "providerId": widget.providerId,
+                    "clientName": widget.clientName,
+                    "clientThought": descriptionController.text,
+                    "totalRate": double.parse(formattedRating),
+                    "photo": widget
+                        .clientImage, // Optional: Add client image if needed
+                  };
+
+                  // Append the new review to the existing list
+                  finalReviews.add(newReview);
+
+                  // Update Firestore document with the updated data
                   await serviceDocRef.update({
                     "totalRate": newTotalRate,
                     "ratingCount": newRatingCount,
-                    "totalReviews": double.parse(
-                        formattedRating), // store as rounded double
+                    "totalReviews": double.parse(formattedRating),
+                    "finalreviews":
+                        finalReviews, // Update the finalreviews array
                   });
-
+                  showMessageBar("Revisión dada con éxitoy", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,
                       MaterialPageRoute(builder: (builder) => MainDashboard()));

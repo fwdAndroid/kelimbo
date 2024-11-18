@@ -87,7 +87,9 @@ class _HiringServiceState extends State<HiringService> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (builder) => RatingList()));
+                              builder: (builder) => RatingList(
+                                    serviceId: widget.uuid,
+                                  )));
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
