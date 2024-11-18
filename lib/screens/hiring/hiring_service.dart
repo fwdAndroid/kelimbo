@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_price.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
+import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
 
@@ -81,28 +82,44 @@ class _HiringServiceState extends State<HiringService> {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                      ),
-                      Text(
-                        widget.totalReviews.toString(),
-                        style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 19,
-                            color: Color(0xff9C9EA2)),
-                      )
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => RatingList()));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                        ),
+                        Text(
+                          widget.totalReviews.toString(),
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 19,
+                              color: Color(0xff9C9EA2)),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.title,
+                      style: GoogleFonts.inter(
+                          fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       widget.category,
                       style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold, fontSize: 20),
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   Center(

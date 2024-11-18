@@ -111,20 +111,6 @@ class _JobsAwardedToMeDetailState extends State<JobsAwardedToMeDetail> {
               ),
             ),
           ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: SaveButton(
-                  title: "Panel de control en Go",
-                  onTap: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => MainDashboard()));
-                  }),
-            ),
-          )
         ],
       ),
     );

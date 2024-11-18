@@ -30,13 +30,6 @@ class OtherUserProfile extends StatefulWidget {
 
 class _OtherUserProfileState extends State<OtherUserProfile> {
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print(widget.uid);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),

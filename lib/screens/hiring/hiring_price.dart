@@ -48,6 +48,7 @@ class HiringPrice extends StatefulWidget {
 
 class _HiringPriceState extends State<HiringPrice> {
   TextEditingController descriptionController = TextEditingController();
+  TextEditingController customerPassController = TextEditingController();
   bool isLoading = false;
   var uuid = Uuid().v4();
   @override
@@ -74,7 +75,6 @@ class _HiringPriceState extends State<HiringPrice> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
-                    maxLength: 30,
                     controller: descriptionController,
                     maxLines: 4,
                     decoration: InputDecoration(
@@ -92,6 +92,28 @@ class _HiringPriceState extends State<HiringPrice> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: customerPassController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          borderSide: BorderSide(
+                            color: textColor,
+                          )),
+                      border: InputBorder.none,
+                      filled: true,
+                      fillColor: textColor,
+                      hintText: "Introducir precio",
+                      hintStyle: GoogleFonts.nunitoSans(
+                        fontSize: 16,
+                        color: iconColor,
+                      ),
+                    ),
+                  ),
+                ),
                 Spacer(),
                 isLoading
                     ? Center(child: CircularProgressIndicator())
@@ -99,7 +121,7 @@ class _HiringPriceState extends State<HiringPrice> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SaveButton(
-                              title: "Finalizar",
+                              title: "Enviar presupuesto",
                               onTap: () async {
                                 if (descriptionController.text.isEmpty) {
                                   showMessageBar(
@@ -118,7 +140,10 @@ class _HiringPriceState extends State<HiringPrice> {
                                         FirebaseAuth.instance.currentUser!.uid,
                                     "serviceProviderId": widget.uid,
                                     "status": "send",
-                                    "price": int.parse(widget.price),
+                                    "price": customerPassController
+                                            .text.isNotEmpty
+                                        ? int.parse(customerPassController.text)
+                                        : int.parse(widget.price),
                                     "providerName": widget.userName,
                                     "providerEmail": widget.userEmail,
                                     "providerImage": widget.userImage,

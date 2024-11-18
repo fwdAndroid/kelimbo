@@ -108,7 +108,6 @@ class _JobsCompletedDetailState extends State<JobsCompletedDetail> {
               ),
             ),
           ),
-          Spacer(),
         ],
       ),
     );
