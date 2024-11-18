@@ -70,7 +70,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           SizedBox(
-            height: MediaQuery.of(context).size.height / 1.4,
+            height: MediaQuery.of(context).size.height / 1.5,
             width: MediaQuery.of(context).size.width,
             child: _searchText.isEmpty
                 ? Center(
@@ -164,7 +164,39 @@ class _SearchScreenState extends State<SearchScreen> {
                                               ? Colors.red
                                               : Colors.grey,
                                         ),
-                                        onPressed: () async {},
+                                        onPressed: () async {
+                                          try {
+                                            final docRef = FirebaseFirestore
+                                                .instance
+                                                .collection("services")
+                                                .doc(data[
+                                                    'uuid']); // Reference the service document
+
+                                            if (isFavorite) {
+                                              // If already favorited, remove current user ID from the favorites list
+                                              await docRef.update({
+                                                "favorite":
+                                                    FieldValue.arrayRemove(
+                                                        [currentUserId]),
+                                              });
+                                            } else {
+                                              // If not favorited, add current user ID to the favorites list
+                                              await docRef.update({
+                                                "favorite":
+                                                    FieldValue.arrayUnion(
+                                                        [currentUserId]),
+                                              });
+                                            }
+
+                                            setState(() {
+                                              // Update local state to reflect the new favorite status
+                                              isFavorite = !isFavorite;
+                                            });
+                                          } catch (e) {
+                                            print(
+                                                "Error updating favorite status: $e");
+                                          }
+                                        },
                                       ),
                                       onTap: () {
                                         Navigator.push(

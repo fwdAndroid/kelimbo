@@ -8,15 +8,16 @@ import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:intl/intl.dart';
 
 class Messages extends StatefulWidget {
-  final providerId;
-  final customerId;
-  final providerName;
-  final providerEmail;
-  final providerPhoto;
-  final customerName;
-  final customerPhoto;
-  final customerEmail;
-  final chatId;
+  final String providerId;
+  final String customerId;
+  final String providerName;
+  final String providerEmail;
+  final String providerPhoto;
+  final String customerName;
+  final String customerPhoto;
+  final String customerEmail;
+  final String chatId;
+
   const Messages({
     super.key,
     required this.providerEmail,
@@ -35,34 +36,31 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  String groupChatId = "";
+  late String groupChatId;
   ScrollController scrollController = ScrollController();
-  bool show = false;
-
   TextEditingController messageController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
-    if (widget.customerId.hashCode <= widget.providerId.hashCode) {
-      groupChatId = "${widget.customerId}-${widget.providerId}";
-    } else {
-      groupChatId = "${widget.providerId}-${widget.customerId}";
-    }
-
     super.initState();
+    print(widget.customerEmail);
+    print(widget.providerEmail);
+    groupChatId = widget.customerId.hashCode <= widget.providerId.hashCode
+        ? "${widget.customerId}-${widget.providerId}"
+        : "${widget.providerId}-${widget.customerId}";
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: GestureDetector(
@@ -84,8 +82,7 @@ class _MessagesState extends State<Messages> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage:
-                    NetworkImage(widget.customerPhoto), // Add your image here
+                backgroundImage: NetworkImage(widget.customerPhoto),
               ),
               SizedBox(height: 4),
               Text(
@@ -103,100 +100,87 @@ class _MessagesState extends State<Messages> {
       body: Column(
         children: <Widget>[
           StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("messages")
-                  .doc(groupChatId)
-                  .collection(groupChatId)
-                  .orderBy("timestamp", descending: false)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  return snapshot.data!.docs == 0
-                      ? Center(child: Text("Vacía "))
-                      : Expanded(
-                          child: ListView.builder(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 14),
-                            reverse: false,
-                            controller: scrollController,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              var ds = snapshot.data!.docs[index];
-                              return ds.get("type") == 0
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4),
-                                      child: Align(
-                                        alignment: (ds.get("senderId") ==
-                                                FirebaseAuth
-                                                    .instance.currentUser!.uid
-                                            ? Alignment.topLeft
-                                            : Alignment.topRight),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              (ds.get("senderId") ==
-                                                      FirebaseAuth.instance
-                                                          .currentUser!.uid
-                                                  ? CrossAxisAlignment.start
-                                                  : CrossAxisAlignment.end),
-                                          //     crossAxisAlignment:
-                                          // messages[index].messageType ==
-                                          //         "receiver"
-                                          //     ? CrossAxisAlignment.start
-                                          //     : CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(16),
-                                                color: (ds.get("senderId") ==
-                                                        FirebaseAuth.instance
-                                                            .currentUser!.uid
-                                                    ? Color(0xfff0f2f9)
-                                                    : Color(0xff668681)),
-                                              ),
-                                              padding: EdgeInsets.all(12),
-                                              child: Text(
-                                                ds.get("content"),
-                                                style: TextStyle(
-                                                    fontSize: 15,
-                                                    color: (ds.get(
-                                                                "senderId") ==
-                                                            FirebaseAuth
-                                                                .instance
-                                                                .currentUser!
-                                                                .uid
-                                                        ? colorBlack
-                                                        : colorWhite)),
-                                              ),
-                                            ),
-                                            SizedBox(height: 4),
-                                            Text(
-                                              DateFormat.jm().format(DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                      int.parse(
-                                                          ds.get("time")))),
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ],
+            stream: FirebaseFirestore.instance
+                .collection("messages")
+                .doc(groupChatId)
+                .collection(groupChatId)
+                .orderBy("timestamp", descending: false)
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return snapshot.data!.docs.isEmpty
+                    ? Expanded(
+                        child: Center(child: Text("No messages yet.")),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 14),
+                          reverse: false,
+                          controller: scrollController,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var ds = snapshot.data!.docs[index];
+                            final bool isCurrentUserSender =
+                                ds.get("senderId") == currentUserId;
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Align(
+                                alignment: isCurrentUserSender
+                                    ? Alignment.topRight
+                                    : Alignment.topLeft,
+                                child: Column(
+                                  crossAxisAlignment: isCurrentUserSender
+                                      ? CrossAxisAlignment.end
+                                      : CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(16),
+                                        color: isCurrentUserSender
+                                            ? Color(0xfff0f2f9)
+                                            : Color(0xff668681),
+                                      ),
+                                      padding: EdgeInsets.all(12),
+                                      child: Text(
+                                        ds.get("content"),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: isCurrentUserSender
+                                              ? colorBlack
+                                              : colorWhite,
                                         ),
                                       ),
-                                    )
-                                  : Container();
-                            },
-                          ),
-                        );
-                } else if (snapshot.hasError) {
-                  return Center(child: Icon(Icons.error_outline));
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
-              }),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      DateFormat.jm().format(
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(ds.get("time")),
+                                        ),
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+              } else if (snapshot.hasError) {
+                return Center(child: Icon(Icons.error_outline));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
@@ -208,7 +192,7 @@ class _MessagesState extends State<Messages> {
                   Expanded(
                     child: TextFormInputField(
                       controller: messageController,
-                      hintText: "Enviar mensaje",
+                      hintText: "Send a message",
                       textInputType: TextInputType.name,
                     ),
                   ),
@@ -232,9 +216,14 @@ class _MessagesState extends State<Messages> {
   }
 
   void sendMessage(String content, int type) {
-    // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       messageController.clear();
+
+      final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+      final String senderId = currentUserId;
+      final String receiverId = (currentUserId == widget.customerId)
+          ? widget.providerId
+          : widget.customerId;
 
       var documentReference = FirebaseFirestore.instance
           .collection('messages')
@@ -246,8 +235,8 @@ class _MessagesState extends State<Messages> {
         await transaction.set(
           documentReference,
           {
-            "senderId": widget.customerId,
-            "receiverId": widget.providerId,
+            "senderId": senderId,
+            "receiverId": receiverId,
             "time": DateTime.now().millisecondsSinceEpoch.toString(),
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
@@ -256,33 +245,31 @@ class _MessagesState extends State<Messages> {
         );
       }).then((value) {
         if (type == 0) {
-          // Assuming type 0 is for 'note'
-          updateLastMessageByProvider(content);
+          updateLastMessage(content);
         }
       });
 
       scrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    } else {
-      // Fluttertoast.showToast(msg: 'Nothing to send');
     }
   }
 
-  void updateLastMessageByProvider(String messageContent) async {
+  void updateLastMessage(String messageContent) async {
     final chatDocRef =
         FirebaseFirestore.instance.collection('chats').doc(widget.chatId);
 
-    // Check if the document exists before attempting to update it
+    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final String fieldToUpdate = (currentUserId == widget.customerId)
+        ? 'lastMessageByCustomer'
+        : 'lastMessageByProvider';
+
     final chatDocSnapshot = await chatDocRef.get();
     if (chatDocSnapshot.exists) {
-      // Document exists, update the lastMessageByProvider field
       await chatDocRef.update({
-        'lastMessageByCustomer': messageContent,
+        fieldToUpdate: messageContent,
       }).catchError((error) {
-        print("Failed to update last message by provider: $error");
+        print("Failed to update last message: $error");
       });
-    } else {
-      print("Document does not exist, cannot update last message by provider");
     }
   }
 }

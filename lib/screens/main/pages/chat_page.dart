@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -14,35 +13,37 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
-    final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Chats",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            color: colorBlack,
+          ),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        iconTheme: IconThemeData(color: colorBlack),
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection("chats")
             .where("providerId", isEqualTo: currentUserId)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> providerSnapshot) {
-          // Check if the providerSnapshot has data and no errors
           if (providerSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (providerSnapshot.hasError) {
-            return Center(
-              child: Text("Error: ${providerSnapshot.error}"),
-            );
-          } else if (!providerSnapshot.hasData ||
-              providerSnapshot.data == null) {
-            return Center(
-              child: Text("No data available for providers."),
-            );
+            return Center(child: Text("Error: ${providerSnapshot.error}"));
           }
 
-          var prods = providerSnapshot
-              .data!; // This is safe because we've checked for null
+          final providerChats = providerSnapshot.data?.docs ?? [];
 
           return StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -51,88 +52,88 @@ class _ChatPageState extends State<ChatPage> {
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> customerSnapshot) {
               if (customerSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center(child: CircularProgressIndicator());
               } else if (customerSnapshot.hasError) {
                 return Center(
                   child: Text("Error: ${customerSnapshot.error}"),
                 );
-              } else if (!customerSnapshot.hasData ||
-                  customerSnapshot.data == null) {
-                return Center(
-                  child: Text("No data available for customers."),
-                );
               }
 
-              // Combine the two snapshots
-              List<DocumentSnapshot> documents = [];
-              if (providerSnapshot.hasData) {
-                documents.addAll(providerSnapshot.data!.docs);
-              }
-              if (customerSnapshot.hasData) {
-                documents.addAll(customerSnapshot.data!.docs);
-              }
+              final customerChats = customerSnapshot.data?.docs ?? [];
+              final allChats = [...providerChats, ...customerChats];
 
-              if (documents.isEmpty) {
+              if (allChats.isEmpty) {
                 return Center(
                   child: Text(
-                    "Todavía no se ha iniciado el chat",
+                    "No chats started yet.",
                     style: TextStyle(color: colorBlack),
                   ),
                 );
               }
 
               return ListView.builder(
-                itemCount: documents.length,
+                itemCount: allChats.length,
                 itemBuilder: (context, index) {
-                  final Map<String, dynamic> data =
-                      documents[index].data() as Map<String, dynamic>;
+                  final chatDoc = allChats[index];
+                  final chatData = chatDoc.data() as Map<String, dynamic>;
 
-                  final prodData =
-                      prods.docs.isNotEmpty && index < prods.docs.length
-                          ? prods.docs[index].data() as Map<String, dynamic>
-                          : null;
+                  // Determine other participant details
+                  final bool isProvider =
+                      chatData['providerId'] == currentUserId;
+                  final String otherUserId = isProvider
+                      ? chatData['customerId']
+                      : chatData['providerId'];
+                  final String otherUserName = isProvider
+                      ? chatData['customerName']
+                      : chatData['providerName'];
+                  final String otherUserPhoto = isProvider
+                      ? chatData['customerPhoto']
+                      : chatData['providerPhoto'];
+                  final String lastMessage =
+                      chatData['lastMessageByCustomer'] ??
+                          chatData['lastMessageByProvider'] ??
+                          "No Message";
 
                   return Column(
                     children: [
                       ListTile(
                         onTap: () {
-                          if (prodData != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => Messages(
-                                  providerEmail: data['providerEmail'],
-                                  providerId: prodData[
-                                      'providerId'], // Use prodData safely
-                                  providerName: prodData['providerName'],
-                                  providerPhoto: prodData['providerPhoto'],
-                                  customerPhoto: data['customerPhoto'],
-                                  customerEmail: data['customerEmail'],
-                                  customerId: data['customerId'],
-                                  chatId: data['chatId'],
-                                  customerName: data['customerName'],
-                                ),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => Messages(
+                                providerEmail:
+                                    chatData['providerEmail'] ?? "No Email",
+                                providerId: chatData['providerId'],
+                                providerName: chatData['providerName'],
+                                providerPhoto: chatData['providerPhoto'],
+                                customerPhoto: chatData['customerPhoto'],
+                                customerEmail:
+                                    chatData['customerEmail'] ?? "No Email",
+                                customerId: chatData['customerId'],
+                                chatId: chatData['chatId'],
+                                customerName: chatData['customerName'],
                               ),
-                            );
-                          }
+                            ),
+                          );
                         },
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(data['customerPhoto']),
+                          backgroundImage: NetworkImage(otherUserPhoto),
                         ),
                         title: Text(
-                          data['customerName'],
+                          otherUserName,
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w600, fontSize: 16),
                         ),
                         subtitle: Text(
-                          data['lastMessageByCustomer'] ?? "No Message",
+                          lastMessage,
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w300, fontSize: 14),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Divider(),
+                      const Divider(),
                     ],
                   );
                 },

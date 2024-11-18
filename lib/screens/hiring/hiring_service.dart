@@ -155,6 +155,7 @@ class _HiringServiceState extends State<HiringService> {
                           "customerName": widget.userName,
                           "customerId": widget.uid,
                           "customerPhoto": widget.userImage,
+                          "customerEmail": widget.userEmail,
                           "chatId": chatId,
                           "providerEmail": snap['email'],
                           "providerId": FirebaseAuth.instance.currentUser!.uid,
