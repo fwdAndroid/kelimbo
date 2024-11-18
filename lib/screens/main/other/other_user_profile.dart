@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
@@ -38,16 +37,19 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
           children: [
             Center(
               child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.customerPhoto),
-                    radius: 60,
-                  )),
+                padding: const EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(widget.userImage),
+                  radius: 60,
+                ),
+              ),
             ),
             Text(
-              widget.customerName,
+              widget.userName,
               style: GoogleFonts.workSans(
-                  fontWeight: FontWeight.w900, fontSize: 22),
+                fontWeight: FontWeight.w900,
+                fontSize: 22,
+              ),
             ),
             SizedBox(
               height: 600,

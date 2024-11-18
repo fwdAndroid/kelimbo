@@ -59,34 +59,54 @@ class _MessagesState extends State<Messages> {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: GestureDetector(
           onTap: () {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (builder) => OtherUserProfile(
-                          userImage: widget.providerPhoto,
-                          userName: widget.providerName,
-                          userEmail: widget.providerEmail,
-                          customerEmail: widget.customerEmail,
-                          customerName: widget.customerName,
-                          customerPhoto: widget.customerPhoto,
-                          uid: widget.customerId,
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (builder) => OtherUserProfile(
+                  userImage: FirebaseAuth.instance.currentUser!.uid ==
+                          widget.customerId
+                      ? widget.providerPhoto
+                      : widget.customerPhoto,
+                  userName: FirebaseAuth.instance.currentUser!.uid ==
+                          widget.customerId
+                      ? widget.providerName
+                      : widget.customerName,
+                  userEmail: FirebaseAuth.instance.currentUser!.uid ==
+                          widget.customerId
+                      ? widget.providerEmail
+                      : widget.customerEmail,
+                  customerEmail: widget.customerEmail,
+                  customerName: widget.customerName,
+                  customerPhoto: widget.customerPhoto,
+                  uid: FirebaseAuth.instance.currentUser!.uid ==
+                          widget.customerId
+                      ? widget.providerId
+                      : widget.customerId,
+                ),
+              ),
+            );
           },
           child: Column(
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(widget.customerPhoto),
+                backgroundImage: NetworkImage(
+                  FirebaseAuth.instance.currentUser!.uid == widget.customerId
+                      ? widget.providerPhoto
+                      : widget.customerPhoto,
+                ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                widget.customerName,
+                FirebaseAuth.instance.currentUser!.uid == widget.customerId
+                    ? widget.providerName
+                    : widget.customerName,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w700,
                   color: colorBlack,
