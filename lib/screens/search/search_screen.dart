@@ -69,55 +69,55 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 1.5,
-            width: MediaQuery.of(context).size.width,
-            child: _searchText.isEmpty
-                ? Center(
+          _searchText.isEmpty
+              ? SizedBox(
+                  height: 500,
+                  child: Center(
                     child: Text(
                       "Por favor ingresa un término de búsqueda",
                       style: TextStyle(color: colorBlack),
                     ),
-                  )
-                : StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection("services")
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-                      if (snapshot.data!.docs.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "No hay servicio disponible",
-                            style: TextStyle(color: colorBlack),
-                          ),
-                        );
-                      }
+                  ),
+                )
+              : StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection("services")
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No hay servicio disponible",
+                          style: TextStyle(color: colorBlack),
+                        ),
+                      );
+                    }
 
-                      final filteredDocs = snapshot.data!.docs.where((doc) {
-                        final data = doc.data() as Map<String, dynamic>;
+                    final filteredDocs = snapshot.data!.docs.where((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
 
-                        // Check if _searchText exists in any field of the document
-                        return data.values.any((value) => value
-                            .toString()
-                            .toLowerCase()
-                            .contains(_searchText.toLowerCase()));
-                      }).toList();
-                      if (filteredDocs.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "No se han encontrado resultados",
-                            style: TextStyle(
-                                color:
-                                    const Color.fromARGB(255, 150, 146, 146)),
-                          ),
-                        );
-                      }
-                      return ListView.builder(
+                      // Check if _searchText exists in any field of the document
+                      return data.values.any((value) => value
+                          .toString()
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase()));
+                    }).toList();
+                    if (filteredDocs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No se han encontrado resultados",
+                          style: TextStyle(
+                              color: const Color.fromARGB(255, 150, 146, 146)),
+                        ),
+                      );
+                    }
+                    return Expanded(
+                      child: ListView.builder(
                           itemCount: filteredDocs.length,
                           itemBuilder: (context, index) {
                             final Map<String, dynamic> data =
@@ -312,9 +312,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                               ),
                             );
-                          });
-                    }),
-          ),
+                          }),
+                    );
+                  }),
         ],
       ),
     );
