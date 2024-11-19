@@ -59,45 +59,48 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 50,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => SearchScreen()));
-                            },
-                            decoration: InputDecoration(
-                              hintText: '¿Como podemos ayudarte?',
-                              border: InputBorder.none,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (builder) => SearchScreen()));
+                  },
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: 50,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                hintText: '¿Como podemos ayudarte?',
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Color(0xFF3B82F6),
-                            shape: BoxShape.circle,
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Color(0xFF3B82F6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_forward,
+                                  color: Colors.white),
+                            ),
                           ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon:
-                                Icon(Icons.arrow_forward, color: Colors.white),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

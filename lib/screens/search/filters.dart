@@ -66,6 +66,8 @@ class _FiltersState extends State<Filters> {
                   } else {
                     selectedFilters.remove(value);
                   }
+                  appliedFilters =
+                      List.from(selectedFilters); // Dynamically update
                 });
               },
               isRadio: false,
@@ -271,26 +273,32 @@ class _FiltersState extends State<Filters> {
     final servicesCollection =
         FirebaseFirestore.instance.collection("services");
 
-    if (appliedFilters.isEmpty) {
-      return Stream<QuerySnapshot>.empty();
-    }
-
+    // Initialize query
     Query query = servicesCollection;
 
-    for (String filter in appliedFilters) {
-      if (filter == "Precio más alto") {
-        query = query.orderBy("price", descending: true);
-      } else if (filter == "Precio más bajo") {
-        query = query.orderBy("price");
-      } else if (filter == "Calificación más alta") {
-        query = query.orderBy("ratingCount", descending: true);
-      } else if (filter == "Calificación más baja") {
-        query = query.orderBy("ratingCount");
-      } else if (filter == "Más trabajo realizado") {
-        query = query.orderBy("totalReviews", descending: true);
-      } else if (filter == "Menos trabajo realizado") {
-        query = query.orderBy("totalReviews");
-      }
+    // Check for each filter and modify the query accordingly
+    if (appliedFilters.contains("Precio más alto") &&
+        !appliedFilters.contains("Precio más bajo")) {
+      query = query.orderBy("price", descending: true);
+    } else if (appliedFilters.contains("Precio más bajo") &&
+        !appliedFilters.contains("Precio más alto")) {
+      query = query.orderBy("price");
+    }
+
+    if (appliedFilters.contains("Calificación más alta") &&
+        !appliedFilters.contains("Calificación más baja")) {
+      query = query.orderBy("ratingCount", descending: true);
+    } else if (appliedFilters.contains("Calificación más baja") &&
+        !appliedFilters.contains("Calificación más alta")) {
+      query = query.orderBy("ratingCount");
+    }
+
+    if (appliedFilters.contains("Más trabajo realizado") &&
+        !appliedFilters.contains("Menos trabajo realizado")) {
+      query = query.orderBy("totalReviews", descending: true);
+    } else if (appliedFilters.contains("Menos trabajo realizado") &&
+        !appliedFilters.contains("Más trabajo realizado")) {
+      query = query.orderBy("totalReviews");
     }
 
     return query.snapshots();
