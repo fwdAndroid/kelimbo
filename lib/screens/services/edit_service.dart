@@ -85,6 +85,7 @@ class _EditServiceState extends State<EditService> {
       discountController.text = (data['pricePerHr'] ?? 0).toString();
       imageUrl = data['photo'];
       dropdownvalue = data['category'] ?? 'Hogar'; // Set dropdown value
+      currencyType = data['currency'] ?? "EURO";
     });
   }
 
