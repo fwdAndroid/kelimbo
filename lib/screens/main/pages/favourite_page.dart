@@ -143,10 +143,11 @@ class _FavouritePageState extends State<FavouritePage> {
                                   Column(
                                     children: [
                                       Text(
-                                        "€${data['price'] ?? '0.0'}",
+                                        "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                                         style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
                                       ),
                                       Text(
                                         "Price",
@@ -200,5 +201,22 @@ class _FavouritePageState extends State<FavouritePage> {
         },
       ),
     );
+  }
+}
+
+String getCurrencySymbol(String currency) {
+  switch (currency) {
+    case 'Euro':
+      return '€';
+    case 'USD':
+      return '\$';
+    case 'BTC':
+      return '₿';
+    case 'ETH':
+      return 'Ξ';
+    case 'G1': // Add custom icons or symbols as needed
+      return 'G1';
+    default:
+      return ''; // Default to no symbol if currency is unrecognized
   }
 }

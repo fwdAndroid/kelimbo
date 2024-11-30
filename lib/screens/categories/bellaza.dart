@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
+import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -81,10 +82,11 @@ class _BellazaState extends State<Bellaza> {
                               Column(
                                 children: [
                                   Text(
-                                    "€" + data['price'].toString(),
+                                    "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                                     style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                   Text(
                                     data['priceType'],

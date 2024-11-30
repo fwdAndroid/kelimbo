@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -95,6 +96,16 @@ class _ChatPageState extends State<ChatPage> {
                       chatData['lastMessageByCustomer'] ??
                           chatData['lastMessageByProvider'] ??
                           "No Message";
+                  final String timestampString = chatData['timestamp'] ?? "";
+                  final DateTime? lastMessageTime = timestampString.isNotEmpty
+                      ? DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(timestampString))
+                      : null;
+
+                  String formattedTime = "";
+                  if (lastMessageTime != null) {
+                    formattedTime = DateFormat.jm().format(lastMessageTime);
+                  }
 
                   return Column(
                     children: [
@@ -133,6 +144,13 @@ class _ChatPageState extends State<ChatPage> {
                               fontWeight: FontWeight.w300, fontSize: 14),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: Text(
+                          formattedTime,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 12,
+                              color: Colors.grey),
                         ),
                       ),
                       const Divider(),

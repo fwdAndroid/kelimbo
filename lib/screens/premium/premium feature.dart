@@ -121,7 +121,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
                 Navigator.of(context).pop();
                 shareOnWhatsApp();
               },
-              child: Text("Compartir en WhatsApp"),
+              child: Text("Compartir"),
             ),
             TextButton(
               onPressed: () {

@@ -428,17 +428,12 @@ class _HomePageState extends State<HomePage> {
                                                   ),
                                                 ],
                                               ),
-                                              Row(
-                                                children: [
-                                                  Text("€"),
-                                                  Text(
-                                                    data['price'].toString(),
-                                                    style: GoogleFonts.inter(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
+                                              Text(
+                                                "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
+                                                style: GoogleFonts.inter(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -601,11 +596,12 @@ class _HomePageState extends State<HomePage> {
                                                 Column(
                                                   children: [
                                                     Text(
-                                                      "€${data['price'] ?? '0.0'}",
+                                                      "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                                                       style: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 20,
+                                                      ),
                                                     ),
                                                     Text(
                                                       "Price",
@@ -671,5 +667,22 @@ class _HomePageState extends State<HomePage> {
             );
           }),
     );
+  }
+}
+
+String getCurrencySymbol(String currency) {
+  switch (currency) {
+    case 'Euro':
+      return '€';
+    case 'USD':
+      return '\$';
+    case 'BTC':
+      return '₿';
+    case 'ETH':
+      return 'Ξ';
+    case 'G1': // Add custom icons or symbols as needed
+      return 'G1';
+    default:
+      return ''; // Default to no symbol if currency is unrecognized
   }
 }

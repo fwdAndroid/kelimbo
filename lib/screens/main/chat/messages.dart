@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/other/other_user_profile.dart';
+import 'package:kelimbo/screens/main/other/other_user_profile_chat.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:intl/intl.dart';
@@ -68,7 +68,7 @@ class _MessagesState extends State<Messages> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (builder) => OtherUserProfile(
+                builder: (builder) => OtherUserProfileChat(
                   userImage: FirebaseAuth.instance.currentUser!.uid ==
                           widget.customerId
                       ? widget.providerPhoto
@@ -236,7 +236,7 @@ class _MessagesState extends State<Messages> {
   }
 
   void sendMessage(String content, int type) {
-    if (content.trim() != '') {
+    if (content.trim().isNotEmpty) {
       messageController.clear();
 
       final currentUserId = FirebaseAuth.instance.currentUser!.uid;
@@ -265,12 +265,15 @@ class _MessagesState extends State<Messages> {
         );
       }).then((value) {
         if (type == 0) {
-          updateLastMessage(content);
+          updateLastMessage(content); // Now updates both users' last messages
         }
       });
 
       scrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    } else {
+      // Optionally, show a snackbar or error dialog to inform the user about the empty message
+      print("Message cannot be empty.");
     }
   }
 
@@ -279,14 +282,25 @@ class _MessagesState extends State<Messages> {
         FirebaseFirestore.instance.collection('chats').doc(widget.chatId);
 
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-    final String fieldToUpdate = (currentUserId == widget.customerId)
-        ? 'lastMessageByCustomer'
-        : 'lastMessageByProvider';
+
+    // Determine the fields to update for both participants
+    final String fieldToUpdateForCurrentUser =
+        (currentUserId == widget.customerId)
+            ? 'lastMessageByCustomer'
+            : 'lastMessageByProvider';
+    final String fieldToUpdateForOtherUser =
+        (currentUserId == widget.customerId)
+            ? 'lastMessageByProvider'
+            : 'lastMessageByCustomer';
 
     final chatDocSnapshot = await chatDocRef.get();
     if (chatDocSnapshot.exists) {
+      // Update both users' last messages
       await chatDocRef.update({
-        fieldToUpdate: messageContent,
+        'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+        fieldToUpdateForCurrentUser: messageContent,
+        fieldToUpdateForOtherUser:
+            messageContent, // Update the other user as well
       }).catchError((error) {
         print("Failed to update last message: $error");
       });

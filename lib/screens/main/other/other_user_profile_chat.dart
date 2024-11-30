@@ -5,7 +5,7 @@ import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/utils/colors.dart';
 
-class OtherUserProfile extends StatefulWidget {
+class OtherUserProfileChat extends StatefulWidget {
   final uid;
   final customerName;
   final customerPhoto;
@@ -14,7 +14,7 @@ class OtherUserProfile extends StatefulWidget {
   final userName;
   final userImage;
 
-  const OtherUserProfile(
+  const OtherUserProfileChat(
       {super.key,
       required this.customerEmail,
       required this.customerName,
@@ -25,10 +25,10 @@ class OtherUserProfile extends StatefulWidget {
       required this.uid});
 
   @override
-  State<OtherUserProfile> createState() => _OtherUserProfileState();
+  State<OtherUserProfileChat> createState() => _OtherUserProfileChatState();
 }
 
-class _OtherUserProfileState extends State<OtherUserProfile> {
+class _OtherUserProfileChatState extends State<OtherUserProfileChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,13 +39,13 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(widget.customerPhoto),
+                backgroundImage: NetworkImage(widget.userImage),
                 radius: 60,
               ),
             ),
           ),
           Text(
-            widget.customerName,
+            widget.userName,
             style: GoogleFonts.workSans(
               fontWeight: FontWeight.w900,
               fontSize: 22,

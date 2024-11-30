@@ -16,6 +16,8 @@ class DeleteAlertWidget extends StatefulWidget {
 }
 
 class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -73,10 +75,21 @@ class _DeleteAlertWidgetState extends State<DeleteAlertWidget> {
             child: Text("Cancelar")),
         ElevatedButton(
           onPressed: () async {
-            await FirebaseFirestore.instance
-                .collection("users")
-                .doc(FirebaseAuth.instance.currentUser!.uid)
-                .delete();
+            final servicesSnapshot = await FirebaseFirestore.instance
+                .collection("services")
+                .where("uid", isEqualTo: uid)
+                .get();
+
+            // Delete each service document
+            for (var doc in servicesSnapshot.docs) {
+              await FirebaseFirestore.instance
+                  .collection("services")
+                  .doc(doc.id)
+                  .delete();
+            }
+
+            // Optionally, delete the user after deleting their services
+            await FirebaseAuth.instance.currentUser!.delete();
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (builder) => AuthLogin()));
             showMessageBar("Cuenta eliminada con éxito", context);
