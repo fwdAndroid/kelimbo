@@ -136,18 +136,37 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => HogarClass()));
-                            },
-                            child: Image.asset(
-                              "assets/home category.png",
-                              width: 100,
-                              height: 100,
-                            ),
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (builder) => HogarClass()));
+                                },
+                                child: Image.asset(
+                                  "assets/home category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              ),
+                              FutureBuilder<String>(
+                                future: fetchFirstSubcategory("Hogar"),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Text("Loading...");
+                                  } else if (snapshot.hasError ||
+                                      !snapshot.hasData) {
+                                    return Text("Error!");
+                                  } else {
+                                    return Text(
+                                        snapshot.data ?? "No Subcategories");
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                           GestureDetector(
                             onTap: () {
@@ -156,10 +175,29 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Salud()));
                             },
-                            child: Image.asset(
-                              "assets/health category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/health category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory("Salud"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -169,10 +207,29 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Turismo()));
                             },
-                            child: Image.asset(
-                              "assets/turism category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/turism category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory("Turismo"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -182,10 +239,30 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Entermiato()));
                             },
-                            child: Image.asset(
-                              "assets/trainning category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/trainning category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future:
+                                      fetchFirstSubcategory("Entrenamiento"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -195,10 +272,29 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Mascotas()));
                             },
-                            child: Image.asset(
-                              "assets/pets category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/pets category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory("Mascotas"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -208,10 +304,29 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Vehiclescat()));
                             },
-                            child: Image.asset(
-                              "assets/vehicle category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/vehicle category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory("Vehículos"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -221,10 +336,30 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Photography()));
                             },
-                            child: Image.asset(
-                              "assets/photography category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/photography category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory(
+                                      "Fotografía y video"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           GestureDetector(
@@ -234,10 +369,29 @@ class _HomePageState extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (builder) => Bellaza()));
                             },
-                            child: Image.asset(
-                              "assets/beauty category.png",
-                              width: 100,
-                              height: 100,
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  "assets/beauty category.png",
+                                  width: 100,
+                                  height: 100,
+                                ),
+                                FutureBuilder<String>(
+                                  future: fetchFirstSubcategory("Belleza"),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return Text("Loading...");
+                                    } else if (snapshot.hasError ||
+                                        !snapshot.hasData) {
+                                      return Text("Error!");
+                                    } else {
+                                      return Text(
+                                          snapshot.data ?? "No Subcategories");
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -667,6 +821,35 @@ class _HomePageState extends State<HomePage> {
             );
           }),
     );
+  }
+
+  Future<String> fetchFirstSubcategory(String category) async {
+    try {
+      // Query Firestore for documents where 'category' matches
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('categories')
+          .where('category', isEqualTo: category)
+          .get();
+
+      // Check if documents exist
+      if (querySnapshot.docs.isNotEmpty) {
+        final data =
+            querySnapshot.docs.first.data(); // Get the first document data
+        if (data.containsKey('subcategories') &&
+            data['subcategories'] is List) {
+          // Extract the subcategories as a List<String>
+          final List<String> subcategories =
+              List<String>.from(data['subcategories']);
+          return subcategories.isNotEmpty
+              ? subcategories.first
+              : "No Subcategories"; // Return the first subcategory
+        }
+      }
+      return "No Subcategories Found"; // Fallback if no subcategories exist
+    } catch (e) {
+      print("Error fetching subcategories: $e");
+      return "Error";
+    }
   }
 }
 

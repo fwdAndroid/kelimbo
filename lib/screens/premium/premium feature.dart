@@ -178,33 +178,126 @@ class _PremiumFeatureState extends State<PremiumFeature> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 10),
-        Text(
-          "BÁSICO (Gratis):",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        Table(
+          border:
+              TableBorder.all(color: Colors.grey), // Adds borders to the table
+          columnWidths: {
+            0: FlexColumnWidth(1), // Basic column width
+            1: FlexColumnWidth(1), // Premium column width
+          },
+          children: [
+            // Header Row
+            TableRow(
+              decoration:
+                  BoxDecoration(color: Colors.grey[200]), // Header background
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "BÁSICO (Gratis)",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "PREMIUM (Compartiendo)",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+            // Benefits Row
+            TableRow(
+              children: [
+                // Basic Benefits
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildBulletPoint(
+                          "Puede publicar hasta 1 anuncio al año."),
+                      buildBulletPoint("Los anuncios serán visibles."),
+                      buildBulletPoint(
+                          "En el básico pueden leer los mensajes que reciben, pero no pueden contestar."),
+                      buildBulletPoint(
+                          "El acceso al botón Trabajo completado está inactivo."),
+                      buildBulletPoint(
+                          "Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
+                    ],
+                  ),
+                ),
+                // Premium Benefits
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildBulletPoint(
+                          "Puede publicar anuncios ilimitados al año."),
+                      buildBulletPoint("Experiencia sin anuncios."),
+                      buildBulletPoint(
+                          "Capacidad para ver los mensajes recibidos y chatear con los clientes."),
+                      buildBulletPoint(
+                          "Puede ver y recibir valoraciones y comentarios de los usuarios."),
+                      buildBulletPoint(
+                          "El acceso al botón Trabajo completado está completamente habilitado."),
+                      buildBulletPoint(
+                          "Puede proporcionar presupuestos y enviar respuestas detalladas a las solicitudes de servicios."),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            // Buttons Row
+            // TableRow(
+            //   children: [
+            //     // Basic Subscription Button
+
+            //     // Premium Subscription Button
+
+            //   ],
+            // ),
+          ],
         ),
-        Text("- Puede publicar hasta 1 anuncio al año."),
-        Text("- Los anuncios serán visibles."),
-        Text(
-            "- En el básico pueden leer los mensajes que reciben, pero no pueden contestar."),
-        Text("- El acceso al botón Trabajo completado está inactivo."),
-        Text(
-            "- Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
-        SizedBox(height: 10),
-        Text(
-          "PREMIUM (Compartiendo):",
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        Text("- Puede publicar anuncios ilimitados al año."),
-        Text("- Experiencia sin anuncios."),
-        Text(
-            "- Capacidad para ver los mensajes recibidos y chatear con los clientes."),
-        Text(
-            "- Puede ver y recibir valoraciones y comentarios de los usuarios."),
-        Text(
-            "- El acceso al botón Trabajo completado está completamente habilitado"),
-        Text(
-            "- Puede proporcionar presupuestos y enviar respuestas detalladas a las solicitudes de servicios."),
       ],
     );
+  }
+
+// Helper function to create a bullet point
+  Widget buildBulletPoint(String text) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+          vertical: 4.0), // Adds spacing between points
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("• ", style: TextStyle(fontSize: 16)), // Bullet
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+// Function to handle Basic subscription activation
+  void activateBasicSubscription() {
+    // Add logic for activating Basic subscription
+    print("Basic subscription activated!");
+    // Optionally, show a success message
+  }
+
+// Function to handle Premium subscription activation
+  void activatePremiumSubscription() {
+    // Add logic for activating Premium subscription
+    print("Premium subscription activated!");
+    // Optionally, show a success message
   }
 }
