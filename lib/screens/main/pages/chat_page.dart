@@ -69,7 +69,7 @@ class _ChatPageState extends State<ChatPage> {
                 return Center(
                   child: Text(
                     "No chats started yet.",
-                    style: TextStyle(color: colorBlack),
+                    style: TextStyle(color: red),
                   ),
                 );
               }

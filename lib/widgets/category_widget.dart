@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/categories/bellaza.dart';
 import 'package:kelimbo/screens/categories/entermiato.dart';
 import 'package:kelimbo/screens/categories/hogar.dart';
@@ -17,6 +18,9 @@ class CategoryWidget extends StatefulWidget {
 }
 
 class _CategoryWidgetState extends State<CategoryWidget> {
+  final Map<String, List<String>> _subcategoriesMap = {};
+  String? _expandedCategory;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,428 +30,116 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (builder) => HogarClass()));
-                  },
-                  child: Image.asset(
-                    "assets/home category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  width: 115,
-                  decoration: BoxDecoration(
-                    color: Color(0xffF3E0FF),
-                    border: Border.all(
-                        width: 2,
-                        color: Color(
-                          0xff6202F1,
-                        )),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: FutureBuilder<String>(
-                    future: fetchFirstSubcategory("Hogar"),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading...");
-                      } else if (snapshot.hasError || !snapshot.hasData) {
-                        return Text("Error!");
-                      } else {
-                        return Center(
-                          child: Text(
-                            snapshot.data ?? "No Subcategories",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff6202F1)),
-                          ),
-                        );
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (builder) => Salud()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/health category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Salud"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Turismo()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/turism category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Turismo"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Entermiato()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/trainning category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Entrenamiento"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Mascotas()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/pets category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Mascotas"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Vehiclescat()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/vehicle category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Vehículos"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Photography()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/photography category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Fotografía y video"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Bellaza()));
-              },
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/beauty category.png",
-                    width: 100,
-                    height: 100,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 10, right: 10),
-                    height: 40,
-                    width: 115,
-                    decoration: BoxDecoration(
-                      color: Color(0xffF3E0FF),
-                      border: Border.all(
-                          width: 2,
-                          color: Color(
-                            0xff6202F1,
-                          )),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: FutureBuilder<String>(
-                      future: fetchFirstSubcategory("Belleza"),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading...");
-                        } else if (snapshot.hasError || !snapshot.hasData) {
-                          return Text("Error!");
-                        } else {
-                          return Center(
-                            child: Text(
-                              snapshot.data ?? "No Subcategories",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xff6202F1)),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildCategory(
+                context, "Hogar", "assets/home_category.png", HogarClass()),
+            _buildCategory(
+                context, "Salud", "assets/health_category.png", Salud()),
+            _buildCategory(
+                context, "Turismo", "assets/turism_category.png", Turismo()),
+            _buildCategory(context, "Entrenamiento",
+                "assets/trainning_category.png", Entermiato()),
+            _buildCategory(
+                context, "Mascotas", "assets/pets_category.png", Mascotas()),
+            _buildCategory(context, "Vehículos", "assets/vehicle_category.png",
+                Vehiclescat()),
+            _buildCategory(context, "Fotografía y vídeo",
+                "assets/photography_category.png", Photography()),
+            _buildCategory(
+                context, "Belleza", "assets/beauty_category.png", Bellaza()),
           ],
         ),
       ),
     );
   }
 
-  Future<String> fetchFirstSubcategory(String category) async {
+  Widget _buildCategory(
+      BuildContext context, String category, String assetPath, Widget page) {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (builder) => page));
+          },
+          child: Image.asset(
+            assetPath,
+            width: 100,
+            height: 100,
+          ),
+        ),
+        GestureDetector(
+          onTap: () => _toggleSubcategories(category),
+          child: Text(
+            category,
+            style: GoogleFonts.inter(
+                color: Color(0xff4E5057),
+                fontWeight: FontWeight.bold,
+                fontSize: 17),
+          ),
+        ),
+        if (_expandedCategory == category &&
+            _subcategoriesMap[category]?.isNotEmpty == true)
+          Padding(
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Wrap(
+              spacing: 12, // Horizontal spacing between chips
+              runSpacing: 12, // Vertical spacing between rows
+              alignment: WrapAlignment.center, // Center the items horizontally
+              children: _subcategoriesMap[category]!.map((subcategory) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 16.0),
+                  decoration: BoxDecoration(
+                    color: const Color(0xffF3E0FF),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Text(
+                    subcategory,
+                    style: const TextStyle(
+                      color: Color(0xff6202F1),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              }).toList(), // Limit to 3 items per row
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _toggleSubcategories(String category) async {
+    if (_expandedCategory == category) {
+      setState(() {
+        _expandedCategory = null; // Hide subcategories if already expanded
+      });
+    } else {
+      final subcategories = await fetchAllSubcategories(category);
+      setState(() {
+        _expandedCategory =
+            category; // Show subcategories for the selected category
+        _subcategoriesMap[category] = subcategories;
+      });
+    }
+  }
+
+  Future<List<String>> fetchAllSubcategories(String category) async {
     try {
-      // Query Firestore for documents where 'category' matches
       final querySnapshot = await FirebaseFirestore.instance
           .collection('categories')
           .where('category', isEqualTo: category)
           .get();
 
-      // Check if documents exist
       if (querySnapshot.docs.isNotEmpty) {
-        final data =
-            querySnapshot.docs.first.data(); // Get the first document data
+        final data = querySnapshot.docs.first.data();
         if (data.containsKey('subcategories') &&
             data['subcategories'] is List) {
-          // Extract the subcategories as a List<String>
-          final List<String> subcategories =
-              List<String>.from(data['subcategories']);
-          return subcategories.isNotEmpty
-              ? subcategories.first
-              : "No Subcategories"; // Return the first subcategory
+          return List<String>.from(data['subcategories']);
         }
       }
-      return "No Subcategories Found"; // Fallback if no subcategories exist
+      return [];
     } catch (e) {
-      print("Error fetching subcategories: $e");
-      return "Error";
+      return [];
     }
   }
 }

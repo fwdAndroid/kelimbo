@@ -121,12 +121,16 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16),
                                 ),
-                                subtitle: Text(
-                                  data['description'],
-                                  style: GoogleFonts.inter(
-                                      color: Color(0xff9C9EA2),
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 15),
+                                subtitle: SizedBox(
+                                  width: 200,
+                                  height: 150,
+                                  child: Text(
+                                    data['description'],
+                                    style: GoogleFonts.inter(
+                                        color: Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.w300,
+                                        fontSize: 15),
+                                  ),
                                 ),
                               ),
                               Row(
