@@ -54,58 +54,82 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
   Widget _buildCategory(
       BuildContext context, String category, String assetPath, Widget page) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (builder) => page));
-          },
-          child: Image.asset(
-            assetPath,
-            width: 100,
-            height: 100,
-          ),
-        ),
-        GestureDetector(
-          onTap: () => _toggleSubcategories(category),
-          child: Text(
-            category,
-            style: GoogleFonts.inter(
-                color: Color(0xff4E5057),
-                fontWeight: FontWeight.bold,
-                fontSize: 17),
-          ),
-        ),
-        if (_expandedCategory == category &&
-            _subcategoriesMap[category]?.isNotEmpty == true)
-          Padding(
-            padding: const EdgeInsets.only(top: 20.0),
-            child: Wrap(
-              spacing: 12, // Horizontal spacing between chips
-              runSpacing: 12, // Vertical spacing between rows
-              alignment: WrapAlignment.center, // Center the items horizontally
-              children: _subcategoriesMap[category]!.map((subcategory) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xffF3E0FF),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Text(
-                    subcategory,
-                    style: const TextStyle(
-                      color: Color(0xff6202F1),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                );
-              }).toList(), // Limit to 3 items per row
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (builder) => page));
+            },
+            child: Image.asset(
+              assetPath,
+              width: 100,
+              height: 100,
             ),
           ),
-      ],
+          GestureDetector(
+            onTap: () => _toggleSubcategories(category),
+            child: Text(
+              category,
+              style: GoogleFonts.inter(
+                  color: Color(0xff4E5057),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17),
+            ),
+          ),
+          if (_expandedCategory == category &&
+              _subcategoriesMap[category]?.isNotEmpty == true)
+            Padding(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: Column(
+                children: _buildSubcategoriesRows(_subcategoriesMap[category]!),
+              ),
+            ),
+        ],
+      ),
     );
+  }
+
+  // This function breaks the list into chunks of the desired size (4 items per row)
+  List<Widget> _buildSubcategoriesRows(List<String> subcategories) {
+    List<Widget> rows = [];
+    int itemsPerRow = 4; // You want 4 items per row
+    int rowCount = (subcategories.length / itemsPerRow).ceil();
+
+    for (int i = 0; i < rowCount; i++) {
+      int startIndex = i * itemsPerRow;
+      int endIndex = (i + 1) * itemsPerRow;
+      List<String> rowItems = subcategories.sublist(startIndex,
+          endIndex > subcategories.length ? subcategories.length : endIndex);
+
+      rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: rowItems.map((subcategory) {
+            return Container(
+              margin: const EdgeInsets.only(right: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              decoration: BoxDecoration(
+                color: const Color(0xffF3E0FF),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Text(
+                subcategory,
+                style: const TextStyle(
+                  color: Color(0xff6202F1),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      );
+    }
+
+    return rows;
   }
 
   void _toggleSubcategories(String category) async {

@@ -19,6 +19,7 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -68,14 +69,19 @@ class _ChatPageState extends State<ChatPage> {
               if (allChats.isEmpty) {
                 return Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
                         "assets/nochat.png",
                         height: 300,
+                        width: 200,
                       ),
                       Text(
-                        "No chats started yet.",
-                        style: TextStyle(color: red),
+                        "Aún no se han iniciado los chats.",
+                        style: TextStyle(
+                            color: colorBlack,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),

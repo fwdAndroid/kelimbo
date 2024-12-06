@@ -144,10 +144,14 @@ class _HomePageState extends State<HomePage> {
                     return Center(
                       child: Column(
                         children: [
-                          Image.asset("assets/nofavourite.png"),
+                          Image.asset(
+                            "assets/op.png",
+                            height: 200,
+                            width: 200,
+                          ),
                           Text(
                             "No results found for '$_searchText'.",
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: colorBlack),
                           ),
                         ],
                       ),

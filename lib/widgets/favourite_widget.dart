@@ -30,11 +30,18 @@ class FavouriteWidget extends StatelessWidget {
           if (snapshot.data!.docs.isEmpty) {
             return Column(
               children: [
-                Image.asset("assets/nofavourite.png"),
+                Image.asset(
+                  "assets/nofavourite.png",
+                  height: 200,
+                  width: 200,
+                ),
                 Center(
                   child: Text(
                     "No hay favoritos disponibles",
-                    style: TextStyle(color: colorBlack),
+                    style: TextStyle(
+                        color: colorBlack,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ],

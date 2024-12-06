@@ -31,11 +31,24 @@ class _FavouritePageState extends State<FavouritePage> {
             );
           }
           if (snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text(
-                "No hay favoritos disponibles",
-                style: TextStyle(color: colorBlack),
-              ),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  "assets/nofavourite.png",
+                  height: 200,
+                  width: 200,
+                ),
+                Center(
+                  child: Text(
+                    "No hay favoritos disponibles",
+                    style: TextStyle(
+                        color: colorBlack,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
             );
           }
 
@@ -82,11 +95,24 @@ class _FavouritePageState extends State<FavouritePage> {
                           return Text("");
                         }
                         if (!snapshot.hasData || snapshot.data == null) {
-                          return Center(
-                              child: Column(children: [
-                            Image.asset("assets/nofavourite.png", height: 300),
-                            Text('No hay servicio favorito disponible')
-                          ]));
+                          return Column(
+                            children: [
+                              Image.asset(
+                                "assets/nofavourite.png",
+                                height: 300,
+                                width: 300,
+                              ),
+                              Center(
+                                child: Text(
+                                  "No hay favoritos disponibles",
+                                  style: TextStyle(
+                                      color: colorBlack,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          );
                         }
                         var snap = snapshot.data;
                         return GestureDetector(

@@ -35,7 +35,8 @@ class PopularServiceWidget extends StatelessWidget {
                   children: [
                     Image.asset(
                       "assets/op.png",
-                      height: 300,
+                      height: 200,
+                      width: 200,
                     ),
                     Text(
                       "No hay servicio disponible",
