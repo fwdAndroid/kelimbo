@@ -82,7 +82,11 @@ class _FavouritePageState extends State<FavouritePage> {
                           return Text("");
                         }
                         if (!snapshot.hasData || snapshot.data == null) {
-                          return Center(child: Text('No data available'));
+                          return Center(
+                              child: Column(children: [
+                            Image.asset("assets/nofavourite.png", height: 300),
+                            Text('No hay servicio favorito disponible')
+                          ]));
                         }
                         var snap = snapshot.data;
                         return GestureDetector(

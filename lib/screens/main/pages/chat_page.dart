@@ -67,9 +67,17 @@ class _ChatPageState extends State<ChatPage> {
 
               if (allChats.isEmpty) {
                 return Center(
-                  child: Text(
-                    "No chats started yet.",
-                    style: TextStyle(color: red),
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/nochat.png",
+                        height: 300,
+                      ),
+                      Text(
+                        "No chats started yet.",
+                        style: TextStyle(color: red),
+                      ),
+                    ],
                   ),
                 );
               }

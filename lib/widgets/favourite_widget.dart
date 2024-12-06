@@ -28,11 +28,16 @@ class FavouriteWidget extends StatelessWidget {
             );
           }
           if (snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text(
-                "No hay favoritos disponibles",
-                style: TextStyle(color: colorBlack),
-              ),
+            return Column(
+              children: [
+                Image.asset("assets/nofavourite.png"),
+                Center(
+                  child: Text(
+                    "No hay favoritos disponibles",
+                    style: TextStyle(color: colorBlack),
+                  ),
+                ),
+              ],
             );
           }
 

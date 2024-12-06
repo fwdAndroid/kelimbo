@@ -142,9 +142,14 @@ class _HomePageState extends State<HomePage> {
 
                   if (filteredDocs.isEmpty) {
                     return Center(
-                      child: Text(
-                        "No results found for '$_searchText'.",
-                        style: TextStyle(color: Colors.grey),
+                      child: Column(
+                        children: [
+                          Image.asset("assets/nofavourite.png"),
+                          Text(
+                            "No results found for '$_searchText'.",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
                       ),
                     );
                   }

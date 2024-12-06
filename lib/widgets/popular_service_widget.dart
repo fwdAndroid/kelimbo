@@ -31,9 +31,17 @@ class PopularServiceWidget extends StatelessWidget {
             }
             if (snapshot.data!.docs.isEmpty) {
               return Center(
-                child: Text(
-                  "No hay servicio disponible",
-                  style: TextStyle(color: colorBlack),
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/op.png",
+                      height: 300,
+                    ),
+                    Text(
+                      "No hay servicio disponible",
+                      style: TextStyle(color: colorBlack),
+                    ),
+                  ],
                 ),
               );
             }
