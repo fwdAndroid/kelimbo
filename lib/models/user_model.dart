@@ -10,7 +10,7 @@ class UserModel {
   String category;
   String subCategory;
   String location;
-
+  String phone;
   UserModel({
     required this.uid,
     required this.email,
@@ -21,6 +21,7 @@ class UserModel {
     required this.category,
     required this.subCategory,
     required this.location,
+    required this.phone,
   });
 
   ///Converting Object into Json Object
@@ -34,6 +35,7 @@ class UserModel {
         'location': location,
         'category': category,
         'subCategory': subCategory,
+        'phone': phone,
       };
 
   ///
@@ -50,6 +52,7 @@ class UserModel {
       location: snapshot['location'],
       category: snapshot['category'],
       subCategory: snapshot['subCategory'],
+      phone: snapshot['phone'],
     );
   }
 }

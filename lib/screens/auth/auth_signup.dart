@@ -30,6 +30,7 @@ class _SignUpState extends State<SignUp> {
   TextEditingController providerPassController = TextEditingController();
   TextEditingController NameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   //Password Check
   bool passwordVisible = false;
   bool passwordVisibleConfrim = false;
@@ -246,6 +247,14 @@ class _SignUpState extends State<SignUp> {
                           IconSuffix: Icons.location_pin,
                           textInputType: TextInputType.emailAddress),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8),
+                      child: TextFormInputField(
+                          controller: phoneController,
+                          hintText: "Teléfono",
+                          IconSuffix: Icons.phone,
+                          textInputType: TextInputType.emailAddress),
+                    ),
                     FutureBuilder<List<Map<String, dynamic>>>(
                       future: fetchCategories(),
                       builder: (context, snapshot) {
@@ -321,6 +330,7 @@ class _SignUpState extends State<SignUp> {
                             if (_formKey.currentState?.validate() ?? false) {
                               Uint8List imageToUpload = _image ?? Uint8List(0);
                               await AuthMethods().signUpUser(
+                                  phone: phoneController.text.trim(),
                                   category: selectedCategory!,
                                   subCategory: selectedSubcategory!,
                                   email: providerEmailController.text.trim(),
@@ -370,7 +380,11 @@ class _SignUpState extends State<SignUp> {
                               "fullName": user?.displayName,
                               "uid": user?.uid,
                               "password": "Auto Take Password",
-                              "confrimPassword": "Auto Take Password"
+                              "confrimPassword": "Auto Take Password",
+                              "phone": user?.phoneNumber,
+                              "location": "Spain",
+                              "category": "Limpieza",
+                              "subCategory": "dhfn",
                             });
 
                             setState(() {

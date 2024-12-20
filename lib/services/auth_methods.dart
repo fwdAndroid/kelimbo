@@ -25,6 +25,7 @@ class AuthMethods {
       required String category,
       required String subCategory,
       required String location,
+      required String phone,
       required Uint8List file}) async {
     String res = 'Wrong Email or Password';
     try {
@@ -42,6 +43,7 @@ class AuthMethods {
             email: email,
             password: pass,
             fullName: name,
+            phone: phone,
             category: category,
             subCategory: subCategory,
             location: location,

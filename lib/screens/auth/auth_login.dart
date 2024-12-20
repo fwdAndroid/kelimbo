@@ -206,12 +206,16 @@ class _AuthLoginState extends State<AuthLogin> {
                               .collection("users")
                               .doc(user.uid)
                               .set({
-                            "image": user.photoURL ?? "",
-                            "email": user.email,
-                            "fullName": user.displayName,
-                            "uid": user.uid,
+                            "image": user?.photoURL?.toString(),
+                            "email": user?.email,
+                            "fullName": user?.displayName,
+                            "uid": user?.uid,
                             "password": "Auto Take Password",
-                            "confirmPassword": "Auto Take Password"
+                            "confrimPassword": "Auto Take Password",
+                            "phone": user?.phoneNumber,
+                            "location": "Spain",
+                            "category": "Limpieza",
+                            "subCategory": "dhfn",
                           });
                         }
 
