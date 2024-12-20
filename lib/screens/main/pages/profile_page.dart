@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/premium/premium%20feature.dart';
 import 'package:kelimbo/screens/profile_pages/completed_jobs.dart';
-import 'package:kelimbo/screens/profile_pages/edit_profile.dart';
+import 'package:kelimbo/screens/profile_pages/view_profile.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_awarded_to_me.dart';
 import 'package:kelimbo/screens/profile_pages/jobs_hired.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
@@ -76,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ListTile(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => EditProfile()));
+                      MaterialPageRoute(builder: (builder) => ViewProfile()));
                 },
                 title: Text(
                   "Ver perfil",

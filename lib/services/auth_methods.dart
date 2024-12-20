@@ -22,6 +22,9 @@ class AuthMethods {
       {required String email,
       required String pass,
       required String name,
+      required String category,
+      required String subCategory,
+      required String location,
       required Uint8List file}) async {
     String res = 'Wrong Email or Password';
     try {
@@ -39,6 +42,9 @@ class AuthMethods {
             email: email,
             password: pass,
             fullName: name,
+            category: category,
+            subCategory: subCategory,
+            location: location,
             image: photoURL);
         await firebaseFirestore
             .collection('users')

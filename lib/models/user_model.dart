@@ -7,6 +7,9 @@ class UserModel {
   String confrimPassword;
   String password;
   String fullName;
+  String category;
+  String subCategory;
+  String location;
 
   UserModel({
     required this.uid,
@@ -15,6 +18,9 @@ class UserModel {
     required this.confrimPassword,
     required this.image,
     required this.fullName,
+    required this.category,
+    required this.subCategory,
+    required this.location,
   });
 
   ///Converting Object into Json Object
@@ -25,6 +31,9 @@ class UserModel {
         'email': email,
         'fullName': fullName,
         'confrimPassword': confrimPassword,
+        'location': location,
+        'category': category,
+        'subCategory': subCategory,
       };
 
   ///
@@ -38,6 +47,9 @@ class UserModel {
       fullName: snapshot['fullName'],
       email: snapshot['email'],
       confrimPassword: snapshot['confrimPassword'],
+      location: snapshot['location'],
+      category: snapshot['category'],
+      subCategory: snapshot['subCategory'],
     );
   }
 }
