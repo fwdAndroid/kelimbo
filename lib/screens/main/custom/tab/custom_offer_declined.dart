@@ -5,29 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/utils/colors.dart';
 
-class CustomOffer extends StatefulWidget {
-  const CustomOffer({super.key});
+class CustomOfferDeclined extends StatefulWidget {
+  const CustomOfferDeclined({super.key});
 
   @override
-  State<CustomOffer> createState() => _CustomOfferState();
+  State<CustomOfferDeclined> createState() => _CustomOfferDeclinedState();
 }
 
-class _CustomOfferState extends State<CustomOffer>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +20,7 @@ class _CustomOfferState extends State<CustomOffer>
         stream: FirebaseFirestore.instance
             .collection("customOffers")
             .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .where("status", isEqualTo: "pending")
+            .where("status", isEqualTo: "declined")
             .snapshots(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
