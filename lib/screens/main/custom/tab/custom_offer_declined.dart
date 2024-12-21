@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_delined_offer_detail.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -38,39 +39,51 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
             itemBuilder: (context, index) {
               final Map<String, dynamic> data =
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
-              return Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'ProviderName: ${data['serviceProviderName']}',
-                        style: GoogleFonts.inter(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      subtitle: Text(
-                        "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+              return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomDeclinedOfferDetail(
+                                status: data['status'],
+                                uuid: data['offerId'],
+                                description: data['description'],
+                                currency: data['currency'],
+                                price: data['price'])));
+                  },
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          title: Text(
+                            'ProviderName: ${data['serviceProviderName']}',
+                            style: GoogleFonts.inter(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          subtitle: Text(
+                            "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
-                      ),
+                        Text(
+                          "Description",
+                          style: TextStyle(
+                              color: colorBlack,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        Text(data['description'] ?? 'No description available'),
+                        Text(
+                          data['status'] ?? 'No description available',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Description",
-                      style: TextStyle(
-                          color: colorBlack,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ),
-                    Text(data['description'] ?? 'No description available'),
-                    Text(
-                      data['status'] ?? 'No description available',
-                      style: TextStyle(color: Colors.green),
-                    ),
-                  ],
-                ),
-              );
+                  ));
             },
           );
         },
