@@ -121,38 +121,40 @@ class _AuthLoginState extends State<AuthLogin> {
                     color: mainColor,
                   ),
                 )
-              : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SaveButton(
-                    title: "Iniciar sesión",
-                    onTap: () async {
-                      if (customerEmailController.text.isEmpty ||
-                          customerPassController.text.isEmpty) {
-                        showMessageBar(
-                            "Se requiere correo electrónico y contraseña",
-                            context);
-                      } else {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        String result = await AuthMethods().loginUpUser(
-                          email: customerEmailController.text.trim(),
-                          pass: customerPassController.text.trim(),
-                        );
-                        if (result == 'success') {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => MainDashboard()),
-                          );
+              : Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SaveButton(
+                      title: "Iniciar sesión",
+                      onTap: () async {
+                        if (customerEmailController.text.isEmpty ||
+                            customerPassController.text.isEmpty) {
+                          showMessageBar(
+                              "Se requiere correo electrónico y contraseña",
+                              context);
                         } else {
-                          showMessageBar(result, context);
+                          setState(() {
+                            isLoading = true;
+                          });
+                          String result = await AuthMethods().loginUpUser(
+                            email: customerEmailController.text.trim(),
+                            pass: customerPassController.text.trim(),
+                          );
+                          if (result == 'success') {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => MainDashboard()),
+                            );
+                          } else {
+                            showMessageBar(result, context);
+                          }
+                          setState(() {
+                            isLoading = false;
+                          });
                         }
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }
-                    },
+                      },
+                    ),
                   ),
                 ),
           Align(

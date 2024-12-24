@@ -11,11 +11,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
+import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/validator/validator_function.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'package:kelimbo/widgets/text_form_field.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -28,9 +28,8 @@ class _SignUpState extends State<SignUp> {
   TextEditingController providerEmailController = TextEditingController();
   TextEditingController reenter = TextEditingController();
   TextEditingController providerPassController = TextEditingController();
-  TextEditingController NameController = TextEditingController();
-  TextEditingController locationController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  // TextEditingController locationController = TextEditingController();
+  // TextEditingController phoneController = TextEditingController();
   //Password Check
   bool passwordVisible = false;
   bool passwordVisibleConfrim = false;
@@ -51,29 +50,29 @@ class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
   //Categories and SubCategories
-  String? selectedCategory;
-  String? selectedSubcategory;
-  List<String> subcategories = [];
+  // String? selectedCategory;
+  // String? selectedSubcategory;
+  // List<String> subcategories = [];
 
-  // Fetch categories from Firestore
-  Future<List<Map<String, dynamic>>> fetchCategories() async {
-    final snapshot =
-        await FirebaseFirestore.instance.collection('categories').get();
-    return snapshot.docs
-        .map((doc) => {'id': doc.id, 'data': doc.data()})
-        .toList();
-  }
+  // // Fetch categories from Firestore
+  // Future<List<Map<String, dynamic>>> fetchCategories() async {
+  //   final snapshot =
+  //       await FirebaseFirestore.instance.collection('categories').get();
+  //   return snapshot.docs
+  //       .map((doc) => {'id': doc.id, 'data': doc.data()})
+  //       .toList();
+  // }
 
-  // Fetch subcategories based on selected category document ID
-  void fetchSubcategories(String documentId) async {
-    final doc = await FirebaseFirestore.instance
-        .collection('categories')
-        .doc(documentId)
-        .get();
-    setState(() {
-      subcategories = List<String>.from(doc['subcategories'] ?? []);
-    });
-  }
+  // // Fetch subcategories based on selected category document ID
+  // void fetchSubcategories(String documentId) async {
+  //   final doc = await FirebaseFirestore.instance
+  //       .collection('categories')
+  //       .doc(documentId)
+  //       .get();
+  //   setState(() {
+  //     subcategories = List<String>.from(doc['subcategories'] ?? []);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -121,14 +120,7 @@ class _SignUpState extends State<SignUp> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8),
-                      child: TextFormInputField(
-                          controller: NameController,
-                          hintText: "Nombre completo",
-                          IconSuffix: Icons.person,
-                          textInputType: TextInputType.emailAddress),
-                    ),
+
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 8.0,
@@ -239,81 +231,78 @@ class _SignUpState extends State<SignUp> {
                           ),
                           controller: reenter,
                         )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8),
-                      child: TextFormInputField(
-                          controller: locationController,
-                          hintText: "Ubicación",
-                          IconSuffix: Icons.location_pin,
-                          textInputType: TextInputType.emailAddress),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8),
-                      child: TextFormInputField(
-                          controller: phoneController,
-                          hintText: "Teléfono",
-                          IconSuffix: Icons.phone,
-                          textInputType: TextInputType.emailAddress),
-                    ),
-                    FutureBuilder<List<Map<String, dynamic>>>(
-                      future: fetchCategories(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return CircularProgressIndicator();
-                        }
-                        final categories = snapshot.data!;
-                        return DropdownButton<String>(
-                          value: selectedCategory,
-                          hint: Text("Select Category"),
-                          items: categories
-                              .map((category) => DropdownMenuItem<String>(
-                                    value: category['data']['category'],
-                                    child: Text(category['data']['category']),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCategory = value;
-                              selectedSubcategory = null; // Reset subcategory
-                              subcategories = [];
-                            });
-                            if (value != null) {
-                              final categoryDoc = categories.firstWhere(
-                                  (cat) => cat['data']['category'] == value);
-                              fetchSubcategories(categoryDoc['id']);
-                            }
-                          },
-                        );
-                      },
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    //   child: TextFormInputField(
+                    //       controller: locationController,
+                    //       hintText: "Ubicación",
+                    //       IconSuffix: Icons.location_pin,
+                    //       textInputType: TextInputType.emailAddress),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 8.0, right: 8),
+                    //   child: TextFormInputField(
+                    //       controller: phoneController,
+                    //       hintText: "Teléfono",
+                    //       IconSuffix: Icons.phone,
+                    //       textInputType: TextInputType.emailAddress),
+                    // ),
+                    // FutureBuilder<List<Map<String, dynamic>>>(
+                    //   future: fetchCategories(),
+                    //   builder: (context, snapshot) {
+                    //     if (!snapshot.hasData) {
+                    //       return CircularProgressIndicator();
+                    //     }
+                    //     final categories = snapshot.data!;
+                    //     return DropdownButton<String>(
+                    //       value: selectedCategory,
+                    //       hint: Text("Select Category"),
+                    //       items: categories
+                    //           .map((category) => DropdownMenuItem<String>(
+                    //                 value: category['data']['category'],
+                    //                 child: Text(category['data']['category']),
+                    //               ))
+                    //           .toList(),
+                    //       onChanged: (value) {
+                    //         setState(() {
+                    //           selectedCategory = value;
+                    //           selectedSubcategory = null; // Reset subcategory
+                    //           subcategories = [];
+                    //         });
+                    //         if (value != null) {
+                    //           final categoryDoc = categories.firstWhere(
+                    //               (cat) => cat['data']['category'] == value);
+                    //           fetchSubcategories(categoryDoc['id']);
+                    //         }
+                    //       },
+                    //     );
+                    //   },
+                    // ),
                     SizedBox(height: 16),
 
                     // Subcategory Dropdown
-                    if (selectedCategory != null)
-                      DropdownButton<String>(
-                        value: selectedSubcategory,
-                        hint: Text("Select Subcategory"),
-                        items: subcategories
-                            .map((subcategory) => DropdownMenuItem<String>(
-                                  value: subcategory,
-                                  child: Text(subcategory),
-                                ))
-                            .toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedSubcategory = value;
-                          });
-                        },
-                      ),
+                    // if (selectedCategory != null)
+                    //   DropdownButton<String>(
+                    //     value: selectedSubcategory,
+                    //     hint: Text("Select Subcategory"),
+                    //     items: subcategories
+                    //         .map((subcategory) => DropdownMenuItem<String>(
+                    //               value: subcategory,
+                    //               child: Text(subcategory),
+                    //             ))
+                    //         .toList(),
+                    //     onChanged: (value) {
+                    //       setState(() {
+                    //         selectedSubcategory = value;
+                    //       });
+                    //     },
+                    //   ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SaveButton(
                         title: "Únete",
                         onTap: () async {
-                          if (NameController.text.isEmpty) {
-                            showMessageBar("el nombre es requerido", context);
-                          }
                           if (providerEmailController.text.isEmpty) {
                             showMessageBar(
                                 "Se requiere correo electrónico", context);
@@ -330,26 +319,23 @@ class _SignUpState extends State<SignUp> {
                             if (_formKey.currentState?.validate() ?? false) {
                               Uint8List imageToUpload = _image ?? Uint8List(0);
                               await AuthMethods().signUpUser(
-                                  phone: phoneController.text.trim(),
-                                  category: selectedCategory!,
-                                  subCategory: selectedSubcategory!,
+                                  phone: "",
+                                  category: "",
+                                  subCategory: "",
                                   email: providerEmailController.text.trim(),
                                   pass: providerPassController.text.trim(),
-                                  name: NameController.text.trim(),
-                                  location: locationController.text.trim(),
+                                  name: "",
+                                  location: "",
                                   file: imageToUpload);
                               setState(() {
                                 isLoading = false;
                               });
-                              showMessageBar("Inscripción completa", context);
+
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (builder) => MainDashboard()));
+                                      builder: (builder) => ProfilePage1()));
                             }
-                            setState(() {
-                              isLoading = false;
-                            });
                           }
                         },
                       ),
