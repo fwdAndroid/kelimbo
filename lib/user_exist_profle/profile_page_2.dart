@@ -151,6 +151,7 @@ class _ProfilePage2State extends State<ProfilePage2> {
               ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
                   width: 200,
