@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/custom/send_custom_offers.dart';
 import 'package:kelimbo/screens/main/custom/tab/current_job.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer.dart';
+import 'package:kelimbo/screens/main/custom/tab/custom_offer_completed.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer_declined.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -11,7 +12,7 @@ class CustomOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -31,6 +32,7 @@ class CustomOffers extends StatelessWidget {
             tabs: [
               Tab(text: "Current Job"),
               Tab(text: "Send Custom Offer"),
+              Tab(text: "Completed Offers"),
               Tab(text: "Declined Offers"),
             ],
           ),
@@ -40,6 +42,7 @@ class CustomOffers extends StatelessWidget {
           children: [
             CurrentJob(),
             CustomOffer(),
+            CustomOfferCompleted(),
             CustomOfferDeclined(),
           ],
         ),
