@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/auth/auth_signup.dart';
 import 'package:kelimbo/screens/auth/forgot_password.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
+import 'package:kelimbo/screens/main/pages/profile_page.dart';
 import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -210,14 +211,9 @@ class _AuthLoginState extends State<AuthLogin> {
                               .set({
                             "image": user?.photoURL?.toString(),
                             "email": user?.email,
-                            "fullName": user?.displayName,
                             "uid": user?.uid,
                             "password": "Auto Take Password",
                             "confrimPassword": "Auto Take Password",
-                            "phone": user?.phoneNumber,
-                            "location": "Spain",
-                            "category": "Limpieza",
-                            "subCategory": "dhfn",
                           });
                         }
 
@@ -225,7 +221,7 @@ class _AuthLoginState extends State<AuthLogin> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MainDashboard()),
+                              builder: (context) => ProfilePage()),
                         );
                       } catch (e) {
                         print("Error storing user data: $e");

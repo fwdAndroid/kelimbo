@@ -9,7 +9,6 @@ import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
-import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -300,45 +299,55 @@ class _SignUpState extends State<SignUp> {
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: SaveButton(
-                        title: "Únete",
-                        onTap: () async {
-                          if (providerEmailController.text.isEmpty) {
-                            showMessageBar(
-                                "Se requiere correo electrónico", context);
-                          } else if (providerPassController.text.isEmpty) {
-                            showMessageBar("Se requiere contraseña ", context);
-                          } else if (reenter.text.isEmpty) {
-                            showMessageBar(
-                                "Se requiere confirmar la contraseña ",
-                                context);
-                          } else {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            if (_formKey.currentState?.validate() ?? false) {
-                              Uint8List imageToUpload = _image ?? Uint8List(0);
-                              await AuthMethods().signUpUser(
-                                  phone: "",
-                                  category: "",
-                                  subCategory: "",
-                                  email: providerEmailController.text.trim(),
-                                  pass: providerPassController.text.trim(),
-                                  name: "",
-                                  location: "",
-                                  file: imageToUpload);
-                              setState(() {
-                                isLoading = false;
-                              });
+                      child: isLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : SaveButton(
+                              title: "Únete",
+                              onTap: () async {
+                                if (providerEmailController.text.isEmpty) {
+                                  showMessageBar(
+                                      "Se requiere correo electrónico",
+                                      context);
+                                } else if (providerPassController
+                                    .text.isEmpty) {
+                                  showMessageBar(
+                                      "Se requiere contraseña ", context);
+                                } else if (reenter.text.isEmpty) {
+                                  showMessageBar(
+                                      "Se requiere confirmar la contraseña ",
+                                      context);
+                                } else {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  if (_formKey.currentState?.validate() ??
+                                      false) {
+                                    Uint8List imageToUpload =
+                                        _image ?? Uint8List(0);
+                                    await AuthMethods().signUpUser(
+                                        phone: "",
+                                        category: "",
+                                        subCategory: "",
+                                        email:
+                                            providerEmailController.text.trim(),
+                                        pass:
+                                            providerPassController.text.trim(),
+                                        name: "",
+                                        location: "",
+                                        file: imageToUpload);
+                                    setState(() {
+                                      isLoading = false;
+                                    });
 
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => ProfilePage1()));
-                            }
-                          }
-                        },
-                      ),
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                ProfilePage1()));
+                                  }
+                                }
+                              },
+                            ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -363,14 +372,9 @@ class _SignUpState extends State<SignUp> {
                                 .set({
                               "image": user?.photoURL?.toString(),
                               "email": user?.email,
-                              "fullName": user?.displayName,
                               "uid": user?.uid,
                               "password": "Auto Take Password",
                               "confrimPassword": "Auto Take Password",
-                              "phone": user?.phoneNumber,
-                              "location": "Spain",
-                              "category": "Limpieza",
-                              "subCategory": "dhfn",
                             });
 
                             setState(() {
@@ -378,7 +382,7 @@ class _SignUpState extends State<SignUp> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (builder) => MainDashboard()));
+                                      builder: (builder) => ProfilePage1()));
                             });
                           });
                         },

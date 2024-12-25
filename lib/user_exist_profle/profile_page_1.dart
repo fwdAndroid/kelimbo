@@ -65,35 +65,39 @@ class _ProfilePage1State extends State<ProfilePage1> {
                   textInputType: TextInputType.text),
             ),
           ),
-          SaveButton(
-              title: "Continuar",
-              onTap: () async {
-                if (NameController.text.isEmpty) {
-                  showMessageBar("El nombre es requerido", context);
-                } else if (phoneController.text.isEmpty) {
-                  showMessageBar("El teléfono es requerido", context);
-                } else if (locationController.text.isEmpty) {
-                  showMessageBar("La ubicación es requerida", context);
-                } else {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  await FirebaseFirestore.instance
-                      .collection("users")
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .update({
-                    "fullName": NameController.text.trim(),
-                    "phone": phoneController.text.trim(),
-                    "location": locationController.text.trim(),
-                  });
-                  setState(() {
-                    isLoading = false;
-                  });
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SaveButton(
+                  title: "Continuar",
+                  onTap: () async {
+                    if (NameController.text.isEmpty) {
+                      showMessageBar("El nombre es requerido", context);
+                    } else if (phoneController.text.isEmpty) {
+                      showMessageBar("El teléfono es requerido", context);
+                    } else if (locationController.text.isEmpty) {
+                      showMessageBar("La ubicación es requerida", context);
+                    } else {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      await FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .update({
+                        "fullName": NameController.text.trim(),
+                        "phone": phoneController.text.trim(),
+                        "location": locationController.text.trim(),
+                      });
+                      setState(() {
+                        isLoading = false;
+                      });
 
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (builder) => ProfilePage2()));
-                }
-              })
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => ProfilePage2()));
+                    }
+                  })
         ],
       ),
     );
