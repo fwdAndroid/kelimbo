@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
-import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
+
+import '../utils/image_utils.dart';
 
 class ProfilePage2 extends StatefulWidget {
   const ProfilePage2({super.key});
@@ -20,15 +21,16 @@ class _ProfilePage2State extends State<ProfilePage2> {
   String? _expandedCategory;
   TextEditingController serviceNameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   String currencyType = "Euro";
   var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
-  TextEditingController descriptionController = TextEditingController();
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Paso 2"),
+        title: const Text("Paso 2"),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -41,45 +43,21 @@ class _ProfilePage2State extends State<ProfilePage2> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildCategory(
-                      context,
-                      "Hogar",
-                      "assets/home_category.png",
-                    ),
+                        context, "Hogar", "assets/home_category.png"),
                     _buildCategory(
-                      context,
-                      "Salud",
-                      "assets/health_category.png",
-                    ),
+                        context, "Salud", "assets/health_category.png"),
                     _buildCategory(
-                      context,
-                      "Turismo",
-                      "assets/turism_category.png",
-                    ),
+                        context, "Turismo", "assets/turism_category.png"),
+                    _buildCategory(context, "Entrenamiento",
+                        "assets/trainning_category.png"),
                     _buildCategory(
-                      context,
-                      "Entrenamiento",
-                      "assets/trainning_category.png",
-                    ),
+                        context, "Mascotas", "assets/pets_category.png"),
                     _buildCategory(
-                      context,
-                      "Mascotas",
-                      "assets/pets_category.png",
-                    ),
+                        context, "Vehículos", "assets/vehicle_category.png"),
+                    _buildCategory(context, "Fotografía y vídeo",
+                        "assets/photography_category.png"),
                     _buildCategory(
-                      context,
-                      "Vehículos",
-                      "assets/vehicle_category.png",
-                    ),
-                    _buildCategory(
-                      context,
-                      "Fotografía y vídeo",
-                      "assets/photography_category.png",
-                    ),
-                    _buildCategory(
-                      context,
-                      "Belleza",
-                      "assets/beauty_category.png",
-                    ),
+                        context, "Belleza", "assets/beauty_category.png"),
                   ],
                 ),
               ),
@@ -127,7 +105,7 @@ class _ProfilePage2State extends State<ProfilePage2> {
                       textInputType: TextInputType.number,
                     ),
                   ),
-                )
+                ),
               ],
             ),
             Padding(
@@ -138,12 +116,11 @@ class _ProfilePage2State extends State<ProfilePage2> {
                 decoration: InputDecoration(
                   filled: true,
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(22)),
-                      borderSide: BorderSide(
-                        color: textColor,
-                      )),
-                  contentPadding: EdgeInsets.all(8),
-                  fillColor: Color(0xffF6F7F9),
+                    borderRadius: const BorderRadius.all(Radius.circular(22)),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  contentPadding: const EdgeInsets.all(8),
+                  fillColor: const Color(0xffF6F7F9),
                   hintText: "Descripción",
                   hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                   border: InputBorder.none,
@@ -154,62 +131,73 @@ class _ProfilePage2State extends State<ProfilePage2> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  width: 200,
+                  width: 150,
                   height: 60,
                   child: SaveButton(
-                      title: "Lo hare despues",
-                      onTap: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MainDashboard()));
-                      }),
+                    title: "Lo hare despues",
+                    onTap: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MainDashboard()),
+                      );
+                    },
+                  ),
                 ),
                 SizedBox(
-                  width: 200,
+                  width: 150,
                   height: 60,
                   child: SaveButton(
-                      title: "Crear negocio",
-                      onTap: () async {
-                        if (serviceNameController.text.isEmpty) {
-                          showMessageBar("El título es obligatorio", context);
-                          return;
-                        } else if (descriptionController.text.isEmpty) {
-                          showMessageBar(
-                              "La descripción es obligatoria", context);
-                          return;
-                        } else if (priceController.text.isEmpty) {
-                          showMessageBar("El precio es obligatorio", context);
-                          return;
-                        } else {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                              .collection("business")
-                              .doc()
-                              .set({
-                            "name": serviceNameController.text,
-                            "description": descriptionController.text,
-                            "price": int.parse(priceController.text),
-                            "currency": currencyType,
-                            "category": _expandedCategory,
-                            "subcategory": _subcategoriesMap[_expandedCategory],
-                          });
-                          setState(() {
-                            isLoading = false;
-                          });
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MainDashboard()));
-                        }
-                      }),
-                )
+                    title: "Crear negocio",
+                    onTap: () async {
+                      if (serviceNameController.text.isEmpty) {
+                        showMessageBar("El título es obligatorio", context);
+                        return;
+                      }
+                      if (descriptionController.text.isEmpty) {
+                        showMessageBar(
+                            "La descripción es obligatoria", context);
+                        return;
+                      }
+                      if (priceController.text.isEmpty) {
+                        showMessageBar("El precio es obligatorio", context);
+                        return;
+                      }
+                      setState(() {
+                        isLoading = true;
+                      });
+                      try {
+                        final data = {
+                          "businessName": serviceNameController.text,
+                          "description": descriptionController.text,
+                          "price": int.parse(priceController.text),
+                          "currency": currencyType,
+                          "category": _expandedCategory ?? "NoCategory",
+                          "subcategory":
+                              _subcategoriesMap[_expandedCategory] ?? [],
+                        };
+                        await FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .update(data);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MainDashboard()),
+                        );
+                      } catch (e) {
+                        showMessageBar("Error: $e", context);
+                      } finally {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
+                    },
+                  ),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -234,9 +222,10 @@ class _ProfilePage2State extends State<ProfilePage2> {
             child: Text(
               category,
               style: GoogleFonts.inter(
-                  color: Color(0xff4E5057),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17),
+                color: const Color(0xff4E5057),
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+              ),
             ),
           ),
           if (_expandedCategory == category &&
@@ -253,17 +242,20 @@ class _ProfilePage2State extends State<ProfilePage2> {
   }
 
   void _toggleSubcategories(String category) async {
-    if (_expandedCategory == category) {
-      setState(() {
-        _expandedCategory = null; // Hide subcategories if already expanded
-      });
-    } else {
-      final subcategories = await fetchAllSubcategories(category);
-      setState(() {
-        _expandedCategory =
-            category; // Show subcategories for the selected category
-        _subcategoriesMap[category] = subcategories;
-      });
+    try {
+      if (_expandedCategory == category) {
+        setState(() {
+          _expandedCategory = null;
+        });
+      } else {
+        final subcategories = await fetchAllSubcategories(category);
+        setState(() {
+          _expandedCategory = category;
+          _subcategoriesMap[category] = subcategories;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error fetching subcategories: $e");
     }
   }
 
@@ -283,20 +275,23 @@ class _ProfilePage2State extends State<ProfilePage2> {
       }
       return [];
     } catch (e) {
+      debugPrint("Error: $e");
       return [];
     }
   }
 
   List<Widget> _buildSubcategoriesRows(List<String> subcategories) {
     List<Widget> rows = [];
-    int itemsPerRow = 4; // You want 4 items per row
+    int itemsPerRow = 4;
     int rowCount = (subcategories.length / itemsPerRow).ceil();
 
     for (int i = 0; i < rowCount; i++) {
       int startIndex = i * itemsPerRow;
       int endIndex = (i + 1) * itemsPerRow;
-      List<String> rowItems = subcategories.sublist(startIndex,
-          endIndex > subcategories.length ? subcategories.length : endIndex);
+      List<String> rowItems = subcategories.sublist(
+        startIndex,
+        endIndex > subcategories.length ? subcategories.length : endIndex,
+      );
 
       rows.add(
         Row(

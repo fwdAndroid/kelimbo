@@ -22,6 +22,7 @@ class _FiltersState extends State<Filters> {
     "Calificación más baja",
     "Más trabajo realizado",
     "Menos trabajo realizado",
+    "Ubicación"
   ];
 
   List<String> selectedFilters = [];
@@ -299,6 +300,11 @@ class _FiltersState extends State<Filters> {
     } else if (appliedFilters.contains("Menos trabajo realizado") &&
         !appliedFilters.contains("Más trabajo realizado")) {
       query = query.orderBy("totalReviews");
+    }
+    // Add filter for location in alphabetical order
+    if (appliedFilters.contains("Ubicación")) {
+      query =
+          query.orderBy("location", descending: false); // Sort alphabetically
     }
 
     return query.snapshots();

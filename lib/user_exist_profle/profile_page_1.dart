@@ -82,7 +82,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                       .collection("users")
                       .doc(FirebaseAuth.instance.currentUser!.uid)
                       .update({
-                    "name": NameController.text.trim(),
+                    "fullName": NameController.text.trim(),
                     "phone": phoneController.text.trim(),
                     "location": locationController.text.trim(),
                   });
