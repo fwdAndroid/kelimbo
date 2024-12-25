@@ -28,6 +28,7 @@ class Database {
       required String userName,
       required String userImage,
       required String currency,
+      required String location,
       required String priceType}) async {
     String res = 'Some error occurred';
     try {
@@ -52,6 +53,7 @@ class Database {
         ServiceModel serviceModel = ServiceModel(
           currency: currency,
           priceType: priceType,
+          location: location,
           userEmail: userEmail,
           userImage: userImage,
           userName: userName,

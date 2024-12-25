@@ -225,6 +225,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   userName: snap['fullName'],
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
+                                  location: snap['location'],
                                   category: dropdownvalue,
                                   currency: currencyType,
                                   priceType: drop,
