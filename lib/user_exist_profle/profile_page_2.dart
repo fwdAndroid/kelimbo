@@ -30,6 +30,8 @@ class _ProfilePage2State extends State<ProfilePage2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
         title: const Text("Paso 2"),
       ),
       body: SingleChildScrollView(
