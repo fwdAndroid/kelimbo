@@ -63,7 +63,6 @@ class _ViewProfileState extends State<ViewProfile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: SingleChildScrollView(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -216,7 +215,7 @@ class _ViewProfileState extends State<ViewProfile> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    "Price: \$${price.toStringAsFixed(2)}",
+                    "Price: \€${price.toStringAsFixed(2)}",
                     style: GoogleFonts.inter(
                       color: Color(0xff240F51),
                       fontSize: 20,
@@ -250,6 +249,6 @@ class _ViewProfileState extends State<ViewProfile> {
           ],
         ),
       ),
-    ));
+    );
   }
 }
