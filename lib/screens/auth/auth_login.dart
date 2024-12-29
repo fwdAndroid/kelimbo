@@ -7,6 +7,7 @@ import 'package:kelimbo/screens/auth/forgot_password.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/screens/main/pages/profile_page.dart';
 import 'package:kelimbo/services/auth_methods.dart';
+import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
@@ -221,7 +222,7 @@ class _AuthLoginState extends State<AuthLogin> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage()),
+                              builder: (context) => ProfilePage1()),
                         );
                       } catch (e) {
                         print("Error storing user data: $e");

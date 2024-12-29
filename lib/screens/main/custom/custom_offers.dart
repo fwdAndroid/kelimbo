@@ -35,6 +35,7 @@ class CustomOffers extends StatelessWidget {
               Tab(text: "Completed Offers"),
               Tab(text: "Declined Offers"),
             ],
+            isScrollable: true,
           ),
           title: Text('Offers Personalizada'),
         ),

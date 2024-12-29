@@ -43,7 +43,7 @@ class _EditProfileState extends State<EditProfile> {
 
     // Update the controllers with the fetched data
     setState(() {
-      addressController.text = data['address'] ?? '';
+      addressController.text = data['location'] ?? '';
       phoneController.text = (data['phone'] ?? ''); // Convert int to string
       nameController.text = data['fullName'] ?? ''; // Convert int to string
       imageUrl = data['image'];
@@ -169,7 +169,7 @@ class _EditProfileState extends State<EditProfile> {
                             "fullName": nameController.text,
                             "phone":
                                 phoneController.text, // Convert string to int
-                            "address":
+                            "location":
                                 addressController.text, // Convert string to int
                             "image": downloadUrl,
                           });

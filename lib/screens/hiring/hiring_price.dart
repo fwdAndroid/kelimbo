@@ -48,7 +48,7 @@ class HiringPrice extends StatefulWidget {
 
 class _HiringPriceState extends State<HiringPrice> {
   TextEditingController descriptionController = TextEditingController();
-  TextEditingController customerPassController = TextEditingController();
+  // TextEditingController customerPassController = TextEditingController();
   bool isLoading = false;
   var uuid = Uuid().v4();
   @override
@@ -92,28 +92,28 @@ class _HiringPriceState extends State<HiringPrice> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: customerPassController,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(22)),
-                          borderSide: BorderSide(
-                            color: textColor,
-                          )),
-                      border: InputBorder.none,
-                      filled: true,
-                      fillColor: textColor,
-                      hintText: "Introducir precio",
-                      hintStyle: GoogleFonts.nunitoSans(
-                        fontSize: 16,
-                        color: iconColor,
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: TextFormField(
+                //     keyboardType: TextInputType.number,
+                //     controller: customerPassController,
+                //     decoration: InputDecoration(
+                //       enabledBorder: OutlineInputBorder(
+                //           borderRadius: BorderRadius.all(Radius.circular(22)),
+                //           borderSide: BorderSide(
+                //             color: textColor,
+                //           )),
+                //       border: InputBorder.none,
+                //       filled: true,
+                //       fillColor: textColor,
+                //       hintText: "Introducir precio",
+                //       hintStyle: GoogleFonts.nunitoSans(
+                //         fontSize: 16,
+                //         color: iconColor,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Spacer(),
                 isLoading
                     ? Center(child: CircularProgressIndicator())
@@ -140,10 +140,7 @@ class _HiringPriceState extends State<HiringPrice> {
                                         FirebaseAuth.instance.currentUser!.uid,
                                     "serviceProviderId": widget.uid,
                                     "status": "send",
-                                    "price": customerPassController
-                                            .text.isNotEmpty
-                                        ? int.parse(customerPassController.text)
-                                        : int.parse(widget.price),
+                                    "price": int.parse(widget.price),
                                     "providerName": widget.userName,
                                     "providerEmail": widget.userEmail,
                                     "providerImage": widget.userImage,
