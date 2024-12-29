@@ -51,7 +51,7 @@ class _AuthLoginState extends State<AuthLogin> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
-              "quis nostrud exercitation ullamco laboris",
+              "Utiliza tu correo electrónico y contraseña para iniciar sesión",
               style: GoogleFonts.poppins(fontSize: 14),
             ),
           ),
