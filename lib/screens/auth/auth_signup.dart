@@ -48,31 +48,6 @@ class _SignUpState extends State<SignUp> {
 
   final _formKey = GlobalKey<FormState>();
 
-  //Categories and SubCategories
-  // String? selectedCategory;
-  // String? selectedSubcategory;
-  // List<String> subcategories = [];
-
-  // // Fetch categories from Firestore
-  // Future<List<Map<String, dynamic>>> fetchCategories() async {
-  //   final snapshot =
-  //       await FirebaseFirestore.instance.collection('categories').get();
-  //   return snapshot.docs
-  //       .map((doc) => {'id': doc.id, 'data': doc.data()})
-  //       .toList();
-  // }
-
-  // // Fetch subcategories based on selected category document ID
-  // void fetchSubcategories(String documentId) async {
-  //   final doc = await FirebaseFirestore.instance
-  //       .collection('categories')
-  //       .doc(documentId)
-  //       .get();
-  //   setState(() {
-  //     subcategories = List<String>.from(doc['subcategories'] ?? []);
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -119,7 +94,6 @@ class _SignUpState extends State<SignUp> {
                         ],
                       ),
                     ),
-
                     Padding(
                       padding: const EdgeInsets.only(
                         left: 8.0,
@@ -230,73 +204,6 @@ class _SignUpState extends State<SignUp> {
                           ),
                           controller: reenter,
                         )),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-                    //   child: TextFormInputField(
-                    //       controller: locationController,
-                    //       hintText: "Ubicación",
-                    //       IconSuffix: Icons.location_pin,
-                    //       textInputType: TextInputType.emailAddress),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-                    //   child: TextFormInputField(
-                    //       controller: phoneController,
-                    //       hintText: "Teléfono",
-                    //       IconSuffix: Icons.phone,
-                    //       textInputType: TextInputType.emailAddress),
-                    // ),
-                    // FutureBuilder<List<Map<String, dynamic>>>(
-                    //   future: fetchCategories(),
-                    //   builder: (context, snapshot) {
-                    //     if (!snapshot.hasData) {
-                    //       return CircularProgressIndicator();
-                    //     }
-                    //     final categories = snapshot.data!;
-                    //     return DropdownButton<String>(
-                    //       value: selectedCategory,
-                    //       hint: Text("Select Category"),
-                    //       items: categories
-                    //           .map((category) => DropdownMenuItem<String>(
-                    //                 value: category['data']['category'],
-                    //                 child: Text(category['data']['category']),
-                    //               ))
-                    //           .toList(),
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //           selectedCategory = value;
-                    //           selectedSubcategory = null; // Reset subcategory
-                    //           subcategories = [];
-                    //         });
-                    //         if (value != null) {
-                    //           final categoryDoc = categories.firstWhere(
-                    //               (cat) => cat['data']['category'] == value);
-                    //           fetchSubcategories(categoryDoc['id']);
-                    //         }
-                    //       },
-                    //     );
-                    //   },
-                    // ),
-                    SizedBox(height: 16),
-
-                    // Subcategory Dropdown
-                    // if (selectedCategory != null)
-                    //   DropdownButton<String>(
-                    //     value: selectedSubcategory,
-                    //     hint: Text("Select Subcategory"),
-                    //     items: subcategories
-                    //         .map((subcategory) => DropdownMenuItem<String>(
-                    //               value: subcategory,
-                    //               child: Text(subcategory),
-                    //             ))
-                    //         .toList(),
-                    //     onChanged: (value) {
-                    //       setState(() {
-                    //         selectedSubcategory = value;
-                    //       });
-                    //     },
-                    //   ),
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: isLoading
@@ -305,26 +212,39 @@ class _SignUpState extends State<SignUp> {
                               title: "Únete",
                               onTap: () async {
                                 if (providerEmailController.text.isEmpty) {
+                                  setState(() {
+                                    isLoading = false; // Stop the loader
+                                  });
                                   showMessageBar(
                                       "Se requiere correo electrónico",
                                       context);
                                 } else if (providerPassController
                                     .text.isEmpty) {
+                                  setState(() {
+                                    isLoading = false; // Stop the loader
+                                  });
                                   showMessageBar(
                                       "Se requiere contraseña ", context);
                                 } else if (reenter.text.isEmpty) {
+                                  setState(() {
+                                    isLoading = false; // Stop the loader
+                                  });
                                   showMessageBar(
                                       "Se requiere confirmar la contraseña ",
                                       context);
                                 } else {
                                   setState(() {
-                                    isLoading = true;
+                                    isLoading = true; // Start the loader
                                   });
+
+                                  // Validate form fields
                                   if (_formKey.currentState?.validate() ??
                                       false) {
                                     Uint8List imageToUpload =
                                         _image ?? Uint8List(0);
-                                    await AuthMethods().signUpUser(
+
+                                    try {
+                                      await AuthMethods().signUpUser(
                                         phone: "",
                                         category: "",
                                         subCategory: "",
@@ -334,16 +254,34 @@ class _SignUpState extends State<SignUp> {
                                             providerPassController.text.trim(),
                                         name: "",
                                         location: "",
-                                        file: imageToUpload);
-                                    setState(() {
-                                      isLoading = false;
-                                    });
+                                        file: imageToUpload,
+                                      );
 
-                                    Navigator.pushReplacement(
+                                      setState(() {
+                                        isLoading =
+                                            false; // Stop the loader after successful sign-up
+                                      });
+
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) =>
-                                                ProfilePage1()));
+                                                ProfilePage1()),
+                                      );
+                                    } catch (e) {
+                                      setState(() {
+                                        isLoading =
+                                            false; // Stop the loader if an error occurs
+                                      });
+                                      showMessageBar(
+                                          "Error al registrar el usuario: ${e.toString()}",
+                                          context);
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isLoading =
+                                          false; // Stop the loader if form validation fails
+                                    });
                                   }
                                 }
                               },
@@ -389,14 +327,6 @@ class _SignUpState extends State<SignUp> {
                         mini: true,
                         buttonType: ButtonType.google,
                       ),
-                      // const SizedBox(
-                      //   width: 20,
-                      // ),
-                      // FlutterSocialButton(
-                      //   onTap: () {},
-                      //   mini: true,
-                      //   buttonType: ButtonType.facebook,
-                      // ),
                     ]),
                     Padding(
                       padding: const EdgeInsets.all(8.0),

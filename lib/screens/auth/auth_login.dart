@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/auth/auth_signup.dart';
 import 'package:kelimbo/screens/auth/forgot_password.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
-import 'package:kelimbo/screens/main/pages/profile_page.dart';
 import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -183,75 +182,61 @@ class _AuthLoginState extends State<AuthLogin> {
           const SizedBox(
             height: 20,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FlutterSocialButton(
-                onTap: () {
-                  AuthMethods().signInWithGoogle().then((value) async {
-                    setState(() {
-                      isGoogle = true;
-                    });
+          Center(
+            child: FlutterSocialButton(
+              onTap: () {
+                AuthMethods().signInWithGoogle().then((value) async {
+                  setState(() {
+                    isGoogle = true;
+                  });
 
-                    User? user = FirebaseAuth.instance.currentUser;
+                  User? user = FirebaseAuth.instance.currentUser;
 
-                    if (user != null) {
-                      try {
-                        // Check if the user document already exists
-                        DocumentSnapshot userDoc = await FirebaseFirestore
-                            .instance
+                  if (user != null) {
+                    try {
+                      // Fetch the user document from Firestore
+                      DocumentSnapshot userDoc = await FirebaseFirestore
+                          .instance
+                          .collection("users")
+                          .doc(user.uid)
+                          .get();
+
+                      if (!userDoc.exists) {
+                        // If the user document doesn't exist, create it and navigate to ProfileStepper
+                        await FirebaseFirestore.instance
                             .collection("users")
                             .doc(user.uid)
-                            .get();
+                            .set({
+                          "image": user.photoURL?.toString(),
+                          "email": user.email,
+                          "uid": user.uid,
+                          "password": "Auto Take Password",
+                          "confrimPassword": "Auto Take Password",
+                        });
 
-                        if (!userDoc.exists) {
-                          // If it doesn't exist, create a new user document
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(user.uid)
-                              .set({
-                            "image": user?.photoURL?.toString(),
-                            "email": user?.email,
-                            "uid": user?.uid,
-                            "password": "Auto Take Password",
-                            "confrimPassword": "Auto Take Password",
-                          });
-                        }
-
-                        // Navigate to MainDashboard regardless of document existence
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfilePage1()),
-                        );
-                      } catch (e) {
-                        print("Error storing user data: $e");
+                        // Navigate to ProfileStepper for initial setup
                       }
-                    } else {
-                      print("No user signed in.");
+                    } catch (e) {
+                      print("Error during Google Sign-In: $e");
+                      showMessageBar(
+                          "Error during sign-in. Please try again.", context);
                     }
+                  } else {
+                    print("No user signed in.");
+                  }
 
-                    setState(() {
-                      isGoogle = false;
-                    });
+                  setState(() {
+                    isGoogle = false;
                   });
-                },
-                mini: true,
-                buttonType: ButtonType.google,
-              ),
-
-              // const SizedBox(
-              //   width: 20,
-              // ),
-              // FlutterSocialButton(
-              //   onTap: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (builder) => MainDashboard()));
-              //   },
-              //   mini: true,
-              //   buttonType: ButtonType.facebook,
-              // ),
-            ],
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePage1()),
+                  );
+                });
+              },
+              mini: true,
+              buttonType: ButtonType.google,
+            ),
           ),
           Spacer(),
           Padding(

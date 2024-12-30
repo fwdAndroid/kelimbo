@@ -8,7 +8,9 @@ import 'package:kelimbo/widgets/save_button.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 
 class ProfilePage1 extends StatefulWidget {
-  const ProfilePage1({super.key});
+  ProfilePage1({
+    super.key,
+  });
 
   @override
   State<ProfilePage1> createState() => _ProfilePage1State();
@@ -35,6 +37,11 @@ class _ProfilePage1State extends State<ProfilePage1> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Divider(
+            thickness: 2,
+            endIndent: MediaQuery.of(context).size.width / 2,
+            color: colorBlack,
+          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8),
@@ -92,7 +99,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                         isLoading = false;
                       });
 
-                      Navigator.pushReplacement(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (builder) => ProfilePage2()));

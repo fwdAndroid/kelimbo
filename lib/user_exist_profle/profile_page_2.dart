@@ -10,7 +10,7 @@ import 'package:kelimbo/widgets/text_form_field.dart';
 import '../utils/image_utils.dart';
 
 class ProfilePage2 extends StatefulWidget {
-  const ProfilePage2({super.key});
+  const ProfilePage2({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage2> createState() => _ProfilePage2State();
@@ -37,6 +37,10 @@ class _ProfilePage2State extends State<ProfilePage2> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Divider(
+              thickness: 2,
+              color: colorBlack,
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SingleChildScrollView(
