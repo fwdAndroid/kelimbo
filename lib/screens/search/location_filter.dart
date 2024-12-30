@@ -2,101 +2,39 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:group_button/group_button.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:kelimbo/screens/search/location_filter.dart';
-import 'package:kelimbo/utils/colors.dart';
-import 'package:kelimbo/widgets/save_button.dart';
 
-class Filters extends StatefulWidget {
-  const Filters({super.key});
+class LocationFilter extends StatefulWidget {
+  const LocationFilter({super.key});
 
   @override
-  State<Filters> createState() => _FiltersState();
+  State<LocationFilter> createState() => _LocationFilterState();
 }
 
-class _FiltersState extends State<Filters> {
-  List<String> specialSituations = [
-    "Precio más alto",
-    "Precio más bajo",
-    "Calificación más alta",
-    "Calificación más baja",
-    "Más trabajo realizado",
-    "Menos trabajo realizado",
-  ];
-
-  List<String> selectedFilters = [];
-  List<String> appliedFilters = [];
+class _LocationFilterState extends State<LocationFilter> {
+  TextEditingController controller = TextEditingController();
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  List<String> appliedFilters = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => LocationFilter()));
-              },
-              child: Text("Ubicación Filtro"))
-        ],
-        centerTitle: true,
-        title: Text(
-          "Ordenar Por:",
-          style: GoogleFonts.inter(
-              fontWeight: FontWeight.bold, fontSize: 22, color: colorBlack),
-        ),
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.close)),
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
-          Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
-            child: GroupButton(
-              options: GroupButtonOptions(
-                buttonWidth: 150,
-                unselectedTextStyle:
-                    GoogleFonts.poppins(color: colorBlack, fontSize: 11),
-                selectedTextStyle:
-                    GoogleFonts.poppins(color: colorWhite, fontSize: 11),
-                textAlign: TextAlign.center,
-                selectedBorderColor: mainColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onSelected: (value, index, isSelected) {
-                setState(() {
-                  if (isSelected) {
-                    selectedFilters.add(value);
-                  } else {
-                    selectedFilters.remove(value);
-                  }
-                  appliedFilters =
-                      List.from(selectedFilters); // Dynamically update
-                });
-              },
-              isRadio: true,
-              buttons: specialSituations,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 200,
-              child: SaveButton(
-                title: "Ordenar",
-                onTap: () {
-                  setState(() {
-                    appliedFilters = List.from(selectedFilters);
-                  });
-                },
+            child: TextField(
+              controller: controller,
+              onChanged: (value) {
+                setState(() {}); // Trigger rebuild to update results
+              },
+              decoration: InputDecoration(
+                labelText: "Enter location",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
               ),
             ),
           ),
@@ -110,7 +48,7 @@ class _FiltersState extends State<Filters> {
                     ),
                   )
                 : StreamBuilder(
-                    stream: _getFilteredQuery(),
+                    stream: _getFilteredQuery(controller.text),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(
@@ -278,43 +216,18 @@ class _FiltersState extends State<Filters> {
     );
   }
 
-  Stream<QuerySnapshot> _getFilteredQuery() {
+  Stream<QuerySnapshot> _getFilteredQuery(String location) {
     final servicesCollection =
         FirebaseFirestore.instance.collection("services");
 
-    // Initialize query
-    Query query = servicesCollection;
-
-    // Check for each filter and modify the query accordingly
-    if (appliedFilters.contains("Precio más alto") &&
-        !appliedFilters.contains("Precio más bajo")) {
-      query = query.orderBy("price", descending: true);
-    } else if (appliedFilters.contains("Precio más bajo") &&
-        !appliedFilters.contains("Precio más alto")) {
-      query = query.orderBy("price");
+    // If the input is empty, return all results
+    if (location.isEmpty) {
+      return servicesCollection.snapshots();
     }
 
-    if (appliedFilters.contains("Calificación más alta") &&
-        !appliedFilters.contains("Calificación más baja")) {
-      query = query.orderBy("ratingCount", descending: true);
-    } else if (appliedFilters.contains("Calificación más baja") &&
-        !appliedFilters.contains("Calificación más alta")) {
-      query = query.orderBy("ratingCount");
-    }
-
-    if (appliedFilters.contains("Más trabajo realizado") &&
-        !appliedFilters.contains("Menos trabajo realizado")) {
-      query = query.orderBy("totalReviews", descending: true);
-    } else if (appliedFilters.contains("Menos trabajo realizado") &&
-        !appliedFilters.contains("Más trabajo realizado")) {
-      query = query.orderBy("totalReviews");
-    }
-    // Add filter for location in alphabetical order
-    if (appliedFilters.contains("Ubicación")) {
-      query =
-          query.orderBy("location", descending: false); // Sort alphabetically
-    }
-
-    return query.snapshots();
+    // Filter by location
+    return servicesCollection
+        .where('location', isEqualTo: location.trim())
+        .snapshots();
   }
 }
