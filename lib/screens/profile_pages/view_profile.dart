@@ -63,11 +63,12 @@ class _ViewProfileState extends State<ViewProfile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-        ),
-        body: Column(
+        child: Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -229,7 +230,7 @@ class _ViewProfileState extends State<ViewProfile> {
               padding: EdgeInsets.all(8),
               child: SizedBox(
                 width: 300,
-                height: 100,
+                height: 80,
                 child: Text(
                   servicesController,
                   style: GoogleFonts.workSans(
@@ -249,6 +250,6 @@ class _ViewProfileState extends State<ViewProfile> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
