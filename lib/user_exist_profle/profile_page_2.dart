@@ -68,6 +68,36 @@ class _ProfilePage2State extends State<ProfilePage2> {
                 ),
               ),
             ),
+            // Subcategories Section
+            if (_expandedCategory != null &&
+                _subcategoriesMap[_expandedCategory]?.isNotEmpty == true)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                child: Wrap(
+                  spacing: 8.0,
+                  runSpacing: 8.0,
+                  children: _subcategoriesMap[_expandedCategory]!
+                      .map(
+                        (subcategory) => Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          decoration: BoxDecoration(
+                            color: const Color(0xffF3E0FF),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: Text(
+                            subcategory,
+                            style: const TextStyle(
+                              color: Color(0xff6202F1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
               child: TextFormInputField(
@@ -238,14 +268,6 @@ class _ProfilePage2State extends State<ProfilePage2> {
               ),
             ),
           ),
-          if (_expandedCategory == category &&
-              _subcategoriesMap[category]?.isNotEmpty == true)
-            Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Column(
-                children: _buildSubcategoriesRows(_subcategoriesMap[category]!),
-              ),
-            ),
         ],
       ),
     );
