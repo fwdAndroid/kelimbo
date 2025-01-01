@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/auth/auth_signup.dart';
 import 'package:kelimbo/screens/auth/forgot_password.dart';
@@ -9,7 +11,6 @@ import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'package:flutter_social_button/flutter_social_button.dart';
 
 class AuthLogin extends StatefulWidget {
   const AuthLogin({super.key});
@@ -19,17 +20,28 @@ class AuthLogin extends StatefulWidget {
 }
 
 class _AuthLoginState extends State<AuthLogin> {
-  TextEditingController customerEmailController = TextEditingController();
-  TextEditingController customerPassController = TextEditingController();
+  final TextEditingController customerEmailController = TextEditingController();
+  final TextEditingController customerPassController = TextEditingController();
+
   bool isLoading = false;
   bool isGoogle = false;
-  //Password
   bool showPassword = false;
-  //Password Functions
+
+  // Toggle password visibility
   void toggleShowPassword() {
     setState(() {
-      showPassword = !showPassword; // Toggle the showPassword flag
+      showPassword = !showPassword;
     });
+  }
+
+  // Display a message bar
+  void showMessageBar(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -39,7 +51,7 @@ class _AuthLoginState extends State<AuthLogin> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(
@@ -59,18 +71,13 @@ class _AuthLoginState extends State<AuthLogin> {
             child: TextFormField(
               controller: customerEmailController,
               decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: iconColor,
-                ),
+                prefixIcon: Icon(Icons.email, color: iconColor),
                 filled: true,
                 fillColor: textColor,
                 enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(22)),
-                    borderSide: BorderSide(
-                      color: textColor,
-                    )),
-                border: InputBorder.none,
+                  borderRadius: BorderRadius.all(Radius.circular(22)),
+                  borderSide: BorderSide(color: textColor),
+                ),
                 hintText: "Correo electrónico",
                 hintStyle: GoogleFonts.nunitoSans(
                   fontSize: 16,
@@ -85,42 +92,31 @@ class _AuthLoginState extends State<AuthLogin> {
               obscureText: !showPassword,
               controller: customerPassController,
               decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(22)),
-                      borderSide: BorderSide(
-                        color: textColor,
-                      )),
-                  border: InputBorder.none,
-                  filled: true,
-                  fillColor: textColor,
-                  hintText: "Contraseña",
-                  hintStyle: GoogleFonts.nunitoSans(
-                    fontSize: 16,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(22)),
+                  borderSide: BorderSide(color: textColor),
+                ),
+                filled: true,
+                fillColor: textColor,
+                hintText: "Contraseña",
+                hintStyle: GoogleFonts.nunitoSans(
+                  fontSize: 16,
+                  color: iconColor,
+                ),
+                prefixIcon: Icon(Icons.lock, color: iconColor),
+                suffixIcon: IconButton(
+                  onPressed: toggleShowPassword,
+                  icon: Icon(
+                    showPassword ? Icons.visibility_off : Icons.visibility,
                     color: iconColor,
                   ),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: iconColor,
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: toggleShowPassword,
-                    icon: showPassword
-                        ? Icon(
-                            Icons.visibility_off,
-                            color: iconColor,
-                          )
-                        : Icon(
-                            Icons.visibility,
-                            color: iconColor,
-                          ),
-                  )),
+                ),
+              ),
             ),
           ),
           isLoading
               ? Center(
-                  child: CircularProgressIndicator(
-                    color: mainColor,
-                  ),
+                  child: CircularProgressIndicator(color: mainColor),
                 )
               : Center(
                   child: Padding(
@@ -131,8 +127,9 @@ class _AuthLoginState extends State<AuthLogin> {
                         if (customerEmailController.text.isEmpty ||
                             customerPassController.text.isEmpty) {
                           showMessageBar(
-                              "Se requiere correo electrónico y contraseña",
-                              context);
+                            "Se requiere correo electrónico y contraseña",
+                            context,
+                          );
                         } else {
                           setState(() {
                             isLoading = true;
@@ -145,7 +142,7 @@ class _AuthLoginState extends State<AuthLogin> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (builder) => MainDashboard()),
+                                  builder: (context) => MainDashboard()),
                             );
                           } else {
                             showMessageBar(result, context);
@@ -165,112 +162,93 @@ class _AuthLoginState extends State<AuthLogin> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => ForgotPassword()));
+                    context,
+                    MaterialPageRoute(builder: (builder) => ForgotPassword()),
+                  );
                 },
                 child: Text(
                   'Olvidé mi contraseña',
                   style: GoogleFonts.workSans(
-                      color: mainColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700),
+                    color: mainColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: FlutterSocialButton(
-              onTap: () {
-                AuthMethods().signInWithGoogle().then((value) async {
-                  setState(() {
-                    isGoogle = true;
-                  });
+          const SizedBox(height: 20),
+          isGoogle
+              ? Center(child: CircularProgressIndicator())
+              : Center(
+                  child: FlutterSocialButton(
+                    onTap: () async {
+                      setState(() {
+                        isGoogle = true;
+                      });
 
-                  User? user = FirebaseAuth.instance.currentUser;
+                      try {
+                        // Get the UserCredential object
 
-                  if (user != null) {
-                    try {
-                      // Fetch the user document from Firestore
-                      DocumentSnapshot userDoc = await FirebaseFirestore
-                          .instance
-                          .collection("users")
-                          .doc(user.uid)
-                          .get();
+                        await AuthMethods().signInWithGoogle();
 
-                      if (!userDoc.exists) {
-                        // If the user document doesn't exist, create it and navigate to ProfileStepper
-                        await FirebaseFirestore.instance
+                        FirebaseFirestore.instance
                             .collection("users")
-                            .doc(user.uid)
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
                             .set({
-                          "image": user.photoURL?.toString(),
-                          "email": user.email,
-                          "uid": user.uid,
+                          "image": FirebaseAuth.instance.currentUser!.photoURL,
+                          "email": FirebaseAuth.instance.currentUser!.email,
+                          "uid": FirebaseAuth.instance.currentUser!.uid,
                           "password": "Auto Take Password",
-                          "confrimPassword": "Auto Take Password",
+                          "confirmPassword": "Auto Take Password",
                         });
 
-                        // Navigate to ProfileStepper for initial setup
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => ProfilePage1()));
+                      } catch (e) {
+                        print("Error during Google Sign-In: $e");
+                        showMessageBar(
+                            "Error during sign-in. Please try again.", context);
                       }
-                    } catch (e) {
-                      print("Error during Google Sign-In: $e");
-                      showMessageBar(
-                          "Error during sign-in. Please try again.", context);
-                    }
-                  } else {
-                    print("No user signed in.");
-                  }
 
-                  setState(() {
-                    isGoogle = false;
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePage1()),
-                  );
-                });
-              },
-              mini: true,
-              buttonType: ButtonType.google,
-            ),
-          ),
-          Spacer(),
+                      setState(() {
+                        isGoogle = false;
+                      });
+                    },
+                  ),
+                ),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => SignUp()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (builder) => SignUp()),
+                  );
                 },
-                child: Text.rich(TextSpan(
+                child: Text.rich(
+                  TextSpan(
                     text: '¿No tienes una cuenta?',
-                    children: <InlineSpan>[
+                    children: [
                       TextSpan(
-                        text: 'Únete ahora',
+                        text: ' Únete ahora',
                         style: GoogleFonts.workSans(
-                            color: mainColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
-                      )
-                    ])),
+                          color: mainColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void showMessageBar(String message, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
       ),
     );
   }
