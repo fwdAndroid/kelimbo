@@ -250,7 +250,7 @@ class _ProfilePage2State extends State<ProfilePage2> {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {},
+            onTap: () => _toggleSubcategories(category),
             child: Image.asset(
               assetPath,
               width: 100,
