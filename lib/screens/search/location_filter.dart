@@ -244,12 +244,6 @@ class _LocationFilterState extends State<LocationFilter> {
               }).toList(),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {}); // Trigger rebuild to filter results
-            },
-            child: const Text("Filter"),
-          ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _getFilteredQuery(),
