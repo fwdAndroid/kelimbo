@@ -9,6 +9,7 @@ import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
 import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -290,44 +291,98 @@ class _SignUpState extends State<SignUp> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      FlutterSocialButton(
-                        onTap: () {
-                          AuthMethods().signInWithGoogle().then((value) async {
-                            setState(() {
-                              isGoogle = true;
-                            });
-                            User? user = FirebaseAuth.instance.currentUser;
+                    isGoogle
+                        ? Center(child: CircularProgressIndicator())
+                        : Center(
+                            child: FlutterSocialButton(
+                                buttonType: ButtonType.google,
+                                title: "Sign In With Google",
+                                onTap: () async {
+                                  setState(() {
+                                    isGoogle = true;
+                                  });
 
-                            // Check if user data exists in Firestore
+                                  await AuthMethods().signInWithGoogle();
 
-                            // If user data doesn't exist, store it
+                                  try {
+                                    // Get the UserCredential object
 
-                            // Set user data in Firestore
-                            await FirebaseFirestore.instance
-                                .collection("users")
-                                .doc(user?.uid)
-                                .set({
-                              "image": user?.photoURL?.toString(),
-                              "email": user?.email,
-                              "uid": user?.uid,
-                              "password": "Auto Take Password",
-                              "confrimPassword": "Auto Take Password",
-                            });
+                                    final userDoc = await FirebaseFirestore
+                                        .instance
+                                        .collection("users")
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .get();
 
-                            setState(() {
-                              isGoogle = false;
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => ProfilePage1()));
-                            });
-                          });
-                        },
-                        mini: true,
-                        buttonType: ButtonType.google,
-                      ),
-                    ]),
+                                    if (userDoc.exists) {
+                                      // Retrieve user data
+                                      final userData = userDoc.data();
+                                      final fullName = userData?['fullName'];
+                                      final phone = userData?['phone'];
+                                      final location = userData?['location'];
+
+                                      // Check if any field is null or empty
+                                      if ((fullName == null ||
+                                              fullName.isEmpty) ||
+                                          (phone == null || phone.isEmpty) ||
+                                          (location == null ||
+                                              location.isEmpty)) {
+                                        // Navigate to ProfilePage1 to complete the profile
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  ProfilePage1()),
+                                        );
+                                      } else {
+                                        // All fields are valid, navigate to MainDashboard
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (builder) =>
+                                                  MainDashboard()),
+                                        );
+                                      }
+                                    } else {
+                                      // If the user does not exist, create a new document
+                                      await FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                          .set({
+                                        "image": FirebaseAuth
+                                            .instance.currentUser!.photoURL,
+                                        "email": FirebaseAuth
+                                            .instance.currentUser!.email,
+                                        "uid": FirebaseAuth
+                                            .instance.currentUser!.uid,
+                                        "password": "Auto Take Password",
+                                        "confirmPassword": "Auto Take Password",
+                                        "fullName": "",
+                                        "phone": "",
+                                        "location": "",
+                                      });
+
+                                      // Navigate to ProfilePage1 for new users
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                ProfilePage1()),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    print("Error during Google Sign-In: $e");
+                                    showMessageBar(
+                                        "Error during sign-in. Please try again.",
+                                        context);
+                                  }
+
+                                  setState(() {
+                                    isGoogle = false;
+                                  });
+                                }),
+                          ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
