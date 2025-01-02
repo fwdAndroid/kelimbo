@@ -54,6 +54,7 @@ class Database {
           currency: currency,
           priceType: priceType,
           location: location,
+          finalreviews: [],
           userEmail: userEmail,
           userImage: userImage,
           userName: userName,

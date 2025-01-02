@@ -20,6 +20,7 @@ class ServiceModel {
   String priceType;
   int ratingCount;
   String location;
+  var finalreviews;
 
   ServiceModel(
       {required this.uid,
@@ -39,6 +40,7 @@ class ServiceModel {
       required this.totalReviews,
       required this.currency,
       required this.priceType,
+      required this.finalreviews,
       required this.location,
       required this.uuid});
 
@@ -62,6 +64,7 @@ class ServiceModel {
         'totalReviews': totalReviews, // Include in toJson
         'reviews': reviews, // Include reviews as a list of strings
         'location': location,
+        'finalreviews': finalreviews,
       };
   static ServiceModel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
@@ -81,6 +84,7 @@ class ServiceModel {
         userEmail: snapshot['userEmail'],
         pricePerHr: snapshot['pricePerHr'],
         location: snapshot['location'],
+        finalreviews: snapshot['finalreviews'],
         category: snapshot['category'],
         totalRate: snapshot['totalRate'], // Fetch from snapshot
         totalReviews: snapshot['totalReviews'], // Fetch from snapshot
