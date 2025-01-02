@@ -295,8 +295,8 @@ class _SignUpState extends State<SignUp> {
                         ? Center(child: CircularProgressIndicator())
                         : Center(
                             child: FlutterSocialButton(
+                                mini: true,
                                 buttonType: ButtonType.google,
-                                title: "Sign In With Google",
                                 onTap: () async {
                                   setState(() {
                                     isGoogle = true;

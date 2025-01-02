@@ -163,81 +163,61 @@ class _ProfilePage2State extends State<ProfilePage2> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 150,
-                  height: 60,
-                  child: SaveButton(
-                    title: "Lo hare despues",
-                    onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MainDashboard()),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 150,
-                  height: 60,
-                  child: isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : SaveButton(
-                          title: "Crear negocio",
-                          onTap: () async {
-                            if (serviceNameController.text.isEmpty) {
-                              showMessageBar(
-                                  "El título es obligatorio", context);
-                              return;
-                            }
-                            if (descriptionController.text.isEmpty) {
-                              showMessageBar(
-                                  "La descripción es obligatoria", context);
-                              return;
-                            }
-                            if (priceController.text.isEmpty) {
-                              showMessageBar(
-                                  "El precio es obligatorio", context);
-                              return;
-                            }
-                            setState(() {
-                              isLoading = true;
-                            });
-                            try {
-                              final data = {
-                                "businessName": serviceNameController.text,
-                                "description": descriptionController.text,
-                                "price": int.parse(priceController.text),
-                                "currency": currencyType,
-                                "category": _expandedCategory ?? "NoCategory",
-                                "subCategory":
-                                    _subcategoriesMap[_expandedCategory] ?? [],
-                              };
-                              await FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .update(data);
+            isLoading
+                ? Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: SaveButton(
+                        title: "Crear negocio",
+                        onTap: () async {
+                          if (serviceNameController.text.isEmpty) {
+                            showMessageBar("El título es obligatorio", context);
+                            return;
+                          }
+                          if (descriptionController.text.isEmpty) {
+                            showMessageBar(
+                                "La descripción es obligatoria", context);
+                            return;
+                          }
+                          if (priceController.text.isEmpty) {
+                            showMessageBar("El precio es obligatorio", context);
+                            return;
+                          }
+                          setState(() {
+                            isLoading = true;
+                          });
+                          try {
+                            final data = {
+                              "businessName": serviceNameController.text,
+                              "description": descriptionController.text,
+                              "price": int.parse(priceController.text),
+                              "currency": currencyType,
+                              "category": _expandedCategory ?? "NoCategory",
+                              "subCategory":
+                                  _subcategoriesMap[_expandedCategory] ?? [],
+                            };
+                            await FirebaseFirestore.instance
+                                .collection("users")
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .update(data);
 
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MainDashboard()),
-                              );
-                            } catch (e) {
-                              showMessageBar("Error: $e", context);
-                            } finally {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                          },
-                        ),
-                ),
-              ],
-            ),
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainDashboard()),
+                            );
+                          } catch (e) {
+                            showMessageBar("Error: $e", context);
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),

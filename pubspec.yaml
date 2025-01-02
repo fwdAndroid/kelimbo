@@ -30,6 +30,8 @@ environment:
 dependencies:
   cloud_firestore: ^5.4.2
   cupertino_icons: ^1.0.8
+  drop_down_search_field: ^1.1.1
+  dropdown_search: ^5.0.3
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
   firebase_storage: ^12.3.1
