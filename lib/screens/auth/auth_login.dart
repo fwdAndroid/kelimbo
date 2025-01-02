@@ -182,6 +182,8 @@ class _AuthLoginState extends State<AuthLogin> {
               ? Center(child: CircularProgressIndicator())
               : Center(
                   child: FlutterSocialButton(
+                    buttonType: ButtonType.google,
+                    title: "Sign In With Google",
                     onTap: () async {
                       setState(() {
                         isGoogle = true;

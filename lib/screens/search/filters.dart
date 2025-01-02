@@ -33,14 +33,6 @@ class _FiltersState extends State<Filters> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => LocationFilter()));
-              },
-              child: Text("Ubicación Filtro"))
-        ],
         centerTitle: true,
         title: Text(
           "Ordenar Por:",
@@ -91,11 +83,12 @@ class _FiltersState extends State<Filters> {
             child: Container(
               width: 200,
               child: SaveButton(
-                title: "Ordenar",
+                title: "Ubicación",
                 onTap: () {
-                  setState(() {
-                    appliedFilters = List.from(selectedFilters);
-                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => LocationFilter()));
                 },
               ),
             ),

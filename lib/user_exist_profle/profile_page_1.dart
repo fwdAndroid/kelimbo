@@ -255,7 +255,8 @@ class _ProfilePage1State extends State<ProfilePage1> {
             child: Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8),
               child: DropdownButton<String>(
-                hint: Text('Select an option'),
+                isExpanded: true,
+                hint: Text('Seleccione una ciudad'),
                 value: selectedValue,
                 onChanged: (value) {
                   setState(() {

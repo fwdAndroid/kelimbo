@@ -12,8 +12,211 @@ class LocationFilter extends StatefulWidget {
 }
 
 class _LocationFilterState extends State<LocationFilter> {
-  TextEditingController controller = TextEditingController();
+  String? selectedValue;
+  final List<String> spanishCities = [
+    'Almería',
+    'Algeciras',
+    'Arcos de la Frontera',
+    'Cádiz',
+    'Chiclana de la Frontera',
+    'El Puerto de Santa María',
+    'Jerez de la Frontera',
+    'La Línea',
+    'Puerto Real',
+    'San Fernando',
+    'Sanlúcar de Barrameda',
+    'Bujalance',
+    'Cabra',
+    'Córdoba',
+    'Lucena',
+    'Montilla',
+    'Peñarroya-Pueblonuevo',
+    'Priego de Córdoba',
+    'Puente-Genil',
+    'Andújar',
+    'Baza',
+    'Granada',
+    'Guadix',
+    'Motril',
+    'Huelva',
+    'Jaén',
+    'Linares',
+    'Úbeda',
+    'Antequera',
+    'Coín',
+    'Málaga',
+    'Melilla',
+    'Ronda',
+    'Alcalá de Guadaira',
+    'Carmona',
+    'Dos Hermanas',
+    'Ecija',
+    'Lebrija',
+    'Lora del Río',
+    'Marchena',
+    'Morón de la Frontera',
+    'Utrera',
+    'Sevilla',
+    'Osuna',
+    'Huesca',
+    'Jaca',
+    'Teruel',
+    'Zaragoza',
+    'Avilés',
+    'Cabañaquinta',
+    'Cangas de Narcea',
+    'Covadonga',
+    'Gijón',
+    'Luarca',
+    'Mieres',
+    'Oviedo',
+    'Pola de Siero',
+    'San Martín del Rey Aurelio',
+    'Tineo',
+    'Villaviciosa',
+    'Palma',
+    'Maó',
+    'Vitoria-Gasteiz',
+    'Donostia–San Sebastián',
+    'Eibar',
+    'Irun',
+    'Barakaldo',
+    'Bilbao',
+    'Getxo',
+    'Guernica',
+    'Portugalete',
+    'Santurtzi',
+    'Sestao',
+    'Arucas',
+    'Las Palmas',
+    'Telde',
+    'La Orotava',
+    'Santa Cruz de Tenerife',
+    'Santander',
+    'Torrelavega',
+    'Albacete',
+    'Hellín',
+    'Villarrobledo',
+    'Alcázar de San Juan',
+    'Almadén',
+    'Ciudad Real',
+    'Puertollano',
+    'Tomelloso',
+    'Valdepeñas',
+    'Cuenca',
+    'Guadalajara',
+    'Talavera de la Reina',
+    'Toledo',
+    'Ávila',
+    'Burgos',
+    'Miranda de Ebro',
+    'Astorga',
+    'León',
+    'Ponferrada',
+    'Palencia',
+    'Ciudad Rodrigo',
+    'Salamanca',
+    'San Ildefonso',
+    'Segovia',
+    'Soria',
+    'Simancas',
+    'Valladolid',
+    'Toro',
+    'Zamora',
+    'Badalona',
+    'Barcelona',
+    'Cornellà',
+    'Granollers',
+    'L’Hospitalet de Llobregat',
+    'Manresa',
+    'Mataró',
+    'Reus',
+    'Sabadell',
+    'Santa Coloma de Gramenet',
+    'Terrassa',
+    'Vic',
+    'Vilanova i la Geltrú',
+    'Girona',
+    'Llívia',
+    'Lleida',
+    'Tarragona',
+    'Tortosa',
+    'Almendralejo',
+    'Badajoz',
+    'Don Benito',
+    'Mérida',
+    'Villanueva de la Serena',
+    'Alcántara',
+    'Cáceres',
+    'Guadalupe',
+    'Plasencia',
+    'Trujillo',
+    'A Coruña',
+    'Carballo',
+    'Ferrol',
+    'Ortigueira',
+    'Ribeira',
+    'Santiago de Compostela',
+    'Lugo',
+    'Mondoñedo',
+    'Monforte de Lemos',
+    'Vilalba',
+    'Ourense',
+    'Vigo',
+    'Vilagarcía de Arousa',
+    'Pontevedra',
+    'Alcalá de Henares',
+    'Aranjuez',
+    'El Escorial',
+    'Getafe',
+    'Madrid',
+    'Caravaca',
+    'Cartagena',
+    'Cieza',
+    'Jumilla',
+    'Lorca',
+    'Murcia',
+    'Yecla',
+    'Funes',
+    'Pamplona',
+    'Roncesvalles',
+    'Calahorra',
+    'Logroño',
+    'Alcoy',
+    'Alicante',
+    'Elche',
+    'Elda',
+    'Orihuela',
+    'Villena',
+    'Castellón de la Plana',
+    'Villarreal',
+    'Alzira',
+    'Gandía',
+    'Requena',
+    'Sagunto',
+    'Sueca',
+    'Torrent',
+    'Valencia'
+  ];
+
+  // Selected city
+  String? selectedCity;
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+  Stream<QuerySnapshot> _getFilteredQuery() {
+    final servicesCollection =
+        FirebaseFirestore.instance.collection("services");
+
+    if (selectedValue == null || selectedValue!.trim().isEmpty) {
+      // Return all results if no location is selected
+      return servicesCollection.snapshots();
+    }
+
+    // Filter based on selected location
+    return servicesCollection
+        .where('location', isEqualTo: selectedValue!.trim())
+        .snapshots();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +228,20 @@ class _LocationFilterState extends State<LocationFilter> {
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: "Enter location",
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-              ),
+            child: DropdownButton<String>(
+              hint: const Text('Seleccione una ciudad'),
+              value: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value; // Update selected value
+                });
+              },
+              items: spanishCities.map((String item) {
+                return DropdownMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList(),
             ),
           ),
           ElevatedButton(
@@ -44,7 +252,7 @@ class _LocationFilterState extends State<LocationFilter> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _getFilteredQuery(controller.text),
+              stream: _getFilteredQuery(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -203,20 +411,5 @@ class _LocationFilterState extends State<LocationFilter> {
         ],
       ),
     );
-  }
-
-  Stream<QuerySnapshot> _getFilteredQuery(String location) {
-    final servicesCollection =
-        FirebaseFirestore.instance.collection("services");
-
-    if (location.trim().isEmpty) {
-      // If no location is entered, return all results
-      return servicesCollection.snapshots();
-    }
-
-    // Filter based on location
-    return servicesCollection
-        .where('location', isEqualTo: location.trim())
-        .snapshots();
   }
 }
