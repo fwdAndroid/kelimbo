@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_price.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
+import 'package:kelimbo/screens/main/other/other_user_profile.dart';
+import 'package:kelimbo/screens/main/other/second_user_profile.dart';
 import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:uuid/uuid.dart';
@@ -69,17 +71,34 @@ class _HiringServiceState extends State<HiringService> {
             return SingleChildScrollView(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(widget.userImage),
-                    radius: 50,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => SecondUserProfile(
+                                  uuid: widget.uuid,
+                                  totalReviews: widget.totalReviews.toString(),
+                                  userEmail: widget.userEmail,
+                                  userName: widget.userName,
+                                  userImage: widget.userImage,
+                                  userId: widget.uid)));
+                    },
+                    child: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.userImage),
+                      radius: 50,
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      widget.userName,
-                      style: GoogleFonts.inter(
-                          fontWeight: FontWeight.bold, fontSize: 28),
-                      textAlign: TextAlign.center,
+                  GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        widget.userName,
+                        style: GoogleFonts.inter(
+                            fontWeight: FontWeight.bold, fontSize: 28),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                   GestureDetector(
