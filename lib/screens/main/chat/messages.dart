@@ -94,6 +94,9 @@ class _MessagesState extends State<Messages> {
           },
           child: Column(
             children: [
+              const SizedBox(
+                height: 3,
+              ),
               CircleAvatar(
                 radius: 20,
                 backgroundImage: NetworkImage(
@@ -102,15 +105,15 @@ class _MessagesState extends State<Messages> {
                       : widget.customerPhoto,
                 ),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 2),
               Text(
                 FirebaseAuth.instance.currentUser!.uid == widget.customerId
                     ? widget.providerName
                     : widget.customerName,
                 style: GoogleFonts.inter(
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   color: colorBlack,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
             ],
