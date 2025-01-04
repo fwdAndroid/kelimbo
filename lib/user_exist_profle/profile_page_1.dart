@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:kelimbo/user_exist_profle/profile_page_2.dart';
+import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -312,7 +312,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (builder) => ProfilePage2()));
+                              builder: (builder) => MainDashboard()));
                     }
                   })
         ],
