@@ -79,7 +79,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         await FirebaseAuth.instance.sendPasswordResetEmail(
                             email: customerEmailController.text);
                         showMessageBar(
-                            "El enlace de restablecimiento de contraseña se envía a su dirección de correo electrónico restablezca su contraseña",
+                            "El enlace de restablecimiento de contraseña se ha enviado a su dirección de correo electrónico",
                             context);
                         Navigator.pushReplacement(
                             context,
