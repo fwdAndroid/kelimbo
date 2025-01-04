@@ -374,7 +374,7 @@ class _SignUpState extends State<SignUp> {
                                   } catch (e) {
                                     print("Error during Google Sign-In: $e");
                                     showMessageBar(
-                                        "Error during sign-in. Please try again.",
+                                        "Error durante el inicio de sesión. Por favor, inténtelo de nuevo.",
                                         context);
                                   }
 
@@ -423,7 +423,7 @@ class _SignUpState extends State<SignUp> {
   // Confirm Password validation function
   String? _validateConfirmPassword(String? value) {
     if (value != providerPassController.text) {
-      return 'Passwords do not match';
+      return 'Las contraseñas no coinciden';
     }
     return null;
   }
