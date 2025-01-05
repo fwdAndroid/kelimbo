@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -30,6 +32,8 @@ class _HogarClassState extends State<HogarClass>
 
   @override
   Widget build(BuildContext context) {
+    final String? currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -62,11 +66,36 @@ class _HogarClassState extends State<HogarClass>
                       documents[contrxt].data() as Map<String, dynamic>;
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      if (data['uid'] == currentUserUid) {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (builder) =>
-                                  EditService(uuid: data['uuid'])));
+                                  EditService(uuid: data['uuid'])),
+                        );
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => HiringService(
+                                      serviceId: data['uuid'],
+                                      currencyType: data['currency'],
+                                      userEmail: data['userEmail'],
+                                      userImage: data['userImage'],
+                                      userName: data['userName'],
+                                      category: data['category'],
+                                      totalReviews:
+                                          data['totalReviews'].toString(),
+                                      uuid: data['uuid'],
+                                      uid: data['uid'],
+                                      totalRating: data['totalRate'].toString(),
+                                      title: data['title'],
+                                      price: data['price'].toString(),
+                                      perHrPrice: data['pricePerHr'].toString(),
+                                      photo: data['photo'],
+                                      description: data['description'],
+                                    )));
+                      }
                     },
                     child: Card(
                       child: Column(
