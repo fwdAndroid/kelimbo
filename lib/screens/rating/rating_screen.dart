@@ -103,7 +103,6 @@ class _RatingScreenState extends State<RatingScreen> {
           SaveButton(
             title: "Enviar calificación",
             onTap: () async {
-              print(widget.serviceId);
               try {
                 // Reference to the specific service document
                 DocumentReference serviceDocRef = FirebaseFirestore.instance
@@ -176,7 +175,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (builder) => MainDashboard()));
               },
-              child: Text("Navío")),
+              child: Text("Más Tarde")),
         ],
       ),
     );
