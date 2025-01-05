@@ -170,122 +170,140 @@ class _PremiumFeatureState extends State<PremiumFeature> {
   }
 
   Widget buildSubscriptionBenefits() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Beneficios de la suscripción",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 10),
-        Table(
-          border:
-              TableBorder.all(color: Colors.grey), // Adds borders to the table
-          columnWidths: {
-            0: FlexColumnWidth(1), // Basic column width
-            1: FlexColumnWidth(1), // Premium column width
-          },
-          children: [
-            // Header Row
-            TableRow(
-              decoration:
-                  BoxDecoration(color: Colors.grey[200]), // Header background
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "BÁSICO (Gratis)",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "PREMIUM (Compartiendo)",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-              ],
-            ),
-            // Benefits Row
-            TableRow(
-              children: [
-                // Basic Benefits
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildBulletPoint(
-                          "Puede publicar hasta 1 anuncio al año."),
-                      buildBulletPoint("Los anuncios serán visibles."),
-                      buildBulletPoint(
-                          "En el básico pueden leer los mensajes que reciben, pero no pueden contestar."),
-                      buildBulletPoint(
-                          "El acceso al botón Trabajo completado está inactivo."),
-                      buildBulletPoint(
-                          "Puede recibir solicitudes de servicios, pero no puede enviar presupuestos."),
-                    ],
-                  ),
-                ),
-                // Premium Benefits
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      buildBulletPoint(
-                          "Puede publicar anuncios ilimitados al año."),
-                      buildBulletPoint("Experiencia sin anuncios."),
-                      buildBulletPoint(
-                          "Capacidad para ver los mensajes recibidos y chatear con los clientes."),
-                      buildBulletPoint(
-                          "Puede ver y recibir valoraciones y comentarios de los usuarios."),
-                      buildBulletPoint(
-                          "El acceso al botón Trabajo completado está completamente habilitado."),
-                      buildBulletPoint(
-                          "Puede proporcionar presupuestos y enviar respuestas detalladas a las solicitudes de servicios."),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            // Buttons Row
-            // TableRow(
-            //   children: [
-            //     // Basic Subscription Button
-
-            //     // Premium Subscription Button
-
-            //   ],
-            // ),
-          ],
-        ),
-      ],
-    );
-  }
-
-// Helper function to create a bullet point
-  Widget buildBulletPoint(String text) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 4.0), // Adds spacing between points
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.all(4.0),
+      child: Table(
+        border: TableBorder.all(),
+        columnWidths: {
+          0: FlexColumnWidth(2),
+          1: FlexColumnWidth(1),
+          2: FlexColumnWidth(1),
+        },
         children: [
-          Text("• ", style: TextStyle(fontSize: 16)), // Bullet
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 14),
-            ),
+          TableRow(
+            children: [
+              Center(
+                  child: Text('¿Qué incluye?',
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              Center(
+                  child: Text(
+                'PLAN KELIMBO FREE',
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              )),
+              Center(
+                  child: Text(
+                'PLAN KELIMBO PREMIUM',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              )),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Publica todos los anuncios que quieras'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Sólo 1 anuncio'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Disfruta de la experiencia sin publicidad'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Contesta a los mensajes en el chat'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Responde a las solicitudes de presupuesto'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('Recibe valoraciones de tus clientes'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
+          ),
+          TableRow(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                    'Tus clientes podrán marcar tus trabajos como completados'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.close),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(Icons.check),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+
+// Helper function to create a bullet point
 
 // Function to handle Basic subscription activation
   void activateBasicSubscription() {
