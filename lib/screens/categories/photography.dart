@@ -15,6 +15,8 @@ class Photography extends StatefulWidget {
 }
 
 class _PhotographyState extends State<Photography> {
+  final String? currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +27,6 @@ class _PhotographyState extends State<Photography> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("services")
-              .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .where("category", isEqualTo: "Fotografía y video")
               .snapshots(),
           builder: (context, snapshot) {
@@ -50,11 +51,36 @@ class _PhotographyState extends State<Photography> {
                       documents[contrxt].data() as Map<String, dynamic>;
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
+                      if (data['uid'] == currentUserUid) {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (builder) =>
-                                  EditService(uuid: data['uuid'])));
+                                  EditService(uuid: data['uuid'])),
+                        );
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => HiringService(
+                                      serviceId: data['uuid'],
+                                      currencyType: data['currency'],
+                                      userEmail: data['userEmail'],
+                                      userImage: data['userImage'],
+                                      userName: data['userName'],
+                                      category: data['category'],
+                                      totalReviews:
+                                          data['totalReviews'].toString(),
+                                      uuid: data['uuid'],
+                                      uid: data['uid'],
+                                      totalRating: data['totalRate'].toString(),
+                                      title: data['title'],
+                                      price: data['price'].toString(),
+                                      perHrPrice: data['pricePerHr'].toString(),
+                                      photo: data['photo'],
+                                      description: data['description'],
+                                    )));
+                      }
                     },
                     child: Card(
                       child: Column(

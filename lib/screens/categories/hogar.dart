@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -40,7 +38,6 @@ class _HogarClassState extends State<HogarClass>
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("services")
-              .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .where("category", isEqualTo: "Hogar")
               .snapshots(),
           builder: (context, snapshot) {
