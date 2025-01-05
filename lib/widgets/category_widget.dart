@@ -66,7 +66,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             child: Image.asset(
               assetPath,
               width: 100,
-              height: 100,
+              height: 70,
             ),
           ),
           GestureDetector(

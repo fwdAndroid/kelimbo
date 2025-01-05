@@ -99,14 +99,26 @@ class FavouriteWidget extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (builder) => OtherUserProfile(
-                                        customerEmail: data['userEmail'],
-                                        customerName: data['userName'],
-                                        customerPhoto: data['userImage'],
-                                        userEmail: snap?['email'],
-                                        userName: snap?['fullName'],
-                                        userImage: snap?['image'],
-                                        uid: data['uid'])));
+                                    builder: (builder) => HiringService(
+                                          serviceId: data['uuid'],
+                                          currencyType: data['currency'],
+                                          userEmail: data['userEmail'],
+                                          userImage: data['userImage'],
+                                          userName: data['userName'],
+                                          category: data['category'],
+                                          totalReviews:
+                                              data['totalReviews'].toString(),
+                                          uuid: data['uuid'],
+                                          uid: data['uid'],
+                                          totalRating:
+                                              data['totalRate'].toString(),
+                                          title: data['title'],
+                                          price: data['price'].toString(),
+                                          perHrPrice:
+                                              data['pricePerHr'].toString(),
+                                          photo: data['photo'],
+                                          description: data['description'],
+                                        )));
                           },
                           child: Column(
                             children: [
