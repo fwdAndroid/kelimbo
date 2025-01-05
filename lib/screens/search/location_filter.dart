@@ -15,7 +15,7 @@ class LocationFilter extends StatefulWidget {
 
 class _LocationFilterState extends State<LocationFilter> {
   String? selectedValue;
-  List<String> spanishCities = [
+  final List<String> spanishCities = [
     'A Coruña',
     'Alcalá de Guadaira',
     'Alcalá de Henares',
@@ -28,6 +28,7 @@ class _LocationFilterState extends State<LocationFilter> {
     'Almadén',
     'Almendralejo',
     'Almería',
+    'Altea',
     'Alzira',
     'Andújar',
     'Antequera',
@@ -42,6 +43,7 @@ class _LocationFilterState extends State<LocationFilter> {
     'Barakaldo',
     'Barcelona',
     'Baza',
+    'Benidorm',
     'Bilbao',
     'Burgos',
     'Bujalance',
