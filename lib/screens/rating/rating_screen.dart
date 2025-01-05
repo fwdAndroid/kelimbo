@@ -11,6 +11,7 @@ import 'package:kelimbo/widgets/save_button.dart';
 
 class RatingScreen extends StatefulWidget {
   final providerId; // Client ID which service will be listed
+  final providerName;
   final serviceId; //Service ID
   final jobid; // current JOb
   final clientId; // user id
@@ -23,6 +24,7 @@ class RatingScreen extends StatefulWidget {
       required this.clientImage,
       required this.clientId,
       required this.providerId,
+      required this.providerName,
       required this.jobid,
       required this.clientName,
       required this.rating,
@@ -56,7 +58,7 @@ class _RatingScreenState extends State<RatingScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "Por favor cuéntanos cómo fue tu experiencia con nuestro proveedor",
+              "Por favor cuéntanos cómo fue tu experiencia con ${widget.providerName}",
               style: GoogleFonts.inter(color: Color(0xff240F51), fontSize: 18),
               textAlign: TextAlign.center,
             ),
@@ -149,7 +151,7 @@ class _RatingScreenState extends State<RatingScreen> {
                     "finalreviews":
                         finalReviews, // Update the finalreviews array
                   });
-                  showMessageBar("Revisión dada con éxitoy", context);
+                  showMessageBar("Valoración enviada", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,
                       MaterialPageRoute(builder: (builder) => MainDashboard()));

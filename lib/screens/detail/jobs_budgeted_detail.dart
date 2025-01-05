@@ -130,6 +130,7 @@ class _JobsBudgetedDetailState extends State<JobsBudgetedDetail> {
                         context,
                         MaterialPageRoute(
                             builder: (builder) => RatingScreen(
+                                  providerName: widget.serviceTitle,
                                   providerId: widget.serviceProviderId,
                                   jobid: widget.uuid,
                                   clientId: widget.clientId,
