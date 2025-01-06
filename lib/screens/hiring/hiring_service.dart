@@ -171,9 +171,9 @@ class _HiringServiceState extends State<HiringService> {
                             .collection("chats")
                             .doc(chatId)
                             .set({
-                          "customerName": widget.userName,
+                          "customerName": widget.title,
                           "customerId": widget.uid,
-                          "customerPhoto": widget.userImage,
+                          "customerPhoto": widget.photo,
                           "customerEmail": widget.userEmail,
                           "chatId": chatId,
                           "providerEmail": snap['email'],
@@ -188,8 +188,8 @@ class _HiringServiceState extends State<HiringService> {
                                       providerEmail: snap['email'],
                                       customerEmail: widget.userEmail,
                                       chatId: chatId,
-                                      customerName: widget.userName,
-                                      customerPhoto: widget.userImage,
+                                      customerName: widget.title,
+                                      customerPhoto: widget.photo,
                                       providerId: FirebaseAuth
                                           .instance.currentUser!.uid,
                                       providerName: snap['fullName'],
