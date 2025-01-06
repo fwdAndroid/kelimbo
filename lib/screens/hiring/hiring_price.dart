@@ -121,7 +121,7 @@ class _HiringPriceState extends State<HiringPrice> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: SaveButton(
-                              title: "Enviar presupuesto",
+                              title: "Solicite un Presupuesto",
                               onTap: () async {
                                 if (descriptionController.text.isEmpty) {
                                   showMessageBar(
