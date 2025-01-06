@@ -63,12 +63,11 @@ class _ViewProfileState extends State<ViewProfile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+        ),
+        body: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -88,40 +87,33 @@ class _ViewProfileState extends State<ViewProfile> {
                                 child: Image.asset("assets/profilephoto.png"),
                               ),
                   ),
-                  Text(
-                    bussinessName,
-                    style: GoogleFonts.inter(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff240F51)),
-                  ),
                 ],
               ),
             ),
-            subCategories.isNotEmpty
-                ? Wrap(
-                    spacing: 8.0, // Horizontal space between items
-                    runSpacing: 4.0, // Vertical space between rows
-                    children: subCategories.map((subCategory) {
-                      return Chip(
-                          label: Container(
-                        margin: const EdgeInsets.only(right: 12.0),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: Text(
-                          subCategory,
-                          style: const TextStyle(
-                            color: Color(0xff6202F1),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ));
-                    }).toList(),
-                  )
-                : Text(
-                    "No subcategories available",
-                    style: GoogleFonts.inter(fontSize: 16),
-                  ),
+            // subCategories.isNotEmpty
+            //     ? Wrap(
+            //         spacing: 8.0, // Horizontal space between items
+            //         runSpacing: 4.0, // Vertical space between rows
+            //         children: subCategories.map((subCategory) {
+            //           return Chip(
+            //               label: Container(
+            //             margin: const EdgeInsets.only(right: 12.0),
+            //             padding: const EdgeInsets.symmetric(
+            //                 vertical: 8.0, horizontal: 16.0),
+            //             child: Text(
+            //               subCategory,
+            //               style: const TextStyle(
+            //                 color: Color(0xff6202F1),
+            //                 fontWeight: FontWeight.bold,
+            //               ),
+            //             ),
+            //           ));
+            //         }).toList(),
+            //       )
+            //     : Text(
+            //         "No subcategories available",
+            //         style: GoogleFonts.inter(fontSize: 16),
+            //       ),
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8, top: 8),
               child: Row(
@@ -206,38 +198,39 @@ class _ViewProfileState extends State<ViewProfile> {
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.price_check,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    "Price: \€${price.toStringAsFixed(2)}",
-                    style: GoogleFonts.inter(
-                      color: Color(0xff240F51),
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: SizedBox(
-                width: 300,
-                height: 80,
-                child: Text(
-                  servicesController,
-                  style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.all(8),
+            //   child: Row(
+            //     children: [
+            //       Icon(
+            //         Icons.price_check,
+            //         color: Colors.black,
+            //       ),
+            //       const SizedBox(width: 10),
+            //       Text(
+            //         "Price: \€${price.toStringAsFixed(2)}",
+            //         style: GoogleFonts.inter(
+            //           color: Color(0xff240F51),
+            //           fontSize: 20,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            // Padding(
+            //   padding: EdgeInsets.all(8),
+            //   child: SizedBox(
+            //     width: 300,
+            //     height: 80,
+            //     child: Text(
+            //       servicesController,
+            //       style: GoogleFonts.workSans(
+            //           fontWeight: FontWeight.w500, fontSize: 16),
+            //     ),
+            //   ),
+            // ),
+            Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SaveButton(
@@ -250,6 +243,6 @@ class _ViewProfileState extends State<ViewProfile> {
           ],
         ),
       ),
-    ));
+    );
   }
 }
