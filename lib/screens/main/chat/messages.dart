@@ -161,6 +161,7 @@ class _MessagesState extends State<Messages> {
                                       : CrossAxisAlignment.start,
                                   children: [
                                     Container(
+                                      width: 200,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(16),
                                         color: isCurrentUserSender
