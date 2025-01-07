@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/custom/tab/current_job.dart';
-import 'package:kelimbo/screens/main/custom/tab/custom_offer.dart';
+import 'package:kelimbo/screens/main/custom/tab/custom_offer_complete.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer_completed.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer_declined.dart';
 
@@ -41,7 +41,7 @@ class CustomOffers extends StatelessWidget {
         body: TabBarView(
           children: [
             CurrentJob(), // Accepte
-            CustomOffer(), // Complete
+            CustomOfferComplete(), // Complete
             CustomOfferCompleted(), //Recived
             CustomOfferDeclined(), // Declined
           ],
