@@ -19,9 +19,10 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("customOffers")
-            .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .where("status", isEqualTo: "completed")
+            .collection("offers")
+            .where("clientId",
+                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where("status", isEqualTo: "counterOffer")
             .snapshots(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -46,9 +47,9 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
                         MaterialPageRoute(
                             builder: (context) => CompleteCustomOfferDetail(
                                 status: data['status'],
-                                uuid: data['offerId'],
-                                description: data['description'],
-                                currency: data['currency'],
+                                uuid: data['uuid'],
+                                description: data['work'],
+                                currency: data['currencyType'],
                                 price: data['price'])));
                   },
                   child: Card(
@@ -57,7 +58,7 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
                       children: [
                         ListTile(
                           title: Text(
-                            'ProviderName: ${data['serviceProviderName']}',
+                            'ProviderName: ${data['providerName']}',
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -76,9 +77,12 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
-                        Text(data['description'] ?? 'No description available'),
+                        SizedBox(
+                            height: 140,
+                            child: Text(
+                                data['work'] ?? 'No description available')),
                         Text(
-                          data['status'] ?? 'No description available',
+                          "Received",
                           style: TextStyle(color: Colors.green),
                         ),
                       ],

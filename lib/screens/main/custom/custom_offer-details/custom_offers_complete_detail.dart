@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/utils/image_utils.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class CompleteCustomOfferDetail extends StatefulWidget {
   String uuid;
   String description;
-  String price;
+  int price;
   var currency;
   String status;
   CompleteCustomOfferDetail(
@@ -50,17 +53,47 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
-                  widget.price +
+                  widget.price.toString() +
                       " " +
                       getCurrencySymbol(widget.currency ?? 'Euro'),
                   style: TextStyle(fontSize: 16),
                 ),
-                Text(
-                  "Status: ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text("Completed ",
-                    style: TextStyle(fontSize: 16, color: Colors.green)),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 150,
+                      child: SaveButton(
+                          title: "Aceptado",
+                          onTap: () async {
+                            // accept the offer
+                            await FirebaseFirestore.instance
+                                .collection("offers")
+                                .doc(widget.uuid)
+                                .update({"status": "start"});
+
+                            showMessageBar("Se acepta la oferta", context);
+                            Navigator.pop(context);
+                          }),
+                    ),
+                    SizedBox(
+                      width: 150,
+                      child: SaveButton(
+                          title: "Rechazado",
+                          onTap: () async {
+                            // accept the offer
+                            await FirebaseFirestore.instance
+                                .collection("offers")
+                                .doc(widget.uuid)
+                                .update({"status": "reject"});
+
+                            showMessageBar("La oferta es rechazada", context);
+                            Navigator.pop(context);
+                          }),
+                    )
+                  ],
+                )
               ],
             )));
   }

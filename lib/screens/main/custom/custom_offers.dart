@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kelimbo/screens/main/custom/send_custom_offers.dart';
 import 'package:kelimbo/screens/main/custom/tab/current_job.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer_completed.dart';
 import 'package:kelimbo/screens/main/custom/tab/custom_offer_declined.dart';
-import 'package:kelimbo/utils/colors.dart';
 
 class CustomOffers extends StatelessWidget {
   const CustomOffers({super.key});
@@ -12,7 +10,7 @@ class CustomOffers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {
@@ -28,23 +26,24 @@ class CustomOffers extends StatelessWidget {
         //   backgroundColor: mainColor,
         // ),
         appBar: AppBar(
-          bottom: TabBar(
+          bottom: const TabBar(
+            labelStyle: TextStyle(fontSize: 12),
+            unselectedLabelStyle: TextStyle(fontSize: 12),
             tabs: [
-              Tab(text: "Current Job"),
-              Tab(text: "Send Custom Offer"),
-              Tab(text: "Completed Offers"),
-              // Tab(text: "Declined Offers"),
+              Tab(text: "Accepted"),
+              Tab(text: "Completed"),
+              Tab(text: 'Received'),
+              Tab(text: "Declined"),
             ],
-            isScrollable: true,
           ),
           title: Text('Offers Personalizada'),
         ),
         body: TabBarView(
           children: [
-            CurrentJob(),
-            CustomOffer(),
-            CustomOfferCompleted(),
-            // CustomOfferDeclined(),
+            CurrentJob(), // Accepte
+            CustomOffer(), // Complete
+            CustomOfferCompleted(), //Recived
+            CustomOfferDeclined(), // Declined
           ],
         ),
       ),
