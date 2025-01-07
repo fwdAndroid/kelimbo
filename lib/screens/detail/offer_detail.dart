@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/budget_screen/budget_screen.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -59,23 +60,23 @@ class _OfferDetailState extends State<OfferDetail> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text(
-                  "Precio: ",
-                  style: GoogleFonts.inter(
-                      fontSize: 20, fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  widget.price.toString() + "€",
-                  style: GoogleFonts.inter(
-                      fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         "Precio: ",
+          //         style: GoogleFonts.inter(
+          //             fontSize: 20, fontWeight: FontWeight.w700),
+          //       ),
+          //       Text(
+          //         widget.price.toString() + "€",
+          //         style: GoogleFonts.inter(
+          //             fontSize: 20, fontWeight: FontWeight.w400),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           ListTile(
             leading: CircleAvatar(
               backgroundImage: NetworkImage(widget.clientImage),
@@ -118,15 +119,27 @@ class _OfferDetailState extends State<OfferDetail> {
               child: SaveButton(
                   title: "Presupuestos",
                   onTap: () async {
-                    await FirebaseFirestore.instance
-                        .collection("offers")
-                        .doc(widget.uuid)
-                        .update({"status": "start"});
-                    showMessageBar("Se acepta la oferta", context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (builder) => MainDashboard()));
+                            builder: (builder) => BudgetScreen(
+                                  price: widget.price,
+                                  priceprehr: widget.priceprehr,
+                                  providerEmail: widget.providerEmail,
+                                  providerImage: widget.providerImage,
+                                  clientEmail: widget.clientEmail,
+                                  clientId: widget.clientId,
+                                  clientImage: widget.clientImage,
+                                  clientName: widget.clientName,
+                                  uuid: widget.uuid,
+                                  providerName: widget.providerName,
+                                  serviceDescription: widget.serviceDescription,
+                                  work: widget.work,
+                                  serviceProviderId: widget.serviceProviderId,
+                                  serviceTitle: widget.serviceTitle,
+                                  status: widget.status,
+                                  totalRating: widget.totalRating,
+                                )));
                   }),
             ),
           ),
