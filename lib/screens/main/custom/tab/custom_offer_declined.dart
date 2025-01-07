@@ -19,9 +19,10 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
     return Scaffold(
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("customOffers")
-            .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .where("status", isEqualTo: "declined")
+            .collection("offers")
+            .where("clientId",
+                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+            .where("status", isEqualTo: "reject")
             .snapshots(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -31,7 +32,7 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No custom offers available.'));
+            return Center(child: Text('No hay trabajo disponible.'));
           }
 
           return ListView.builder(
@@ -46,8 +47,8 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                         MaterialPageRoute(
                             builder: (context) => CustomDeclinedOfferDetail(
                                 status: data['status'],
-                                uuid: data['offerId'],
-                                description: data['description'],
+                                uuid: data['uuid'],
+                                description: data['serviceDescription'],
                                 currency: data['currency'],
                                 price: data['price'])));
                   },
@@ -57,7 +58,7 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                       children: [
                         ListTile(
                           title: Text(
-                            'ProviderName: ${data['serviceProviderName']}',
+                            'ProviderName: ${data['providerName']}',
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
@@ -76,7 +77,8 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                               fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ),
-                        Text(data['description'] ?? 'No description available'),
+                        Text(data['serviceDescription'] ??
+                            'No description available'),
                         Text(
                           data['status'] ?? 'No description available',
                           style: TextStyle(color: Colors.green),

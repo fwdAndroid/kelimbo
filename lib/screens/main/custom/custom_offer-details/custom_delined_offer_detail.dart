@@ -4,7 +4,7 @@ import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 class CustomDeclinedOfferDetail extends StatefulWidget {
   String uuid;
   String description;
-  String price;
+  int price;
   var currency;
   String status;
   CustomDeclinedOfferDetail(
@@ -50,7 +50,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
-                  widget.price +
+                  widget.price.toString() +
                       " " +
                       getCurrencySymbol(widget.currency ?? 'Euro'),
                   style: TextStyle(fontSize: 16),

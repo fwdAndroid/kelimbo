@@ -32,7 +32,7 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No custom offers available.'));
+            return Center(child: Text('No hay trabajo disponible.'));
           }
 
           return ListView.builder(
