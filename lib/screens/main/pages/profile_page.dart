@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/custom/custom_offers.dart';
-import 'package:kelimbo/screens/main/custom/provider_custom_offers/provider_custom_tab.dart';
 import 'package:kelimbo/screens/premium/premium%20feature.dart';
 import 'package:kelimbo/screens/profile_pages/view_profile.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
 import 'package:kelimbo/screens/services/my_services.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
 import 'package:kelimbo/widgets/logout_widget.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -240,27 +240,30 @@ class _ProfilePageState extends State<ProfilePage> {
               //     color: colorBlack,
               //   ),
               // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-              //   child: Divider(
-              //     color: iconColor,
-              //   ),
-              // ),
-              // ListTile(
-              //   onTap: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (builder) => CompletedJobs()));
-              //   },
-              //   title: Text(
-              //     "Trabajos completados",
-              //     style: GoogleFonts.workSans(
-              //         fontWeight: FontWeight.w500, fontSize: 16),
-              //   ),
-              //   trailing: Icon(
-              //     Icons.arrow_forward_ios,
-              //     color: colorBlack,
-              //   ),
-              // ),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8),
+                child: Divider(
+                  color: iconColor,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  showMessageBar(
+                      "La política de privacidad se muestra más adelante",
+                      context);
+                  // Navigator.push(context,
+                  //     MaterialPageRoute(builder: (builder) => CompletedJobs()));
+                },
+                title: Text(
+                  "Trabajos completados",
+                  style: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: colorBlack,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8),
                 child: Divider(
