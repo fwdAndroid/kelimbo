@@ -119,8 +119,31 @@ class _ProfilePageState extends State<ProfilePage> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (builder) => RecentWorks()));
                 },
+                //"Realiza una oferta"
                 title: Text(
-                  "Realiza una oferta",
+                  "Presupuesto",
+                  style: GoogleFonts.workSans(
+                      fontWeight: FontWeight.w500, fontSize: 16),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  color: colorBlack,
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8),
+                child: Divider(
+                  color: iconColor,
+                ),
+              ),
+              ListTile(
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => CustomOffers()));
+                },
+                title: Text(
+                  "Oferta personalizada",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -144,27 +167,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 title: Text(
                   "Función Premium",
-                  style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: colorBlack,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8),
-                child: Divider(
-                  color: iconColor,
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (builder) => CustomOffers()));
-                },
-                title: Text(
-                  "Oferta personalizada",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),
@@ -255,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   //     MaterialPageRoute(builder: (builder) => CompletedJobs()));
                 },
                 title: Text(
-                  "Trabajos completados",
+                  "Información legal",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),

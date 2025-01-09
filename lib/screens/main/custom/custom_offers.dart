@@ -27,16 +27,16 @@ class CustomOffers extends StatelessWidget {
         // ),
         appBar: AppBar(
           bottom: const TabBar(
-            labelStyle: TextStyle(fontSize: 12),
-            unselectedLabelStyle: TextStyle(fontSize: 12),
+            labelStyle: TextStyle(fontSize: 10),
+            unselectedLabelStyle: TextStyle(fontSize: 10),
             tabs: [
-              Tab(text: "Accepted"),
-              Tab(text: "Completed"),
-              Tab(text: 'Received'),
-              Tab(text: "Declined"),
+              Tab(text: "Aceptados"),
+              Tab(text: "Completados"),
+              Tab(text: 'Enviados'),
+              Tab(text: "Rechazados"),
             ],
           ),
-          title: Text('Offers Personalizada'),
+          title: Text('Oferta Personalizada'),
         ),
         body: TabBarView(
           children: [

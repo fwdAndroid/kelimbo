@@ -11,7 +11,7 @@ class PremiumFeature extends StatefulWidget {
 class _PremiumFeatureState extends State<PremiumFeature> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String userId = FirebaseAuth.instance.currentUser!.uid;
-  String subscription = "basic";
+  String subscription = "Free";
   DateTime? subscriptionExpiry;
   int shareCount = 0;
 
@@ -26,7 +26,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
     var userDoc = await _firestore.collection('users').doc(userId).get();
     var data = userDoc.data();
     setState(() {
-      subscription = data?['subscription'] ?? "basic";
+      subscription = data?['subscription'] ?? "Free";
       subscriptionExpiry = data?['subscriptionExpiry'] != null
           ? DateTime.parse(data?['subscriptionExpiry'])
           : null;
@@ -42,10 +42,10 @@ class _PremiumFeatureState extends State<PremiumFeature> {
         DateTime.now().isAfter(subscriptionExpiry!)) {
       // Downgrade to basic if subscription has expired
       await _firestore.collection('users').doc(userId).update({
-        'subscription': 'basic',
+        'subscription': 'Free',
       });
       setState(() {
-        subscription = 'basic';
+        subscription = 'Free';
       });
     }
   }
