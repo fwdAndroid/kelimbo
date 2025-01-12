@@ -316,7 +316,17 @@ class _ProfilePage1State extends State<ProfilePage1> {
                           MaterialPageRoute(
                               builder: (builder) => MainDashboard()));
                     }
-                  })
+                  }),
+          Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Text(
+                "Tú teléfono y dirección de correo electrónico no será visible para otros usuarios",
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
         ],
       ),
     );

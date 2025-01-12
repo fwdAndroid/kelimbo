@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
-import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
+import 'package:kelimbo/screens/auth/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/validator/validator_function.dart';

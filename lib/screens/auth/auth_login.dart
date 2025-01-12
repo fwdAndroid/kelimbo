@@ -7,7 +7,7 @@ import 'package:kelimbo/screens/auth/auth_signup.dart';
 import 'package:kelimbo/screens/auth/forgot_password.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
-import 'package:kelimbo/user_exist_profle/profile_page_1.dart';
+import 'package:kelimbo/screens/auth/profile_page_1.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
