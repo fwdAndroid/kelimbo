@@ -99,198 +99,154 @@ class _SecondUserProfileState extends State<SecondUserProfile> {
                   );
                 }
                 return Expanded(
-                  child: ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        final List<DocumentSnapshot> documents =
-                            snapshot.data!.docs;
-                        final Map<String, dynamic> data =
-                            documents[index].data() as Map<String, dynamic>;
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HiringService(
-                                        userEmail: data['userEmail'],
-                                        userImage: data['userImage'],
-                                        userName: data['userName'],
-                                        category: data['category'],
-                                        totalReviews:
-                                            data['totalReviews'].toString(),
-                                        uuid: data['uuid'],
-                                        uid: data['uid'],
-                                        currencyType: data['currency'],
-                                        totalRating:
-                                            data['totalRate'].toString(),
-                                        title: data['title'],
-                                        price: data['price'].toString(),
-                                        serviceId: data['uuid'],
-                                        perHrPrice:
-                                            data['pricePerHr'].toString(),
-                                        photo: data['photo'],
-                                        description: data['description'],
-                                      )),
-                            );
-                          },
-                          child: Card(
-                            child: StreamBuilder(
-                                stream: FirebaseFirestore.instance
-                                    .collection("users")
-                                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Text("");
-                                  }
-                                  if (!snapshot.hasData ||
-                                      snapshot.data == null) {
-                                    return Center(
-                                        child: Text('No data available'));
-                                  }
-                                  var snap = snapshot.data;
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (builder) =>
-                                                  HiringService(
-                                                    serviceId: data['uuid'],
-                                                    currencyType:
-                                                        data['currency'],
-                                                    userEmail:
-                                                        data['userEmail'],
-                                                    userImage:
-                                                        data['userImage'],
-                                                    userName: data['userName'],
-                                                    category: data['category'],
-                                                    totalReviews:
-                                                        data['totalReviews']
-                                                            .toString(),
-                                                    uuid: data['uuid'],
-                                                    uid: data['uid'],
-                                                    totalRating:
-                                                        data['totalRate']
-                                                            .toString(),
-                                                    title: data['title'],
-                                                    price: data['price']
-                                                        .toString(),
-                                                    perHrPrice:
-                                                        data['pricePerHr']
-                                                            .toString(),
-                                                    photo: data['photo'],
-                                                    description:
-                                                        data['description'],
-                                                  )));
-                                    },
-                                    child: Column(
-                                      children: [
-                                        ListTile(
-                                          leading: GestureDetector(
-                                            child: CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  data['photo'] ??
-                                                      "assets/logo.png"),
+                    child: ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final data = snapshot.data!.docs[index].data()
+                        as Map<String, dynamic>;
+
+                    bool isFavorite = (data['favorite'] as List<dynamic>?)
+                            ?.contains(currentUserId) ??
+                        false;
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => HiringService(
+                                      serviceId: data['uuid'],
+                                      currencyType: data['currency'],
+                                      userEmail: data['userEmail'],
+                                      userImage: data['userImage'],
+                                      userName: data['userName'],
+                                      category: data['category'],
+                                      totalReviews:
+                                          data['totalReviews'].toString(),
+                                      uuid: data['uuid'],
+                                      uid: data['uid'],
+                                      totalRating: data['totalRate'].toString(),
+                                      title: data['title'],
+                                      price: data['price'].toString(),
+                                      perHrPrice: data['pricePerHr'].toString(),
+                                      photo: data['photo'],
+                                      description: data['description'],
+                                    )));
+                      },
+                      child: SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: Card(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Stack(
+                                  children: [
+                                    data['photo'] == ""
+                                        ? Container()
+                                        : ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.network(
+                                              fit: BoxFit.cover,
+                                              data['photo'],
+                                              height: 150,
+                                              width: 300,
                                             ),
                                           ),
-                                          title: Text(
-                                            data['title'] ?? "No Title",
-                                            style: GoogleFonts.inter(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                          subtitle: Text(
-                                            data['category'] ?? "No Subtitle",
-                                            style: GoogleFonts.inter(
-                                                color: Color(0xff9C9EA2),
-                                                fontWeight: FontWeight.w300,
-                                                fontSize: 15),
-                                          ),
-                                          trailing: GestureDetector(
-                                            onTap: () async {
-                                              final docRef = FirebaseFirestore
-                                                  .instance
-                                                  .collection("services")
-                                                  .doc(data['uuid']);
-                                              await docRef.update({
-                                                "favorite":
-                                                    FieldValue.arrayRemove(
-                                                        [currentUserId])
-                                              });
-                                            },
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final docRef = FirebaseFirestore
+                                            .instance
+                                            .collection("services")
+                                            .doc(data['uuid']);
+                                        if (isFavorite) {
+                                          // Remove from favorites
+                                          await docRef.update({
+                                            "favorite": FieldValue.arrayRemove(
+                                                [currentUserId])
+                                          });
+                                        } else {
+                                          // Add to favorites
+                                          await docRef.update({
+                                            "favorite": FieldValue.arrayUnion(
+                                                [currentUserId])
+                                          });
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment:
+                                              AlignmentDirectional.topEnd,
+                                          child: Container(
                                             child: Icon(
-                                              Icons.favorite,
+                                              isFavorite
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_outline,
                                               color: red,
                                             ),
+                                            height: 50,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: colorWhite),
                                           ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
-                                                  style: GoogleFonts.inter(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 20,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "Price",
-                                                  style: GoogleFonts.inter(
-                                                      color: Color(0xff9C9EA2),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 19),
-                                                ),
-                                              ],
-                                            ),
-                                            Image.asset(
-                                              "assets/line.png",
-                                              height: 40,
-                                              width: 52,
-                                            ),
-                                            Column(
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.star,
-                                                      color: yellow,
-                                                    ),
-                                                    Text(
-                                                      "${data['totalReviews'] ?? '0.0'}",
-                                                      style: GoogleFonts.inter(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 20),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  "${data['ratingCount'] ?? '0'} Reviews",
-                                                  style: GoogleFonts.inter(
-                                                      color: Color(0xff9C9EA2),
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 19),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  data['title'],
+                                  style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.star,
+                                          color: yellow,
+                                        ),
+                                        Text(
+                                          data['totalReviews'].toString(),
+                                          style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13),
+                                        ),
                                       ],
                                     ),
-                                  );
-                                }),
+                                    Text(
+                                      "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
+                                      style: GoogleFonts.inter(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      }),
-                );
+                        ),
+                      ),
+                    );
+                  },
+                ));
               }),
         ],
       ),
