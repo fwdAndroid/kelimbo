@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
@@ -29,6 +30,8 @@ class OtherUserProfileChat extends StatefulWidget {
 }
 
 class _OtherUserProfileChatState extends State<OtherUserProfileChat> {
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +81,10 @@ class _OtherUserProfileChatState extends State<OtherUserProfileChat> {
                             snapshot.data!.docs;
                         final Map<String, dynamic> data =
                             documents[index].data() as Map<String, dynamic>;
+
+                        bool isFavorite = (data['favorite'] as List<dynamic>?)
+                                ?.contains(currentUserId) ??
+                            false;
                         return Card(
                           child: Column(
                             children: [
@@ -127,6 +134,45 @@ class _OtherUserProfileChatState extends State<OtherUserProfileChat> {
                                       color: Color(0xff9C9EA2),
                                       fontWeight: FontWeight.w300,
                                       fontSize: 15),
+                                ),
+                                trailing: GestureDetector(
+                                  onTap: () async {
+                                    final docRef = FirebaseFirestore.instance
+                                        .collection("services")
+                                        .doc(data['uuid']);
+                                    if (isFavorite) {
+                                      // Remove from favorites
+                                      await docRef.update({
+                                        "favorite": FieldValue.arrayRemove(
+                                            [currentUserId])
+                                      });
+                                    } else {
+                                      // Add to favorites
+                                      await docRef.update({
+                                        "favorite": FieldValue.arrayUnion(
+                                            [currentUserId])
+                                      });
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Align(
+                                      alignment: AlignmentDirectional.topEnd,
+                                      child: Container(
+                                        child: Icon(
+                                          isFavorite
+                                              ? Icons.favorite
+                                              : Icons.favorite_outline,
+                                          color: red,
+                                        ),
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: colorWhite),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               Row(
