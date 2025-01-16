@@ -129,6 +129,7 @@ class _ChatPageState extends State<ChatPage> {
                             context,
                             MaterialPageRoute(
                               builder: (builder) => Messages(
+                                description: chatData['serviceDescription'],
                                 providerEmail:
                                     chatData['providerEmail'] ?? "No Email",
                                 providerId: chatData['providerId'],

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_price.dart';
 import 'package:kelimbo/screens/main/chat/messages.dart';
-import 'package:kelimbo/screens/main/other/other_user_profile.dart';
 import 'package:kelimbo/screens/main/other/second_user_profile.dart';
 import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -189,6 +188,7 @@ class _HiringServiceState extends State<HiringService> {
                             context,
                             MaterialPageRoute(
                                 builder: (builder) => Messages(
+                                      description: widget.serviceDescription,
                                       providerEmail: snap['email'],
                                       customerEmail: widget.userEmail,
                                       chatId: chatId,

@@ -17,6 +17,7 @@ class Messages extends StatefulWidget {
   final String customerPhoto;
   final String customerEmail;
   final String chatId;
+  final String description;
 
   const Messages({
     super.key,
@@ -28,6 +29,7 @@ class Messages extends StatefulWidget {
     required this.providerId,
     required this.providerName,
     required this.customerId,
+    required this.description,
     required this.providerPhoto,
   });
 
@@ -122,8 +124,22 @@ class _MessagesState extends State<Messages> {
       ),
       body: Column(
         children: <Widget>[
-          Card(
-            child: Text("data['providerName']"),
+          SizedBox(
+            height: 60,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  widget.description,
+                  style: GoogleFonts.inter(
+                    fontWeight: FontWeight.w400,
+                    color: colorBlack,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ),
           ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
@@ -164,7 +180,7 @@ class _MessagesState extends State<Messages> {
                                       : CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 200,
+                                      width: 150,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(16),
                                         color: isCurrentUserSender
