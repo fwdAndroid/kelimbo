@@ -62,7 +62,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: Text(""),
                   );
                 }
                 if (snapshot.data!.docs.isEmpty) {
@@ -81,6 +81,10 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                             snapshot.data!.docs;
                         final Map<String, dynamic> data =
                             documents[index].data() as Map<String, dynamic>;
+                        bool isFavorite = (data['favorite'] as List<dynamic>?)
+                                ?.contains(currentUserId) ??
+                            false;
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -189,15 +193,34 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                                   .instance
                                                   .collection("services")
                                                   .doc(data['uuid']);
-                                              await docRef.update({
-                                                "favorite":
-                                                    FieldValue.arrayRemove(
-                                                        [currentUserId])
-                                              });
+                                              if (isFavorite) {
+                                                // Remove from favorites
+                                                await docRef.update({
+                                                  "favorite":
+                                                      FieldValue.arrayRemove(
+                                                          [currentUserId])
+                                                });
+                                              } else {
+                                                // Add to favorites
+                                                await docRef.update({
+                                                  "favorite":
+                                                      FieldValue.arrayUnion(
+                                                          [currentUserId])
+                                                });
+                                              }
                                             },
-                                            child: Icon(
-                                              Icons.favorite,
-                                              color: red,
+                                            child: Container(
+                                              child: Icon(
+                                                isFavorite
+                                                    ? Icons.favorite
+                                                    : Icons.favorite_outline,
+                                                color: red,
+                                              ),
+                                              height: 50,
+                                              width: 50,
+                                              decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: colorWhite),
                                             ),
                                           ),
                                         ),
