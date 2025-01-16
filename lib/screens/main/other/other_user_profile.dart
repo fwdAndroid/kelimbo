@@ -91,6 +91,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => HiringService(
+                                        serviceDescription: data['description'],
                                         userEmail: data['userEmail'],
                                         userImage: data['userImage'],
                                         userName: data['userName'],
@@ -136,6 +137,8 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                           MaterialPageRoute(
                                               builder: (builder) =>
                                                   HiringService(
+                                                    serviceDescription:
+                                                        data['description'],
                                                     serviceId: data['uuid'],
                                                     currencyType:
                                                         data['currency'],

@@ -24,6 +24,7 @@ class HiringService extends StatefulWidget {
   final category;
   final uid;
   final userEmail;
+  final serviceDescription;
   final userName;
   final userImage;
   const HiringService(
@@ -41,6 +42,7 @@ class HiringService extends StatefulWidget {
       required this.totalRating,
       required this.uid,
       required this.currencyType,
+      required this.serviceDescription,
       required this.uuid,
       required this.totalReviews});
 
@@ -167,10 +169,12 @@ class _HiringServiceState extends State<HiringService> {
                   SaveButton(
                       title: "Chatear ahora",
                       onTap: () async {
+                        print(widget.serviceDescription);
                         await FirebaseFirestore.instance
                             .collection("chats")
                             .doc(chatId)
                             .set({
+                          "serviceDescription": widget.serviceDescription,
                           "customerName": widget.title,
                           "customerId": widget.uid,
                           "customerPhoto": widget.photo,

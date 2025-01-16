@@ -79,6 +79,7 @@ class PopularServiceWidget extends StatelessWidget {
                                   perHrPrice: data['pricePerHr'].toString(),
                                   photo: data['photo'],
                                   description: data['description'],
+                                  serviceDescription: data['description'],
                                 )));
                   },
                   child: SizedBox(

@@ -62,6 +62,7 @@ class FavouriteWidget extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => HiringService(
                               userEmail: data['userEmail'],
+                              serviceDescription: data['description'],
                               userImage: data['userImage'],
                               userName: data['userName'],
                               category: data['category'],
@@ -100,6 +101,8 @@ class FavouriteWidget extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (builder) => HiringService(
+                                          serviceDescription:
+                                              data['description'],
                                           serviceId: data['uuid'],
                                           currencyType: data['currency'],
                                           userEmail: data['userEmail'],

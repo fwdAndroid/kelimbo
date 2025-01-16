@@ -73,6 +73,7 @@ class _TurismoState extends State<Turismo> {
                                       totalReviews:
                                           data['totalReviews'].toString(),
                                       uuid: data['uuid'],
+                                      serviceDescription: data['description'],
                                       uid: data['uid'],
                                       totalRating: data['totalRate'].toString(),
                                       title: data['title'],

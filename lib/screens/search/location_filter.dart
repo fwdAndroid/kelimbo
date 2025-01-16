@@ -293,6 +293,7 @@ class _LocationFilterState extends State<LocationFilter> {
                           context,
                           MaterialPageRoute(
                             builder: (builder) => HiringService(
+                              serviceDescription: data['description'],
                               serviceId: data['uuid'],
                               currencyType: data['currency'],
                               price: data['price'].toString(),

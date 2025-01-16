@@ -94,6 +94,8 @@ class _OtherUserProfileChatState extends State<OtherUserProfileChat> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (builder) => HiringService(
+                                                serviceDescription:
+                                                    data['description'],
                                                 userEmail: data['userEmail'],
                                                 userImage: data['userImage'],
                                                 userName: data['userName'],

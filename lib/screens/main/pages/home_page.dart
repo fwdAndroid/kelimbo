@@ -174,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (builder) => HiringService(
+                                  serviceDescription: data['description'],
                                   serviceId: data['uuid'],
                                   currencyType: data['currency'],
                                   price: data['price'].toString(),
@@ -240,6 +241,8 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (builder) => HiringService(
+                                                  serviceDescription:
+                                                      data['description'],
                                                   currencyType:
                                                       data['currency'],
                                                   userEmail: data['userEmail'],

@@ -135,6 +135,7 @@ class _FiltersState extends State<Filters> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (builder) => HiringService(
+                                    serviceDescription: data['description'],
                                     serviceId: data['uuid'],
                                     currencyType: data['currency'],
                                     price: data['price'].toString(),

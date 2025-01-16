@@ -63,6 +63,7 @@ class _BellazaState extends State<Bellaza> {
                             context,
                             MaterialPageRoute(
                                 builder: (builder) => HiringService(
+                                      serviceDescription: data['description'],
                                       serviceId: data['uuid'],
                                       currencyType: data['currency'],
                                       userEmail: data['userEmail'],

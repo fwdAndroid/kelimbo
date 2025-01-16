@@ -122,6 +122,9 @@ class _MessagesState extends State<Messages> {
       ),
       body: Column(
         children: <Widget>[
+          Card(
+            child: Text("data['providerName']"),
+          ),
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection("messages")

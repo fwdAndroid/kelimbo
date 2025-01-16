@@ -121,6 +121,7 @@ class _SecondUserProfileState extends State<SecondUserProfile> {
                                       userImage: data['userImage'],
                                       userName: data['userName'],
                                       category: data['category'],
+                                      serviceDescription: data['description'],
                                       totalReviews:
                                           data['totalReviews'].toString(),
                                       uuid: data['uuid'],

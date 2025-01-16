@@ -69,6 +69,7 @@ class _SaludState extends State<Salud> {
                                       userImage: data['userImage'],
                                       userName: data['userName'],
                                       category: data['category'],
+                                      serviceDescription: data['description'],
                                       totalReviews:
                                           data['totalReviews'].toString(),
                                       uuid: data['uuid'],
