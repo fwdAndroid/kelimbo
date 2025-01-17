@@ -94,7 +94,12 @@ class PopularServiceWidget extends StatelessWidget {
                             child: Stack(
                               children: [
                                 data['photo'] == ""
-                                    ? Container()
+                                    ? Image.asset(
+                                        fit: BoxFit.cover,
+                                        "assets/logo.png",
+                                        height: 150,
+                                        width: 300,
+                                      )
                                     : ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: Image.network(

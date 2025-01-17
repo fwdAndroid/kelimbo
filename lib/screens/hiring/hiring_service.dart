@@ -85,10 +85,15 @@ class _HiringServiceState extends State<HiringService> {
                                   userImage: widget.userImage,
                                   userId: widget.uid)));
                     },
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(widget.userImage),
-                      radius: 50,
-                    ),
+                    child: widget.photo == ""
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage("assets/logo.png"),
+                          )
+                        : CircleAvatar(
+                            backgroundImage: NetworkImage(widget.userImage),
+                            radius: 50,
+                          ),
                   ),
                   GestureDetector(
                     onTap: () {},
@@ -144,15 +149,16 @@ class _HiringServiceState extends State<HiringService> {
                           fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
-                  Center(
-                    child: SizedBox(
-                      height: 150,
-                      width: 390,
-                      child: Text(
-                        widget.description,
-                        style: GoogleFonts.inter(
-                            fontWeight: FontWeight.w500, fontSize: 18),
-                        textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Text(
+                          widget.description,
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                          textAlign: TextAlign.justify,
+                        ),
                       ),
                     ),
                   ),
