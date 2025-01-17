@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:drop_down_search_field/drop_down_search_field.dart';
 
 class LocationFilter extends StatefulWidget {
   const LocationFilter({Key? key}) : super(key: key);

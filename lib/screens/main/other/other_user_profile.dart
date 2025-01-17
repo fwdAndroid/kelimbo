@@ -129,7 +129,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                     return Center(
                                         child: Text('No data available'));
                                   }
-                                  var snap = snapshot.data;
+
                                   return GestureDetector(
                                     onTap: () {
                                       Navigator.push(

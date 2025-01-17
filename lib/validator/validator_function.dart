@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class RegisterFunctions {
   // Email validation function
   String? validateEmail(String? value) {

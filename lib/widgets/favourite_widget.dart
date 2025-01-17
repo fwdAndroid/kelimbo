@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:kelimbo/screens/main/other/other_user_profile.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/currecysymbal.dart';
 
@@ -94,7 +93,6 @@ class FavouriteWidget extends StatelessWidget {
                         if (!snapshot.hasData || snapshot.data == null) {
                           return Center(child: Text('No data available'));
                         }
-                        var snap = snapshot.data;
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
