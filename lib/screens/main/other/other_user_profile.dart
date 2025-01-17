@@ -241,7 +241,7 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  "Price",
+                                                  "Precio",
                                                   style: GoogleFonts.inter(
                                                       color: Color(0xff9C9EA2),
                                                       fontWeight:
