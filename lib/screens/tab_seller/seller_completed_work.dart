@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/screens/tab_seller/tab_seller_detail/complete_seller_Detail.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class SellerCompletedWork extends StatefulWidget {
@@ -41,15 +42,15 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
               return GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => SellerSendDetail(
-                    //             status: data['status'],
-                    //             uuid: data['uuid'],
-                    //             description: data['work'],
-                    //             currency: data['currencyType'],
-                    //             price: data['price'])));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CompleteSellerDetail(
+                                status: data['status'],
+                                uuid: data['uuid'],
+                                description: data['work'],
+                                currency: data['currencyType'],
+                                price: data['price'])));
                   },
                   child: Card(
                     child: Column(

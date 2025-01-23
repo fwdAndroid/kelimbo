@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_delined_offer_detail.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -41,15 +42,15 @@ class _SellerOfferDeclinedState extends State<SellerOfferDeclined> {
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
               return GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => SellerSendDetail(
-                    //             status: data['status'],
-                    //             uuid: data['uuid'],
-                    //             description: data['work'],
-                    //             currency: data['currencyType'],
-                    //             price: data['price'])));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomDeclinedOfferDetail(
+                                status: data['status'],
+                                uuid: data['uuid'],
+                                description: data['serviceDescription'],
+                                currency: data['currency'],
+                                price: data['price'])));
                   },
                   child: Card(
                     child: Column(
