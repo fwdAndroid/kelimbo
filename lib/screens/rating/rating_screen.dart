@@ -155,7 +155,14 @@ class _RatingScreenState extends State<RatingScreen> {
                   await FirebaseFirestore.instance
                       .collection("users")
                       .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .update({"numberofjobs": FieldValue.increment(1)});
+                      .update({
+                    "numberofjobs": FieldValue.increment(1),
+                    "totalRate": newTotalRate,
+                    "ratingCount": newRatingCount,
+                    "finalreviews":
+                        finalReviews, // Update the finalreviews array
+                    "totalReviews": double.parse(formattedRating),
+                  });
                   showMessageBar("Valoración enviada", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,
