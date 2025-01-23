@@ -18,6 +18,7 @@ class _ViewProfileState extends State<ViewProfile> {
   String? phoneController;
   String? nameController;
   String? emailController;
+  int? numberofjobs;
 
   Uint8List? _image;
   String? imageUrl;
@@ -43,6 +44,7 @@ class _ViewProfileState extends State<ViewProfile> {
         nameController = data['fullName'] ?? '';
         emailController = data['email'] ?? '';
         imageUrl = data['image'];
+        numberofjobs = data['numberofjobs'];
       });
     } catch (e) {
       // Handle any errors
@@ -79,6 +81,13 @@ class _ViewProfileState extends State<ViewProfile> {
                   ),
                 ],
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Número de trabajos"),
+                Text(": ${numberofjobs.toString()}"),
+              ],
             ),
             buildInfoRow(Icons.person, nameController!),
             buildInfoRow(Icons.mobile_friendly, phoneController!),

@@ -38,16 +38,23 @@ class AuthMethods {
         );
         //Add User to the database with modal
         UserModel userModel = UserModel(
-            confrimPassword: pass,
-            uid: cred.user!.uid,
-            email: email,
-            password: pass,
-            fullName: name,
-            phone: phone,
-            category: category,
-            subCategory: subCategory,
-            location: location,
-            image: photoURL);
+          numberofjobs: 0,
+          confrimPassword: pass,
+          uid: cred.user!.uid,
+          email: email,
+          password: pass,
+          fullName: name,
+          phone: phone,
+          category: category,
+          subCategory: subCategory,
+          location: location,
+          image: photoURL,
+          finalreviews: [],
+          totalRate: 0,
+          totalReviews: 0,
+          ratingCount: 0,
+          reviews: {},
+        );
         await firebaseFirestore
             .collection('users')
             .doc(cred.user!.uid)

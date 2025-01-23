@@ -130,7 +130,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: colorBlack,
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8),
                 child: Divider(
@@ -175,73 +174,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: colorBlack,
                 ),
               ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-              //   child: Divider(
-              //     color: iconColor,
-              //   ),
-              // ),
-              // ListTile(
-              //   onTap: () {
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (builder) => ProviderCustomTab()));
-              //   },
-              //   title: Text(
-              //     "Ver ofertas personalizadas",
-              //     style: GoogleFonts.workSans(
-              //         fontWeight: FontWeight.w500, fontSize: 16),
-              //   ),
-              //   trailing: Icon(
-              //     Icons.arrow_forward_ios,
-              //     color: colorBlack,
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-              //   child: Divider(
-              //     color: iconColor,
-              //   ),
-              // ),
-              // ListTile(
-              //   onTap: () {
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (builder) => JobsAwardedToMe()));
-              //   },
-              //   title: Text(
-              //     "Trabajo que se me ha otorgado",
-              //     style: GoogleFonts.workSans(
-              //         fontWeight: FontWeight.w500, fontSize: 16),
-              //   ),
-              //   trailing: Icon(
-              //     Icons.arrow_forward_ios,
-              //     color: colorBlack,
-              //   ),
-              // ),
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 8.0, right: 8),
-              //   child: Divider(
-              //     color: iconColor,
-              //   ),
-              // ),
-              // ListTile(
-              //   onTap: () {
-              //     Navigator.push(context,
-              //         MaterialPageRoute(builder: (builder) => JobsHired()));
-              //   },
-              //   title: Text(
-              //     "Trabajos contratados por mí",
-              //     style: GoogleFonts.workSans(
-              //         fontWeight: FontWeight.w500, fontSize: 16),
-              //   ),
-              //   trailing: Icon(
-              //     Icons.arrow_forward_ios,
-              //     color: colorBlack,
-              //   ),
-              // ),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8),
                 child: Divider(

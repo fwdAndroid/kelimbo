@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kelimbo/screens/main/custom/tab/current_job.dart';
-import 'package:kelimbo/screens/main/custom/tab/custom_offer_complete.dart';
-import 'package:kelimbo/screens/main/custom/tab/custom_offer_completed.dart';
-import 'package:kelimbo/screens/main/custom/tab/custom_offer_declined.dart';
+import 'package:kelimbo/screens/tab_seller/seller_completed_work.dart';
+import 'package:kelimbo/screens/tab_seller/seller_offer_accepted.dart';
+import 'package:kelimbo/screens/tab_seller/seller_offer_declined.dart';
+import 'package:kelimbo/screens/tab_seller/seller_offer_send_to_buyer.dart';
+import 'package:kelimbo/screens/tab_seller/seller_recived_by_buyer.dart';
 
 class RecentWorks extends StatefulWidget {
   const RecentWorks({super.key});
@@ -19,8 +20,10 @@ class _RecentWorksState extends State<RecentWorks> {
       child: Scaffold(
         appBar: AppBar(
           bottom: const TabBar(
-            labelStyle: TextStyle(fontSize: 10),
-            unselectedLabelStyle: TextStyle(fontSize: 10),
+            isScrollable: true,
+            automaticIndicatorColorAdjustment: true,
+            labelStyle: TextStyle(fontSize: 12),
+            unselectedLabelStyle: TextStyle(fontSize: 12),
             tabs: [
               Tab(text: "Pendientes"),
               Tab(text: "Enviados"),
@@ -31,15 +34,15 @@ class _RecentWorksState extends State<RecentWorks> {
               )
             ],
           ),
-          title: Text('Oferta Personalizada'),
+          title: Text('Presupuesto'),
         ),
         body: TabBarView(
           children: [
-            CurrentJob(), // Accepte
-            CustomOfferComplete(), // Complete
-            CustomOfferCompleted(), //Recived
-            CustomOfferDeclined(), // Declined
-            CustomOfferDeclined(), // Declined
+            SellerReceivedByBuyer(), // Seller Earning
+            SellerOfferSendToBuyer(), // Seller  Sent
+            SellerOfferAccepted(), //Seller Offer Accepted
+            SellerOfferDeclined(), // Seller Rejected
+            SellerCompletedWork(), // Seller Completed
           ],
         ),
       ),

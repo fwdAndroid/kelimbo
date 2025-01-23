@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -151,6 +152,10 @@ class _RatingScreenState extends State<RatingScreen> {
                     "finalreviews":
                         finalReviews, // Update the finalreviews array
                   });
+                  await FirebaseFirestore.instance
+                      .collection("users")
+                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .update({"numberofjobs": FieldValue.increment(1)});
                   showMessageBar("Valoración enviada", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,

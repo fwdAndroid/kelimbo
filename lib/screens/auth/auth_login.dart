@@ -238,6 +238,12 @@ class _AuthLoginState extends State<AuthLogin> {
                               "fullName": "",
                               "phone": "",
                               "location": "",
+                              "numberofjobs": 0,
+                              "finalreviews": [],
+                              "totalRate": 0,
+                              "totalReviews": 0,
+                              "ratingCount": 0,
+                              "reviews": {},
                             });
 
                             // Navigate to ProfilePage1 for new users
