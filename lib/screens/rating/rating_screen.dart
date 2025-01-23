@@ -154,7 +154,7 @@ class _RatingScreenState extends State<RatingScreen> {
                   });
                   await FirebaseFirestore.instance
                       .collection("users")
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
+                      .doc(widget.providerId)
                       .update({
                     "numberofjobs": FieldValue.increment(1),
                     "totalRate": newTotalRate,
