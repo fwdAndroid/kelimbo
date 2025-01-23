@@ -38,7 +38,7 @@ class _RecentWorksState extends State<RecentWorks> {
         ),
         body: TabBarView(
           children: [
-            SellerReceivedByBuyer(), // Seller Earning
+            SellerReceivedByBuyer(), // Seller Recived Offers
             SellerOfferSendToBuyer(), // Seller  Sent
             SellerOfferAccepted(), //Seller Offer Accepted
             SellerOfferDeclined(), // Seller Rejected
