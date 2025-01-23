@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/pages/edit_profile.dart';
+import 'package:kelimbo/screens/rating/rating_list.dart';
+import 'package:kelimbo/screens/rating/rating_list_user.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class ViewProfile extends StatefulWidget {
@@ -19,7 +21,7 @@ class _ViewProfileState extends State<ViewProfile> {
   String? nameController;
   String? emailController;
   int? numberofjobs;
-
+  var totalReviews;
   Uint8List? _image;
   String? imageUrl;
 
@@ -45,6 +47,7 @@ class _ViewProfileState extends State<ViewProfile> {
         emailController = data['email'] ?? '';
         imageUrl = data['image'];
         numberofjobs = data['numberofjobs'];
+        totalReviews = data['totalReviews'];
       });
     } catch (e) {
       // Handle any errors
@@ -79,6 +82,28 @@ class _ViewProfileState extends State<ViewProfile> {
                                 child: Image.asset("assets/profilephoto.png"),
                               ),
                   ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => RatingListUser()));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                  ),
+                  Text(
+                    totalReviews.toString(),
+                    style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19,
+                        color: Color(0xff9C9EA2)),
+                  )
                 ],
               ),
             ),

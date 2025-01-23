@@ -6,6 +6,7 @@ import 'package:kelimbo/screens/main/custom/custom_offers.dart';
 import 'package:kelimbo/screens/premium/premium%20feature.dart';
 import 'package:kelimbo/screens/profile_pages/view_profile.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
+import 'package:kelimbo/screens/rating/rating_list_user.dart';
 import 'package:kelimbo/screens/services/my_services.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
@@ -65,6 +66,30 @@ class _ProfilePageState extends State<ProfilePage> {
                           snap['fullName'],
                           style: GoogleFonts.workSans(
                               fontWeight: FontWeight.w900, fontSize: 22),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => RatingListUser()));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                              ),
+                              Text(
+                                snap['totalReviews'].toString(),
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 19,
+                                    color: Color(0xff9C9EA2)),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     );
