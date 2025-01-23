@@ -159,7 +159,8 @@ class _HiringPriceState extends State<HiringPrice> {
                                     isLoading = false;
                                   });
                                   showMessageBar(
-                                      "Envío de oferta al proveedor", context);
+                                      "la solicitud ha sido enviada al proveedor",
+                                      context);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -163,7 +163,7 @@ class _RatingScreenState extends State<RatingScreen> {
                         finalReviews, // Update the finalreviews array
                     "totalReviews": double.parse(formattedRating),
                   });
-                  showMessageBar("Valoración enviada", context);
+                  showMessageBar("Revisión enviada", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,
                       MaterialPageRoute(builder: (builder) => MainDashboard()));
