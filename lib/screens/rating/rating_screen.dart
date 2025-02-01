@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -163,6 +162,17 @@ class _RatingScreenState extends State<RatingScreen> {
                         finalReviews, // Update the finalreviews array
                     "totalReviews": double.parse(formattedRating),
                   });
+                  await FirebaseFirestore.instance
+                      .collection("offers")
+                      .doc(widget.jobid)
+                      .update({
+                    "isRated": true,
+                    "totalRate": newTotalRate,
+                    "ratingCount": newRatingCount,
+                    "finalreviews":
+                        finalReviews, // Update the finalreviews array
+                    "totalReviews": double.parse(formattedRating),
+                  });
                   showMessageBar("Revisión enviada", context);
                   // Navigate to the main dashboard or show a success message
                   Navigator.push(context,
@@ -185,7 +195,13 @@ class _RatingScreenState extends State<RatingScreen> {
             ),
           ),
           TextButton(
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(widget.providerId)
+                    .update({
+                  "numberofjobs": FieldValue.increment(1),
+                });
                 Navigator.push(context,
                     MaterialPageRoute(builder: (builder) => MainDashboard()));
               },

@@ -86,7 +86,7 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
                   padding: const EdgeInsets.all(8.0),
                   child: Center(
                     child: SaveButton(
-                        title: "Marcado como completado",
+                        title: "Marcar como completa",
                         onTap: () async {
                           await FirebaseFirestore.instance
                               .collection("offers")
@@ -99,7 +99,7 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
                               context,
                               MaterialPageRoute(
                                   builder: (builder) => RatingScreen(
-                                        providerName: widget.serviceTitle,
+                                        providerName: widget.providerName,
                                         providerId: widget.serviceProviderId,
                                         jobid: widget.uuid,
                                         clientId: widget.clientId,

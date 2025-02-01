@@ -26,6 +26,8 @@ class SellerReceivedDetail extends StatefulWidget {
 
 class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
   TextEditingController providerPassController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +77,26 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                       ),
                       controller: providerPassController,
                     )),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          borderSide: BorderSide(
+                            color: textColor,
+                          )),
+                      contentPadding: EdgeInsets.all(8),
+                      fillColor: Color(0xffF6F7F9),
+                      hintText: "Descripción",
+                      hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
                 Spacer(),
                 Center(
                   child: SaveButton(
@@ -88,7 +110,9 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                               .doc(widget.uuid)
                               .update({
                             "status": "counterOffer",
-                            "price": int.parse(providerPassController.text)
+                            "price": int.parse(providerPassController.text),
+                            "serviceDescription":
+                                descriptionController.text ?? widget.description
                           });
                           showMessageBar("Se acepta la oferta", context);
                           Navigator.pop(context);

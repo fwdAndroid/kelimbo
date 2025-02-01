@@ -65,7 +65,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                     SizedBox(
                       width: 150,
                       child: SaveButton(
-                          title: "Aceptado",
+                          title: "Aceptar",
                           onTap: () async {
                             // accept the offer
                             await FirebaseFirestore.instance
@@ -80,7 +80,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                     SizedBox(
                       width: 150,
                       child: SaveButton(
-                          title: "Rechazado",
+                          title: "Rechazar",
                           onTap: () async {
                             // accept the offer
                             await FirebaseFirestore.instance
