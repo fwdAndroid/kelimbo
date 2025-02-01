@@ -87,8 +87,12 @@ class _ViewProfileState extends State<ViewProfile> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => RatingListUser()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => UserRatings(
+                              serviceId: FirebaseAuth.instance.currentUser!.uid,
+                            )));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

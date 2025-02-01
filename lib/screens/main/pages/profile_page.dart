@@ -72,7 +72,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (builder) => RatingListUser()));
+                                    builder: (builder) => UserRatings(
+                                          serviceId: FirebaseAuth
+                                              .instance.currentUser!.uid,
+                                        )));
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -90,6 +93,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               )
                             ],
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Número de trabajos: "),
+                            Text(snap['numberofjobs'].toString()),
+                          ],
                         ),
                       ],
                     );
