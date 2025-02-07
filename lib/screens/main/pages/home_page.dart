@@ -8,12 +8,12 @@ import 'package:kelimbo/widgets/category_widget.dart';
 import 'package:kelimbo/widgets/favourite_widget.dart';
 import 'package:kelimbo/widgets/popular_service_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomePageState extends State<HomePage> {
   TextEditingController _searchController = TextEditingController();
   String _searchText = "";
   String currentUserId =
