@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
+import 'package:kelimbo/screens/services/user_profile.dart';
 import 'package:kelimbo/widgets/delete_service_widget.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
@@ -49,20 +50,28 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
               var snap = snapshot.data;
               return Column(
                 children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: snap['image'] != null && snap['image'].isNotEmpty
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                snap['image'],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => UserProfile()));
+                    },
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: snap['image'] != null && snap['image'].isNotEmpty
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                  snap['image'],
+                                ),
+                                radius: 60,
+                              )
+                            : CircleAvatar(
+                                radius: 60,
+                                child: Icon(Icons.person, size: 60),
                               ),
-                              radius: 60,
-                            )
-                          : CircleAvatar(
-                              radius: 60,
-                              child: Icon(Icons.person, size: 60),
-                            ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -94,13 +103,15 @@ class _ServiceDescriptionState extends State<ServiceDescription> {
                       ),
                     ),
                   ),
-                widget.photo == "" ? Container() :  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(
-                      widget.photo,
-                      height: 254,
-                    ),
-                  ),
+                  widget.photo == ""
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            widget.photo,
+                            height: 254,
+                          ),
+                        ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(

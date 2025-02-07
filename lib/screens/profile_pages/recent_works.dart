@@ -34,7 +34,7 @@ class _RecentWorksState extends State<RecentWorks> {
               )
             ],
           ),
-          title: Text('Presupuesto'),
+          title: Text('Presupuestos'),
         ),
         body: TabBarView(
           children: [

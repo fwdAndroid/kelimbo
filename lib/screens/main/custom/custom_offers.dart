@@ -30,7 +30,9 @@ class CustomOffers extends StatelessWidget {
             labelStyle: TextStyle(fontSize: 10),
             unselectedLabelStyle: TextStyle(fontSize: 10),
             tabs: [
-              Tab(text: "Recibidas"), //Recived
+              Tab(text: "Pendiente"), //Recived
+
+              //    Tab(text: "Recibidas"), //Recived
               Tab(text: "Aceptadas"), // Accepted
               Tab(text: 'Rechazadas'), // Rejected
               Tab(text: "Completadas"), //Comm=
