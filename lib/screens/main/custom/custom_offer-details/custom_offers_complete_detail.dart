@@ -73,7 +73,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                                 .doc(widget.uuid)
                                 .update({"status": "start"});
 
-                            showMessageBar("Se acepta la oferta", context);
+                            showMessageBar("Presupuesto enviado", context);
                             Navigator.pop(context);
                           }),
                     ),

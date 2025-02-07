@@ -159,7 +159,7 @@ class _HiringPriceState extends State<HiringPrice> {
                                     isLoading = false;
                                   });
                                   showMessageBar(
-                                      "la solicitud ha sido enviada al proveedor",
+                                      "La solicitud ha sido enviada al proveedor",
                                       context);
                                   Navigator.push(
                                       context,

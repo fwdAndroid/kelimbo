@@ -97,255 +97,252 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: _searchText.isEmpty
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CategoryWidget(),
-                  Center(
+      body: _searchText.isEmpty
+          ? CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(child: CategoryWidget()),
+                SliverToBoxAdapter(
+                  child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "Servicios Populares",
                         style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w600, fontSize: 16),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                  PopularServiceWidget(),
-                  FavouriteWidget(),
-                ],
-              )
-            : StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection("services")
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                ),
+                const SliverToBoxAdapter(child: PopularServiceWidget()),
+                const SliverToBoxAdapter(child: FavouriteWidget()),
+              ],
+            )
+          : StreamBuilder(
+              key: ValueKey(_searchText), // Optimizes re-rendering
+              stream:
+                  FirebaseFirestore.instance.collection("services").snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-                  final docs = snapshot.data!.docs;
-                  final filteredDocs = docs.where((doc) {
-                    final data = doc.data() as Map<String, dynamic>;
-                    return data.values.any((value) =>
-                        value != null &&
-                        value
-                            .toString()
-                            .toLowerCase()
-                            .contains(_searchText.toLowerCase()));
-                  }).toList();
+                final docs = snapshot.data!.docs;
+                final filteredDocs = docs.where((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+                  return data.values.any((value) =>
+                      value != null &&
+                      value
+                          .toString()
+                          .toLowerCase()
+                          .contains(_searchText.toLowerCase()));
+                }).toList();
 
-                  if (filteredDocs.isEmpty) {
-                    return Center(
-                      child: Column(
-                        children: [
-                          Image.asset(
-                            "assets/op.png",
-                            height: 200,
-                            width: 200,
-                          ),
-                          Text(
-                            "No results found for '$_searchText'.",
-                            style: TextStyle(color: colorBlack),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
+                if (filteredDocs.isEmpty) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "assets/op.png",
+                          height: 200,
+                          width: 200,
+                        ),
+                        Text(
+                          "No results found for '$_searchText'.",
+                          style: TextStyle(color: colorBlack),
+                        ),
+                      ],
+                    ),
+                  );
+                }
 
-                  return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: filteredDocs.length,
-                      itemBuilder: (context, index) {
-                        final Map<String, dynamic> data =
-                            filteredDocs[index].data() as Map<String, dynamic>;
-                        final List<dynamic> favorites = data['favorite'] ?? [];
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: filteredDocs.length,
+                    itemBuilder: (context, index) {
+                      final Map<String, dynamic> data =
+                          filteredDocs[index].data() as Map<String, dynamic>;
+                      final List<dynamic> favorites = data['favorite'] ?? [];
 
-                        bool isFavorite = favorites.contains(currentUserId);
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (builder) => HiringService(
-                                  serviceDescription: data['description'],
-                                  serviceId: data['uuid'],
-                                  currencyType: data['currency'],
-                                  price: data['price'].toString(),
-                                  userEmail: data['userEmail'],
-                                  userImage: data['userImage'],
-                                  userName: data['userName'],
-                                  category: data['category'],
-                                  totalReviews: data['totalReviews'].toString(),
-                                  uuid: data['uuid'],
-                                  uid: data['uid'],
-                                  totalRating: data['totalRate'].toString(),
-                                  title: data['title'],
-                                  perHrPrice: data['pricePerHr'].toString(),
-                                  photo: data['photo'],
-                                  description: data['description'],
+                      bool isFavorite = favorites.contains(currentUserId);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => HiringService(
+                                serviceDescription: data['description'],
+                                serviceId: data['uuid'],
+                                currencyType: data['currency'],
+                                price: data['price'].toString(),
+                                userEmail: data['userEmail'],
+                                userImage: data['userImage'],
+                                userName: data['userName'],
+                                category: data['category'],
+                                totalReviews: data['totalReviews'].toString(),
+                                uuid: data['uuid'],
+                                uid: data['uid'],
+                                totalRating: data['totalRate'].toString(),
+                                title: data['title'],
+                                perHrPrice: data['pricePerHr'].toString(),
+                                photo: data['photo'],
+                                description: data['description'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          child: Column(
+                            children: [
+                              ListTile(
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color:
+                                        isFavorite ? Colors.red : Colors.grey,
+                                  ),
+                                  onPressed: () async {
+                                    try {
+                                      final docRef = FirebaseFirestore.instance
+                                          .collection("services")
+                                          .doc(data[
+                                              'uuid']); // Reference the service document
+
+                                      if (isFavorite) {
+                                        // If already favorited, remove current user ID from the favorites list
+                                        await docRef.update({
+                                          "favorite": FieldValue.arrayRemove(
+                                              [currentUserId]),
+                                        });
+                                      } else {
+                                        // If not favorited, add current user ID to the favorites list
+                                        await docRef.update({
+                                          "favorite": FieldValue.arrayUnion(
+                                              [currentUserId]),
+                                        });
+                                      }
+
+                                      setState(() {
+                                        // Update local state to reflect the new favorite status
+                                        isFavorite = !isFavorite;
+                                      });
+                                    } catch (e) {
+                                      print(
+                                          "Error updating favorite status: $e");
+                                    }
+                                  },
+                                ),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (builder) => HiringService(
+                                                serviceDescription:
+                                                    data['description'],
+                                                currencyType: data['currency'],
+                                                userEmail: data['userEmail'],
+                                                serviceId: data['uuid'],
+                                                userImage: data['userImage'],
+                                                userName: data['userName'],
+                                                category: data['category'],
+                                                totalReviews:
+                                                    data['totalReviews']
+                                                        .toString(),
+                                                uuid: data['uuid'],
+                                                uid: data['uid'],
+                                                totalRating: data['totalRate']
+                                                    .toString(),
+                                                title: data['title'],
+                                                price: data['price'].toString(),
+                                                perHrPrice: data['pricePerHr']
+                                                    .toString(),
+                                                photo: data['photo'],
+                                                description:
+                                                    data['description'],
+                                              )));
+                                },
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(data['photo']),
+                                ),
+                                title: Text(
+                                  data['title'],
+                                  style: GoogleFonts.inter(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                subtitle: Text(
+                                  data['category'],
+                                  style: GoogleFonts.inter(
+                                      color: Color(0xff9C9EA2),
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 15),
                                 ),
                               ),
-                            );
-                          },
-                          child: Card(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.favorite,
-                                      color:
-                                          isFavorite ? Colors.red : Colors.grey,
-                                    ),
-                                    onPressed: () async {
-                                      try {
-                                        final docRef = FirebaseFirestore
-                                            .instance
-                                            .collection("services")
-                                            .doc(data[
-                                                'uuid']); // Reference the service document
-
-                                        if (isFavorite) {
-                                          // If already favorited, remove current user ID from the favorites list
-                                          await docRef.update({
-                                            "favorite": FieldValue.arrayRemove(
-                                                [currentUserId]),
-                                          });
-                                        } else {
-                                          // If not favorited, add current user ID to the favorites list
-                                          await docRef.update({
-                                            "favorite": FieldValue.arrayUnion(
-                                                [currentUserId]),
-                                          });
-                                        }
-
-                                        setState(() {
-                                          // Update local state to reflect the new favorite status
-                                          isFavorite = !isFavorite;
-                                        });
-                                      } catch (e) {
-                                        print(
-                                            "Error updating favorite status: $e");
-                                      }
-                                    },
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "€" + data['price'].toString(),
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                      Text(
+                                        data['priceType'],
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xff9C9EA2),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19),
+                                      ),
+                                    ],
                                   ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (builder) => HiringService(
-                                                  serviceDescription:
-                                                      data['description'],
-                                                  currencyType:
-                                                      data['currency'],
-                                                  userEmail: data['userEmail'],
-                                                  serviceId: data['uuid'],
-                                                  userImage: data['userImage'],
-                                                  userName: data['userName'],
-                                                  category: data['category'],
-                                                  totalReviews:
-                                                      data['totalReviews']
-                                                          .toString(),
-                                                  uuid: data['uuid'],
-                                                  uid: data['uid'],
-                                                  totalRating: data['totalRate']
-                                                      .toString(),
-                                                  title: data['title'],
-                                                  price:
-                                                      data['price'].toString(),
-                                                  perHrPrice: data['pricePerHr']
-                                                      .toString(),
-                                                  photo: data['photo'],
-                                                  description:
-                                                      data['description'],
-                                                )));
-                                  },
-                                  leading: CircleAvatar(
-                                    backgroundImage:
-                                        NetworkImage(data['photo']),
+                                  Image.asset(
+                                    "assets/line.png",
+                                    height: 40,
+                                    width: 52,
                                   ),
-                                  title: Text(
-                                    data['title'],
-                                    style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  subtitle: Text(
-                                    data['category'],
-                                    style: GoogleFonts.inter(
-                                        color: Color(0xff9C9EA2),
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: 15),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Text(
-                                          "€" + data['price'].toString(),
-                                          style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
-                                        ),
-                                        Text(
-                                          data['priceType'],
-                                          style: GoogleFonts.inter(
-                                              color: Color(0xff9C9EA2),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 19),
-                                        ),
-                                      ],
-                                    ),
-                                    Image.asset(
-                                      "assets/line.png",
-                                      height: 40,
-                                      width: 52,
-                                    ),
-                                    Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.star,
-                                              color: yellow,
-                                            ),
-                                            Text(
-                                              data['totalReviews'].toString(),
-                                              style: GoogleFonts.inter(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 20),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          data['ratingCount'].toString() +
-                                              " Reviews",
-                                          style: GoogleFonts.inter(
-                                              color: Color(0xff9C9EA2),
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 19),
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: yellow,
+                                          ),
+                                          Text(
+                                            data['totalReviews'].toString(),
+                                            style: GoogleFonts.inter(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        data['ratingCount'].toString() +
+                                            " Reviews",
+                                        style: GoogleFonts.inter(
+                                            color: Color(0xff9C9EA2),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
                           ),
-                        );
-                      });
-                },
-              ),
-      ),
+                        ),
+                      );
+                    });
+              },
+            ),
     );
   }
 }

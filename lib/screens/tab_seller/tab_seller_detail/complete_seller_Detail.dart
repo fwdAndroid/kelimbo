@@ -1,8 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
-import 'package:kelimbo/utils/image_utils.dart';
-import 'package:kelimbo/widgets/save_button.dart';
 
 class CompleteSellerDetail extends StatefulWidget {
   String uuid;

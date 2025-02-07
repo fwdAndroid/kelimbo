@@ -30,20 +30,20 @@ class CustomOffers extends StatelessWidget {
             labelStyle: TextStyle(fontSize: 10),
             unselectedLabelStyle: TextStyle(fontSize: 10),
             tabs: [
-              Tab(text: "Aceptados"),
-              Tab(text: "Completados"),
-              Tab(text: 'Enviados'),
-              Tab(text: "Rechazados"),
+              Tab(text: "Recibidas"), //Recived
+              Tab(text: "Aceptadas"), // Accepted
+              Tab(text: 'Rechazadas'), // Rejected
+              Tab(text: "Completadas"), //Comm=
             ],
           ),
           title: Text('Oferta Personalizada'),
         ),
         body: TabBarView(
           children: [
-            CurrentJob(), // Accepte
-            CustomOfferComplete(), // Complete
             CustomOfferCompleted(), //Recived
+            CurrentJob(), // Accepte
             CustomOfferDeclined(), // Declined
+            CustomOfferComplete(), // Complete
           ],
         ),
       ),

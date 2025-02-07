@@ -29,7 +29,7 @@ class _AddServicePageState extends State<AddServicePage> {
   String drop = "Por Hora";
 
   var PriceType = ['Por Hora', 'Por Servicio'];
-  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'G1'];
+  var currency = ['Euro', 'USD', 'BTC', 'ETH', 'Ğ'];
 
   var items = [
     'Acompañamiento',
@@ -243,7 +243,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   ),
                                 );
                                 showMessageBar(
-                                    "Servicios agregados con éxito".toString(),
+                                    "Servicio agregado con éxito".toString(),
                                     context);
                               } catch (e) {
                                 showMessageBar(e.toString(), context);

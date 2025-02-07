@@ -114,7 +114,7 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                             "serviceDescription":
                                 descriptionController.text ?? widget.description
                           });
-                          showMessageBar("Se acepta la oferta", context);
+                          showMessageBar("Presupuesto enviado", context);
                           Navigator.pop(context);
                         }
                         // accept the offer

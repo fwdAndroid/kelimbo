@@ -156,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 },
                 //"Realiza una oferta"
                 title: Text(
-                  "Presupuesto",
+                  "Presupuestos",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),

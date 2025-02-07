@@ -27,8 +27,6 @@ class _VehiclescatState extends State<Vehiclescat> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("services")
-              .where("uid",
-                  isNotEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .where("category", isEqualTo: "Vehículos")
               .snapshots(),
           builder: (context, snapshot) {

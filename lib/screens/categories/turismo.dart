@@ -27,7 +27,6 @@ class _TurismoState extends State<Turismo> {
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("services")
-              .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
               .where("category", isEqualTo: "Turismo")
               .snapshots(),
           builder: (context, snapshot) {

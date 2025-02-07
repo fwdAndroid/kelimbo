@@ -8,8 +8,8 @@ String getCurrencySymbol(String currency) {
       return '₿';
     case 'ETH':
       return 'Ξ';
-    case 'G1': // Add custom icons or symbols as needed
-      return 'G1';
+    case 'Ğ': // Add custom icons or symbols as needed
+      return 'Ğ';
     default:
       return ''; // Default to no symbol if currency is unrecognized
   }
