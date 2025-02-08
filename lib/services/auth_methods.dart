@@ -72,7 +72,7 @@ class AuthMethods {
     required String email,
     required String pass,
   }) async {
-    String res = ' Wrong Email or Password';
+    String res = ' Correo electrónico o contraseña incorrectos';
     try {
       if (email.isNotEmpty || pass.isNotEmpty) {
         await _auth.signInWithEmailAndPassword(email: email, password: pass);

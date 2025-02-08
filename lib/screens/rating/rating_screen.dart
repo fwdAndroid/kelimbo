@@ -188,7 +188,7 @@ class _RatingScreenState extends State<RatingScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "OR",
+              "o",
               style: TextStyle(
                 color: Colors.black,
               ),

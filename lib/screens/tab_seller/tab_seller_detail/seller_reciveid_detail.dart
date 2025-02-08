@@ -100,7 +100,7 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                 Spacer(),
                 Center(
                   child: SaveButton(
-                      title: "Aceptado",
+                      title: "Enviar Presupuesto ",
                       onTap: () async {
                         if (providerPassController.text.isEmpty) {
                           showMessageBar("Se requiere precio", context);

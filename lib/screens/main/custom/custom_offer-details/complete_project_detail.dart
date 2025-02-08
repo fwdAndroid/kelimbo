@@ -115,7 +115,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Please rate this offer:",
+                          "Por favor, valora este trabajo:",
                           style: TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 10),
@@ -249,7 +249,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                         isLoading = false;
                                       });
                                       showMessageBar(
-                                          "Revisión enviada", context);
+                                          "Valoración enviada", context);
                                       // Navigate to the main dashboard or show a success message
                                       Navigator.push(
                                           context,
