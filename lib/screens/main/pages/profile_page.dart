@@ -8,6 +8,7 @@ import 'package:kelimbo/screens/profile_pages/view_profile.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
 import 'package:kelimbo/screens/rating/rating_list_user.dart';
 import 'package:kelimbo/screens/services/my_services.dart';
+import 'package:kelimbo/screens/services/user_profile.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
@@ -45,21 +46,29 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     return Column(
                       children: [
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: snap['image'] != null &&
-                                    snap['image'].isNotEmpty
-                                ? CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                      snap['image'],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => UserProfile()));
+                          },
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: snap['image'] != null &&
+                                      snap['image'].isNotEmpty
+                                  ? CircleAvatar(
+                                      backgroundImage: NetworkImage(
+                                        snap['image'],
+                                      ),
+                                      radius: 60,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 60,
+                                      child: Icon(Icons.person, size: 60),
                                     ),
-                                    radius: 60,
-                                  )
-                                : CircleAvatar(
-                                    radius: 60,
-                                    child: Icon(Icons.person, size: 60),
-                                  ),
+                            ),
                           ),
                         ),
                         Text(

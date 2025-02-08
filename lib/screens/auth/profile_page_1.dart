@@ -345,7 +345,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
             padding: const EdgeInsets.all(8.0),
             child: Center(
               child: Text(
-                "Tú teléfono y dirección de correo electrónico no será visible para otros usuarios",
+                "Tú teléfono y dirección de correo electrónico no serán visibles para otros usuarios",
                 textAlign: TextAlign.center,
               ),
             ),
