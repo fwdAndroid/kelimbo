@@ -181,7 +181,7 @@ class _FavouritePageState extends State<FavouritePage> {
                                         ),
                                       ),
                                       Text(
-                                        "Precio",
+                                        data['priceType'],
                                         style: GoogleFonts.inter(
                                             color: Color(0xff9C9EA2),
                                             fontWeight: FontWeight.bold,
