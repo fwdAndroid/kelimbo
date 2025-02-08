@@ -299,15 +299,12 @@ class _FiltersState extends State<Filters> {
       query = query.orderBy("price");
     }
 
-    // Filter by Rating.
-    if (appliedFilters.contains("Calificación más alta") &&
-        !appliedFilters.contains("Calificación más baja")) {
-      query = query.orderBy("ratingCount", descending: true);
-    } else if (appliedFilters.contains("Calificación más baja") &&
-        !appliedFilters.contains("Calificación más alta")) {
-      query = query.orderBy("ratingCount");
+    if (appliedFilters.contains("Calificación más alta")) {
+      query = query.orderBy("totalReviews", descending: true);
     }
-
+    if (appliedFilters.contains("Calificación más baja")) {
+      query = query.orderBy("totalReviews", descending: false);
+    }
     // Filter by Work Done using the denormalized field "numberOfJobs".
     if (appliedFilters.contains("Más trabajo realizado") &&
         !appliedFilters.contains("Menos trabajo realizado")) {
