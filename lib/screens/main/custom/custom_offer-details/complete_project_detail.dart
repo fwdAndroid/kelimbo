@@ -221,6 +221,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                             double.parse(formattedRating),
                                         "finalreviews":
                                             finalReviews, // Update the finalreviews array
+                                        "numberOfJobs": FieldValue.increment(1)
                                       });
                                       await FirebaseFirestore.instance
                                           .collection("users")

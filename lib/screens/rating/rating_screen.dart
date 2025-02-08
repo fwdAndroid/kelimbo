@@ -150,6 +150,7 @@ class _RatingScreenState extends State<RatingScreen> {
                     "totalReviews": double.parse(formattedRating),
                     "finalreviews":
                         finalReviews, // Update the finalreviews array
+                    "numberofjobs": FieldValue.increment(1),
                   });
                   await FirebaseFirestore.instance
                       .collection("users")
@@ -200,6 +201,12 @@ class _RatingScreenState extends State<RatingScreen> {
                     .collection("users")
                     .doc(widget.providerId)
                     .update({
+                  "numberofjobs": FieldValue.increment(1),
+                });
+                DocumentReference serviceDocRef = FirebaseFirestore.instance
+                    .collection("services")
+                    .doc(widget.serviceId);
+                await serviceDocRef.update({
                   "numberofjobs": FieldValue.increment(1),
                 });
                 Navigator.push(context,

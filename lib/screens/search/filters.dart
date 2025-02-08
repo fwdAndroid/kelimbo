@@ -9,13 +9,15 @@ import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 class Filters extends StatefulWidget {
-  const Filters({super.key});
+  const Filters({Key? key}) : super(key: key);
 
   @override
   State<Filters> createState() => _FiltersState();
 }
 
 class _FiltersState extends State<Filters> {
+  // List of available filter options. Make sure that the strings used here
+  // match exactly with those used in the query builder below.
   List<String> specialSituations = [
     "Precio más alto",
     "Precio más bajo",
@@ -23,10 +25,15 @@ class _FiltersState extends State<Filters> {
     "Calificación más baja",
     "Más trabajo realizado",
     "Menos trabajo realizado",
+    // You can also add "Ubicación" here if you want to combine it.
+    "Ubicación",
   ];
 
+  // This list will store the selected filter(s)
   List<String> selectedFilters = [];
   List<String> appliedFilters = [];
+
+  // Get the current user's uid.
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
@@ -43,12 +50,13 @@ class _FiltersState extends State<Filters> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.close)),
+            icon: const Icon(Icons.close)),
       ),
       body: Column(
         children: [
+          // GroupButton displays filter options
           Container(
-            margin: const EdgeInsets.only(left: 20, right: 20, top: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: GroupButton(
               options: GroupButtonOptions(
                 buttonWidth: 150,
@@ -60,24 +68,24 @@ class _FiltersState extends State<Filters> {
                 selectedBorderColor: mainColor,
                 borderRadius: BorderRadius.circular(20),
               ),
+              // Using isRadio:true so only one filter is selected at a time.
               onSelected: (value, index, isSelected) {
                 setState(() {
+                  // Clear previous selections since we're using a radio style
+                  selectedFilters.clear();
                   if (isSelected) {
                     selectedFilters.add(value);
-                  } else {
-                    selectedFilters.remove(value);
                   }
-                  appliedFilters =
-                      List.from(selectedFilters); // Dynamically update
+                  // Update the appliedFilters list
+                  appliedFilters = List.from(selectedFilters);
                 });
               },
               isRadio: true,
               buttons: specialSituations,
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
+          // SaveButton for location filtering (navigates to a LocationFilter screen)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
@@ -86,13 +94,16 @@ class _FiltersState extends State<Filters> {
                 title: "Ubicación",
                 onTap: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (builder) => LocationFilter()));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LocationFilter(),
+                    ),
+                  );
                 },
               ),
             ),
           ),
+          // Expanded widget displays the query results or an appropriate message.
           Expanded(
             child: appliedFilters.isEmpty
                 ? Center(
@@ -102,13 +113,11 @@ class _FiltersState extends State<Filters> {
                       textAlign: TextAlign.center,
                     ),
                   )
-                : StreamBuilder(
+                : StreamBuilder<QuerySnapshot>(
                     stream: _getFilteredQuery(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
+                        return const Center(child: CircularProgressIndicator());
                       }
                       if (snapshot.data!.docs.isEmpty) {
                         return Center(
@@ -126,7 +135,6 @@ class _FiltersState extends State<Filters> {
                           final data = document.data() as Map<String, dynamic>;
                           final List<dynamic> favorites =
                               data['favorite'] ?? [];
-
                           bool isFavorite = favorites.contains(currentUserId);
 
                           return GestureDetector(
@@ -134,7 +142,7 @@ class _FiltersState extends State<Filters> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (builder) => HiringService(
+                                  builder: (context) => HiringService(
                                     serviceDescription: data['description'],
                                     serviceId: data['uuid'],
                                     currencyType: data['currency'],
@@ -200,7 +208,7 @@ class _FiltersState extends State<Filters> {
                                     subtitle: Text(
                                       data['category'],
                                       style: GoogleFonts.inter(
-                                          color: Color(0xff9C9EA2),
+                                          color: const Color(0xff9C9EA2),
                                           fontWeight: FontWeight.w300,
                                           fontSize: 15),
                                     ),
@@ -219,7 +227,7 @@ class _FiltersState extends State<Filters> {
                                           Text(
                                             data['priceType'],
                                             style: GoogleFonts.inter(
-                                                color: Color(0xff9C9EA2),
+                                                color: const Color(0xff9C9EA2),
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 19),
                                           ),
@@ -234,7 +242,7 @@ class _FiltersState extends State<Filters> {
                                         children: [
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.star,
                                                 color: Colors.yellow,
                                               ),
@@ -250,7 +258,7 @@ class _FiltersState extends State<Filters> {
                                             data['ratingCount'].toString() +
                                                 " Reviews",
                                             style: GoogleFonts.inter(
-                                                color: Color(0xff9C9EA2),
+                                                color: const Color(0xff9C9EA2),
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 19),
                                           ),
@@ -272,14 +280,17 @@ class _FiltersState extends State<Filters> {
     );
   }
 
+  /// Builds a Firestore query based on the applied filters.
+  /// For the "Más trabajo realizado" and "Menos trabajo realizado" filters,
+  /// it orders by the denormalized field "numberOfJobs".
   Stream<QuerySnapshot> _getFilteredQuery() {
     final servicesCollection =
         FirebaseFirestore.instance.collection("services");
 
-    // Initialize query
+    // Start with the base collection.
     Query query = servicesCollection;
 
-    // Check for each filter and modify the query accordingly
+    // Filter by Price.
     if (appliedFilters.contains("Precio más alto") &&
         !appliedFilters.contains("Precio más bajo")) {
       query = query.orderBy("price", descending: true);
@@ -288,6 +299,7 @@ class _FiltersState extends State<Filters> {
       query = query.orderBy("price");
     }
 
+    // Filter by Rating.
     if (appliedFilters.contains("Calificación más alta") &&
         !appliedFilters.contains("Calificación más baja")) {
       query = query.orderBy("ratingCount", descending: true);
@@ -296,17 +308,18 @@ class _FiltersState extends State<Filters> {
       query = query.orderBy("ratingCount");
     }
 
+    // Filter by Work Done using the denormalized field "numberOfJobs".
     if (appliedFilters.contains("Más trabajo realizado") &&
         !appliedFilters.contains("Menos trabajo realizado")) {
-      query = query.orderBy("totalReviews", descending: true);
+      query = query.orderBy("numberOfJobs", descending: true);
     } else if (appliedFilters.contains("Menos trabajo realizado") &&
         !appliedFilters.contains("Más trabajo realizado")) {
-      query = query.orderBy("totalReviews");
+      query = query.orderBy("numberOfJobs", descending: false);
     }
-    // Add filter for location in alphabetical order
+
+    // Optional: Filter by Location if the filter "Ubicación" is applied.
     if (appliedFilters.contains("Ubicación")) {
-      query =
-          query.orderBy("location", descending: false); // Sort alphabetically
+      query = query.orderBy("location", descending: false);
     }
 
     return query.snapshots();

@@ -8,6 +8,7 @@ class ServiceModel {
   String description;
   String title;
   String category;
+  int numberOfJobs;
   String uid;
   List favorite;
   double totalRate; // Stores the total rate
@@ -36,6 +37,7 @@ class ServiceModel {
       required this.totalRate,
       required this.userName,
       required this.userImage,
+      required this.numberOfJobs,
       required this.userEmail,
       required this.totalReviews,
       required this.currency,
@@ -65,6 +67,7 @@ class ServiceModel {
         'reviews': reviews, // Include reviews as a list of strings
         'location': location,
         'finalreviews': finalreviews,
+        'numberOfJobs': numberOfJobs,
       };
   static ServiceModel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
@@ -75,6 +78,7 @@ class ServiceModel {
         priceType: snapshot['priceType'],
         currency: snapshot['currency'],
         favorite: snapshot['favorite'],
+        numberOfJobs: snapshot['numberOfJobs'],
         title: snapshot['title'],
         ratingCount: snapshot['ratingCount'],
         description: snapshot['description'],

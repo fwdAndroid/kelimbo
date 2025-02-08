@@ -53,6 +53,7 @@ class Database {
         ServiceModel serviceModel = ServiceModel(
           currency: currency,
           priceType: priceType,
+          numberOfJobs: 0,
           location: location,
           finalreviews: [],
           userEmail: userEmail,
