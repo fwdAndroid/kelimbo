@@ -103,7 +103,7 @@ class _RatingScreenState extends State<RatingScreen> {
             ),
           ),
           SaveButton(
-            title: "Enviar calificación",
+            title: "Enviar Valoración ",
             onTap: () async {
               try {
                 // Reference to the specific service document

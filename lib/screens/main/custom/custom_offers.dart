@@ -32,7 +32,7 @@ class CustomOffers extends StatelessWidget {
             labelStyle: TextStyle(fontSize: 10),
             unselectedLabelStyle: TextStyle(fontSize: 10),
             tabs: [
-              Tab(text: "Pendiente"), //Pending
+              Tab(text: "Pendientes"), //Pending
 
               Tab(text: "Recibidas"), //Recived
               Tab(text: "Aceptadas"), // Accepted
