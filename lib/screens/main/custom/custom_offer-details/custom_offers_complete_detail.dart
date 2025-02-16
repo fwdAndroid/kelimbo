@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CompleteCustomOfferDetail extends StatefulWidget {
   String uuid;
@@ -24,6 +26,8 @@ class CompleteCustomOfferDetail extends StatefulWidget {
 }
 
 class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
+  TextEditingController descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,15 +38,11 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Custom Offer",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
                   "Description: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
-                  height: 300,
+                  height: 250,
                   child: Text(
                     widget.description,
                     style: TextStyle(fontSize: 16),
@@ -58,6 +58,26 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                       getCurrencySymbol(widget.currency ?? 'Euro'),
                   style: TextStyle(fontSize: 16),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    controller: descriptionController,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      filled: true,
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(22)),
+                          borderSide: BorderSide(
+                            color: textColor,
+                          )),
+                      contentPadding: EdgeInsets.all(8),
+                      fillColor: Color(0xffF6F7F9),
+                      hintText: "Descripción",
+                      hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
                 Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,14 +87,24 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                       child: SaveButton(
                           title: "Aceptar",
                           onTap: () async {
-                            // accept the offer
-                            await FirebaseFirestore.instance
-                                .collection("offers")
-                                .doc(widget.uuid)
-                                .update({"status": "start"});
+                            if (descriptionController.text.isEmpty) {
+                              showMessageBar(
+                                  "Por favor, ingrese una descripción",
+                                  context);
+                              return;
+                            } else {
+                              // accept the offer
+                              await FirebaseFirestore.instance
+                                  .collection("offers")
+                                  .doc(widget.uuid)
+                                  .update({
+                                "status": "start",
+                                "serviceDescription": descriptionController.text
+                              });
 
-                            showMessageBar("Presupuesto enviado", context);
-                            Navigator.pop(context);
+                              showMessageBar("Oferta aceptada", context);
+                              Navigator.pop(context);
+                            }
                           }),
                     ),
                     SizedBox(
@@ -88,7 +118,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                                 .doc(widget.uuid)
                                 .update({"status": "reject"});
 
-                            showMessageBar("La oferta es rechazada", context);
+                            showMessageBar("Oferta rechazada", context);
                             Navigator.pop(context);
                           }),
                     )
