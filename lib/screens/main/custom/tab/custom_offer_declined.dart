@@ -57,12 +57,16 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(data['providerImage'] ?? ""),
+                          ),
                           title: Text(
-                            'ProviderName: ${data['providerName']}',
+                            data['providerName'],
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
-                          subtitle: Text(
+                          trailing: Text(
                             "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold,
@@ -70,19 +74,21 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                             ),
                           ),
                         ),
-                        Text(
-                          "Description",
-                          style: TextStyle(
-                              color: colorBlack,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Descripciónes de puestos de trabajo",
+                            style: TextStyle(
+                                color: colorBlack,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
-                        Text(data['serviceDescription'] ??
-                            'No description available'),
-                        Text(
-                          data['status'] ?? 'No description available',
-                          style: TextStyle(color: Colors.green),
-                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Text(data['work'] ?? 'No description available'),
+                        )
                       ],
                     ),
                   ));
