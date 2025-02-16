@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_offers_complete_detail.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/tab_seller/tab_seller_detail/seller_reciveid_detail.dart';
 import 'package:kelimbo/utils/colors.dart';
@@ -58,12 +57,16 @@ class _SellerReceivedByBuyerState extends State<SellerReceivedByBuyer> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(data['clientImage'] ?? ""),
+                          ),
                           title: Text(
-                            'Client Name: ${data['clientName']}',
+                            data['clientName'],
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
-                          subtitle: Text(
+                          trailing: Text(
                             "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold,
@@ -71,21 +74,21 @@ class _SellerReceivedByBuyerState extends State<SellerReceivedByBuyer> {
                             ),
                           ),
                         ),
-                        Text(
-                          "Description",
-                          style: TextStyle(
-                              color: colorBlack,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Descripciónes de puestos de trabajo",
+                            style: TextStyle(
+                                color: colorBlack,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
-                        SizedBox(
-                            height: 140,
-                            child: Text(
-                                data['work'] ?? 'No description available')),
-                        Text(
-                          "Received",
-                          style: TextStyle(color: Colors.green),
-                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Text(data['work'] ?? 'No description available'),
+                        )
                       ],
                     ),
                   ));

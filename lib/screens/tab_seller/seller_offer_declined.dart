@@ -57,12 +57,16 @@ class _SellerOfferDeclinedState extends State<SellerOfferDeclined> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(data['clientImage'] ?? ""),
+                          ),
                           title: Text(
-                            'Client Name: ${data['clientName']}',
+                            data['clientName'],
                             style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
-                          subtitle: Text(
+                          trailing: Text(
                             "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
                             style: GoogleFonts.inter(
                               fontWeight: FontWeight.bold,
@@ -70,21 +74,21 @@ class _SellerOfferDeclinedState extends State<SellerOfferDeclined> {
                             ),
                           ),
                         ),
-                        Text(
-                          "Description",
-                          style: TextStyle(
-                              color: colorBlack,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Descripciónes de puestos de trabajo",
+                            style: TextStyle(
+                                color: colorBlack,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                          ),
                         ),
-                        SizedBox(
-                            height: 140,
-                            child: Text(
-                                data['work'] ?? 'No description available')),
-                        Text(
-                          "Declined",
-                          style: TextStyle(color: Colors.red),
-                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              Text(data['work'] ?? 'No description available'),
+                        )
                       ],
                     ),
                   ));
