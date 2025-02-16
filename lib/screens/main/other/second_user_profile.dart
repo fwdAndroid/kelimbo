@@ -13,6 +13,7 @@ class SecondUserProfile extends StatefulWidget {
   String userId;
   String userName;
   String uuid;
+  String numberofJobs;
   var totalReviews;
   SecondUserProfile(
       {super.key,
@@ -20,6 +21,7 @@ class SecondUserProfile extends StatefulWidget {
       required this.userId,
       required this.userImage,
       required this.userName,
+      required this.numberofJobs,
       required this.uuid,
       required this.totalReviews});
 
@@ -79,6 +81,13 @@ class _SecondUserProfileState extends State<SecondUserProfile> {
               ],
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Número de trabajos: "),
+              Text(widget.numberofJobs.toString()),
+            ],
+          ),
           StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection("services")
@@ -134,88 +143,113 @@ class _SecondUserProfileState extends State<SecondUserProfile> {
                                       description: data['description'],
                                     )));
                       },
-                      child: SizedBox(
-                        height: 300,
-                        width: 300,
-                        child: Card(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Stack(
+                      child: Card(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.favorite,
+                                  color: isFavorite ? Colors.red : Colors.grey,
+                                ),
+                                onPressed: () async {
+                                  try {
+                                    final docRef = FirebaseFirestore.instance
+                                        .collection("services")
+                                        .doc(data[
+                                            'uuid']); // Reference the service document
+
+                                    if (isFavorite) {
+                                      // Remove the current user ID from favorites
+                                      await docRef.update({
+                                        "favorite": FieldValue.arrayRemove(
+                                            [currentUserId]),
+                                      });
+                                    } else {
+                                      // Add the current user ID to favorites
+                                      await docRef.update({
+                                        "favorite": FieldValue.arrayUnion(
+                                            [currentUserId]),
+                                      });
+                                    }
+
+                                    setState(() {
+                                      isFavorite = !isFavorite;
+                                    });
+                                  } catch (e) {
+                                    print("Error updating favorite status: $e");
+                                  }
+                                },
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HiringService(
+                                              serviceDescription:
+                                                  data['description'],
+                                              currencyType: data['currency'],
+                                              userEmail: data['userEmail'],
+                                              serviceId: data['uuid'],
+                                              userImage: data['userImage'],
+                                              userName: data['userName'],
+                                              category: data['category'],
+                                              totalReviews: data['totalReviews']
+                                                  .toString(),
+                                              uuid: data['uuid'],
+                                              uid: data['uid'],
+                                              totalRating:
+                                                  data['totalRate'].toString(),
+                                              title: data['title'],
+                                              price: data['price'].toString(),
+                                              perHrPrice:
+                                                  data['pricePerHr'].toString(),
+                                              photo: data['photo'],
+                                              description: data['description'],
+                                            )));
+                              },
+                              leading: CircleAvatar(
+                                backgroundImage: NetworkImage(data['photo']),
+                              ),
+                              title: Text(
+                                data['title'],
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              subtitle: Text(
+                                data['category'],
+                                style: GoogleFonts.inter(
+                                    color: Color(0xff9C9EA2),
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 15),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Column(
                                   children: [
-                                    data['photo'] == ""
-                                        ? Container()
-                                        : ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Image.network(
-                                              fit: BoxFit.cover,
-                                              data['photo'],
-                                              height: 150,
-                                              width: 300,
-                                            ),
-                                          ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final docRef = FirebaseFirestore
-                                            .instance
-                                            .collection("services")
-                                            .doc(data['uuid']);
-                                        if (isFavorite) {
-                                          // Remove from favorites
-                                          await docRef.update({
-                                            "favorite": FieldValue.arrayRemove(
-                                                [currentUserId])
-                                          });
-                                        } else {
-                                          // Add to favorites
-                                          await docRef.update({
-                                            "favorite": FieldValue.arrayUnion(
-                                                [currentUserId])
-                                          });
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment:
-                                              AlignmentDirectional.topEnd,
-                                          child: Container(
-                                            child: Icon(
-                                              isFavorite
-                                                  ? Icons.favorite
-                                                  : Icons.favorite_outline,
-                                              color: red,
-                                            ),
-                                            height: 50,
-                                            width: 50,
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: colorWhite),
-                                          ),
-                                        ),
-                                      ),
-                                    )
+                                    Text(
+                                      "€" + data['price'].toString(),
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20),
+                                    ),
+                                    Text(
+                                      data['priceType'],
+                                      style: GoogleFonts.inter(
+                                          color: Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  data['title'],
-                                  style: GoogleFonts.inter(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
+                                Image.asset(
+                                  "assets/line.png",
+                                  height: 40,
+                                  width: 52,
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Column(
                                   children: [
                                     Row(
                                       children: [
@@ -227,22 +261,23 @@ class _SecondUserProfileState extends State<SecondUserProfile> {
                                           data['totalReviews'].toString(),
                                           style: GoogleFonts.inter(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 13),
+                                              fontSize: 20),
                                         ),
                                       ],
                                     ),
                                     Text(
-                                      "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
+                                      data['ratingCount'].toString() +
+                                          " Reviews",
                                       style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
+                                          color: Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19),
                                     ),
                                   ],
-                                ),
-                              ),
-                            ],
-                          ),
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       ),
                     );

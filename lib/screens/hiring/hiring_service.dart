@@ -78,6 +78,7 @@ class _HiringServiceState extends State<HiringService> {
                           context,
                           MaterialPageRoute(
                               builder: (builder) => SecondUserProfile(
+                                  numberofJobs: snap['numberofjobs'].toString(),
                                   uuid: widget.uuid,
                                   totalReviews: widget.totalReviews.toString(),
                                   userEmail: widget.userEmail,
