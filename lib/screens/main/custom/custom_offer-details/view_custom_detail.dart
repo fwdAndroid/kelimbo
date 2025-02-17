@@ -30,11 +30,7 @@ class _ViewCustomDetailState extends State<ViewCustomDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Custom Offer",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -45,7 +41,7 @@ class _ViewCustomDetailState extends State<ViewCustomDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
@@ -55,10 +51,10 @@ class _ViewCustomDetailState extends State<ViewCustomDetail> {
                   style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  "Status: ",
+                  "Estado: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Text("Pending ",
+                Text("Pendiente ",
                     style: TextStyle(fontSize: 16, color: Colors.green)),
               ],
             )));

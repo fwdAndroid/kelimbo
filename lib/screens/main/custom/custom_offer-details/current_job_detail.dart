@@ -32,11 +32,7 @@ class _CurrentJobDetailState extends State<CurrentJobDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Custom Offer",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -47,7 +43,7 @@ class _CurrentJobDetailState extends State<CurrentJobDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
@@ -62,18 +58,18 @@ class _CurrentJobDetailState extends State<CurrentJobDetail> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text("Confirm"),
+                              title: Text("Confirmar"),
                               content: Text(
-                                  "Are you sure you want to mark this job as completed?"),
+                                  "¿Está seguro de que desea marcar este trabajo como completado?"),
                               actions: [
                                 TextButton(
-                                  child: Text("Cancel"),
+                                  child: Text("Cancelar"),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
                                 TextButton(
-                                  child: Text("Yes"),
+                                  child: Text("Sí"),
                                   onPressed: () async {
                                     await FirebaseFirestore.instance
                                         .collection('customOffers')
@@ -94,7 +90,7 @@ class _CurrentJobDetailState extends State<CurrentJobDetail> {
                           });
                     },
                     child: Text(
-                      "Mark as completed",
+                      "Marcar como completado",
                       style: TextStyle(color: Colors.green),
                     ))
               ],

@@ -38,7 +38,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -49,7 +49,7 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(

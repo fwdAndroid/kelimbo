@@ -127,7 +127,8 @@ class _OtherUserProfileState extends State<OtherUserProfile> {
                                   if (!snapshot.hasData ||
                                       snapshot.data == null) {
                                     return Center(
-                                        child: Text('No data available'));
+                                        child:
+                                            Text('No hay datos disponibles'));
                                   }
 
                                   return GestureDetector(

@@ -85,8 +85,8 @@ class _PendingOfferState extends State<PendingOffer> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child:
-                              Text(data['work'] ?? 'No description available'),
+                          child: Text(
+                              data['work'] ?? 'No hay descripción disponible'),
                         )
                       ],
                     ),

@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/utils/colors.dart';
 

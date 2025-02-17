@@ -53,7 +53,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Description:",
+                "Descripción:",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -66,7 +66,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
               ),
               const SizedBox(height: 16),
               const Text(
-                "Price:",
+                "Precio:",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               const SizedBox(height: 8),
@@ -102,7 +102,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                   if (isRated) {
                     // If the offer is already rated, show a message.
                     return const Text(
-                      "Offer is rated.",
+                      "La oferta está calificada..",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,

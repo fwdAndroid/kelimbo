@@ -30,7 +30,7 @@ class _SellerSendDetailState extends State<SellerSendDetail> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                "Description: ",
+                "Descripción ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               SizedBox(
@@ -41,7 +41,7 @@ class _SellerSendDetailState extends State<SellerSendDetail> {
                 ),
               ),
               Text(
-                "Price: ",
+                "Precio: ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text(

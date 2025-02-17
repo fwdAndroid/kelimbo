@@ -38,7 +38,7 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -49,7 +49,7 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(

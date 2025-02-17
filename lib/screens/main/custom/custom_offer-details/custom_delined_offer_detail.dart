@@ -31,11 +31,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Custom Offer",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -46,7 +42,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "Precio: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
@@ -56,10 +52,10 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
                   style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  "Status: ",
+                  "Estado: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
-                Text("Declined ",
+                Text("Rechazado ",
                     style: TextStyle(fontSize: 16, color: Colors.red)),
               ],
             )));

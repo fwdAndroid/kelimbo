@@ -66,34 +66,7 @@ class _MessagesState extends State<Messages> {
         ),
         centerTitle: true,
         title: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (builder) => OtherUserProfileChat(
-                  userImage: FirebaseAuth.instance.currentUser!.uid ==
-                          widget.customerId
-                      ? widget.providerPhoto
-                      : widget.customerPhoto,
-                  userName: FirebaseAuth.instance.currentUser!.uid ==
-                          widget.customerId
-                      ? widget.providerName
-                      : widget.customerName,
-                  userEmail: FirebaseAuth.instance.currentUser!.uid ==
-                          widget.customerId
-                      ? widget.providerEmail
-                      : widget.customerEmail,
-                  customerEmail: widget.customerEmail,
-                  customerName: widget.customerName,
-                  customerPhoto: widget.customerPhoto,
-                  uid: FirebaseAuth.instance.currentUser!.uid ==
-                          widget.customerId
-                      ? widget.providerId
-                      : widget.customerId,
-                ),
-              ),
-            );
-          },
+          onTap: () {},
           child: Column(
             children: [
               const SizedBox(
