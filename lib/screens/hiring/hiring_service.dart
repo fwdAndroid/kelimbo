@@ -175,17 +175,16 @@ class _HiringServiceState extends State<HiringService> {
                   SaveButton(
                       title: "Chatear ahora",
                       onTap: () async {
-                        print(widget.serviceDescription);
                         await FirebaseFirestore.instance
                             .collection("chats")
-                            .doc(chatId)
+                            .doc(widget.serviceId)
                             .set({
                           "serviceDescription": widget.serviceDescription,
                           "customerName": widget.title,
                           "customerId": widget.uid,
                           "customerPhoto": widget.photo,
                           "customerEmail": widget.userEmail,
-                          "chatId": chatId,
+                          "chatId": widget.serviceId,
                           "providerEmail": snap['email'],
                           "providerId": FirebaseAuth.instance.currentUser!.uid,
                           "providerName": snap['fullName'],
