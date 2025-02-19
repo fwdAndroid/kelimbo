@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
+import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/search/filters.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/category_widget.dart';
-import 'package:kelimbo/widgets/favourite_widget.dart';
 import 'package:kelimbo/widgets/popular_service_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -129,7 +129,41 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SliverToBoxAdapter(child: PopularServiceWidget()),
-            SliverToBoxAdapter(child: FavouriteWidget()),
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("services")
+                  .where("favorite", arrayContains: currentUserId)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return SliverToBoxAdapter(
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (snapshot.data!.docs.isEmpty) {
+                  return SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Image.asset("assets/nofavourite.png",
+                            height: 200, width: 200),
+                        Text("No hay favoritos disponibles",
+                            style: TextStyle(color: colorBlack)),
+                      ],
+                    ),
+                  );
+                }
+                return SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final data = snapshot.data!.docs[index].data()
+                          as Map<String, dynamic>;
+                      return _buildFavoriteItem(data);
+                    },
+                    childCount: snapshot.data!.docs.length,
+                  ),
+                );
+              },
+            ),
           ] else
             // If there is search text, show the search results
             StreamBuilder(
@@ -362,6 +396,125 @@ class _HomePageState extends State<HomePage> {
               },
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFavoriteItem(Map<String, dynamic> data) {
+    return Card(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HiringService(
+                      userEmail: data['userEmail'],
+                      serviceDescription: data['description'],
+                      userImage: data['userImage'],
+                      userName: data['userName'],
+                      category: data['category'],
+                      totalReviews: data['totalReviews'].toString(),
+                      uuid: data['uuid'],
+                      uid: data['uid'],
+                      currencyType: data['currency'],
+                      totalRating: data['totalRate'].toString(),
+                      title: data['title'],
+                      price: data['price'].toString(),
+                      serviceId: data['uuid'],
+                      perHrPrice: data['pricePerHr'].toString(),
+                      photo: data['photo'],
+                      description: data['description'],
+                    )),
+          );
+        },
+        child: Column(
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage:
+                    NetworkImage(data['photo'] ?? "assets/logo.png"),
+              ),
+              title: Text(
+                data['title'] ?? "No Title",
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              subtitle: Text(
+                data['category'] ?? "No Subtitle",
+                style: GoogleFonts.inter(
+                    color: Color(0xff9C9EA2),
+                    fontWeight: FontWeight.w300,
+                    fontSize: 15),
+              ),
+              trailing: GestureDetector(
+                onTap: () async {
+                  final docRef = FirebaseFirestore.instance
+                      .collection("services")
+                      .doc(data['uuid']);
+                  await docRef.update({
+                    "favorite": FieldValue.arrayRemove([currentUserId])
+                  });
+                },
+                child: Icon(
+                  Icons.favorite,
+                  color: red,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "${getCurrencySymbol(data['currency'] ?? 'Euro')}${data['price'] ?? '0.0'}",
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                    Text(
+                      data['priceType'],
+                      style: GoogleFonts.inter(
+                          color: Color(0xff9C9EA2),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19),
+                    ),
+                  ],
+                ),
+                Image.asset(
+                  "assets/line.png",
+                  height: 40,
+                  width: 52,
+                ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: yellow,
+                        ),
+                        Text(
+                          "${data['totalReviews'] ?? '0.0'}",
+                          style: GoogleFonts.inter(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "${data['ratingCount'] ?? '0'} Reviews",
+                      style: GoogleFonts.inter(
+                          color: Color(0xff9C9EA2),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
