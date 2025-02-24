@@ -49,6 +49,7 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                                 status: data['status'],
                                 uuid: data['uuid'],
                                 description: data['serviceDescription'],
+                                observation: data['observation'],
                                 currency: data['currency'],
                                 price: data['price'])));
                   },

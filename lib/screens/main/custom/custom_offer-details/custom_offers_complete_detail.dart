@@ -112,12 +112,21 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                       child: SaveButton(
                           title: "Rechazar",
                           onTap: () async {
-                            // accept the offer
-                            await FirebaseFirestore.instance
-                                .collection("offers")
-                                .doc(widget.uuid)
-                                .update({"status": "reject"});
-
+                            if (descriptionController.text.isEmpty) {
+                              showMessageBar(
+                                  "Por favor, ingrese una observaciones",
+                                  context);
+                              return;
+                            } else {
+                              // accept the offer
+                              await FirebaseFirestore.instance
+                                  .collection("offers")
+                                  .doc(widget.uuid)
+                                  .update({
+                                "status": "reject",
+                                "observation": descriptionController.text
+                              });
+                            }
                             showMessageBar("Oferta rechazada", context);
                             Navigator.pop(context);
                           }),

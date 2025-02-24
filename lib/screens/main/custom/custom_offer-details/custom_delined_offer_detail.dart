@@ -6,6 +6,7 @@ class CustomDeclinedOfferDetail extends StatefulWidget {
   String description;
   int price;
   var currency;
+  String observation;
   String status;
   CustomDeclinedOfferDetail(
       {super.key,
@@ -13,6 +14,7 @@ class CustomDeclinedOfferDetail extends StatefulWidget {
       required this.uuid,
       required this.description,
       required this.currency,
+      required this.observation,
       required this.price});
 
   @override
@@ -57,6 +59,14 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
                 ),
                 Text("Rechazado ",
                     style: TextStyle(fontSize: 16, color: Colors.red)),
+                Text(
+                  "observaciones : ",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Text(
+                  widget.observation.toString(),
+                  style: TextStyle(fontSize: 16),
+                ),
               ],
             )));
   }
