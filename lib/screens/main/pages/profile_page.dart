@@ -186,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       MaterialPageRoute(builder: (builder) => CustomOffers()));
                 },
                 title: Text(
-                  "Oferta personalizada",
+                  "Ofertas Personalizadas",
                   style: GoogleFonts.workSans(
                       fontWeight: FontWeight.w500, fontSize: 16),
                 ),

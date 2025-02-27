@@ -45,8 +45,6 @@ class _MessagesState extends State<Messages> {
   @override
   void initState() {
     super.initState();
-    print(widget.customerEmail);
-    print(widget.providerEmail);
     groupChatId = widget.customerId.hashCode <= widget.providerId.hashCode
         ? "${widget.customerId}-${widget.providerId}"
         : "${widget.providerId}-${widget.customerId}";
@@ -153,7 +151,11 @@ class _MessagesState extends State<Messages> {
                                       : CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      width: 150,
+                                      constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.75, // Max width 75% of screen
+                                      ),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(16),
                                         color: isCurrentUserSender
@@ -164,7 +166,7 @@ class _MessagesState extends State<Messages> {
                                       child: Text(
                                         ds.get("content"),
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 16, // Increase if needed
                                           color: isCurrentUserSender
                                               ? colorBlack
                                               : colorWhite,

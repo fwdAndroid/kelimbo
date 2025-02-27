@@ -40,7 +40,7 @@ class CustomOffers extends StatelessWidget {
               Tab(text: "Completadas"), //Comm=
             ],
           ),
-          title: Text('Oferta Personalizada'),
+          title: Text('Ofertas Personalizadas'),
         ),
         body: TabBarView(
           children: [
