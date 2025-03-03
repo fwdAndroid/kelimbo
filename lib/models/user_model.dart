@@ -9,7 +9,7 @@ class UserModel {
   String fullName;
   String category;
   String subCategory;
-  String location;
+  List<String> location;
   String phone;
   int ratingCount;
   int numberofjobs;

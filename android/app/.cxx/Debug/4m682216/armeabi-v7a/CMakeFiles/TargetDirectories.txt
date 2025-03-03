@@ -1,0 +1,2 @@
+D:/current projects/kelimbo/android/app/.cxx/Debug/4m682216/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/current projects/kelimbo/android/app/.cxx/Debug/4m682216/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -254,7 +254,7 @@ class _SignUpState extends State<SignUp> {
                                         pass:
                                             providerPassController.text.trim(),
                                         name: "",
-                                        location: "",
+                                        location: [],
                                         file: imageToUpload,
                                       );
 

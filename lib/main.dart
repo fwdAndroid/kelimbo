@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:kelimbo/screens/auth/profile_page_1.dart';
 import 'package:kelimbo/screens/splash_screen.dart';
 
 void main() async {
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SplashScreen(),
+      home: ProfilePage1(),
     );
   }
 }
