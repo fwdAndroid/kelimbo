@@ -70,11 +70,14 @@ class _ProfilePage1State extends State<ProfilePage1> {
             ),
 
             // "Select All" button with dialog
-            TextButton(
-              onPressed: () {
-                showSelectAllDialog();
-              },
-              child: Text("Select All Cities"),
+            Align(
+              alignment: Alignment.topLeft,
+              child: TextButton(
+                onPressed: () {
+                  showSelectAllDialog();
+                },
+                child: Text("Seleccionar varias ciudades"),
+              ),
             ),
 
             // Multi-selection dropdown
@@ -88,7 +91,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                 ),
                 dropdownDecoratorProps: DropDownDecoratorProps(
                   dropdownSearchDecoration: InputDecoration(
-                    labelText: 'Select Municipality',
+                    labelText: 'Seleccionar Municipio',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -145,10 +148,10 @@ class _ProfilePage1State extends State<ProfilePage1> {
   }
 
   /// Function to show the Select All dialog
-
   void showSelectAllDialog() {
-    List<String> tempSelected =
-        List.from(selectedMunicipalities); // ✅ Start with selected items only
+    List<String> tempSelected = List.from(selectedMunicipalities);
+    TextEditingController searchController = TextEditingController();
+    List<String> filteredCities = List.from(cityNames);
 
     showDialog(
       context: context,
@@ -156,48 +159,71 @@ class _ProfilePage1State extends State<ProfilePage1> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Select Cities"),
-              content: Container(
-                width: double.maxFinite,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: cityNames.length,
-                  itemBuilder: (context, index) {
-                    return CheckboxListTile(
-                      title: Text(cityNames[index]),
-                      value: tempSelected.contains(cityNames[index]),
-                      onChanged: (bool? value) {
-                        setDialogState(() {
-                          if (value == true) {
-                            if (!tempSelected.contains(cityNames[index])) {
-                              tempSelected.add(cityNames[index]);
-                            }
-                          } else {
-                            tempSelected.remove(cityNames[index]);
-                          }
-                        });
+              title: Text("Seleccionar varias ciudades"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Search Input Field
+                  TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: "Buscar ciudad...",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (query) {
+                      setDialogState(() {
+                        filteredCities = cityNames
+                            .where((city) => city
+                                .toLowerCase()
+                                .contains(query.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  // City List with Checkboxes
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredCities.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(filteredCities[index]),
+                          value: tempSelected.contains(filteredCities[index]),
+                          onChanged: (bool? value) {
+                            setDialogState(() {
+                              if (value == true) {
+                                if (!tempSelected
+                                    .contains(filteredCities[index])) {
+                                  tempSelected.add(filteredCities[index]);
+                                }
+                              } else {
+                                tempSelected.remove(filteredCities[index]);
+                              }
+                            });
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.pop(context); // Close dialog without saving
                   },
-                  child: Text("Cancel"),
+                  child: Text("Cancelar"),
                 ),
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      // ✅ Ensure UI updates correctly
                       selectedMunicipalities = List.from(tempSelected);
                     });
-
-                    Navigator.pop(context); // ✅ Close dialog smoothly
+                    Navigator.pop(context); // Close dialog smoothly
                   },
-                  child: Text("Confirm"),
+                  child: Text("Confirmar"),
                 ),
               ],
             );

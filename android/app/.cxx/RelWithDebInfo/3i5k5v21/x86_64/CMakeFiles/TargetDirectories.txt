@@ -1,0 +1,2 @@
+D:/current projects/kelimbo/android/app/.cxx/RelWithDebInfo/3i5k5v21/x86_64/CMakeFiles/edit_cache.dir
+D:/current projects/kelimbo/android/app/.cxx/RelWithDebInfo/3i5k5v21/x86_64/CMakeFiles/rebuild_cache.dir
