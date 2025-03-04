@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +17,7 @@ class LocationFilter extends StatefulWidget {
 class _LocationFilterState extends State<LocationFilter> {
   List<String> cityNames = [];
   String? selectedMunicipality;
+
   @override
   void initState() {
     super.initState();
@@ -46,13 +46,13 @@ class _LocationFilterState extends State<LocationFilter> {
         FirebaseFirestore.instance.collection("services");
 
     if (selectedMunicipality == null || selectedMunicipality!.trim().isEmpty) {
-      // Return all results if no location is selected
       return servicesCollection.snapshots();
     }
 
-    // Filter based on selected location
     return servicesCollection
-        .where('location', isEqualTo: selectedMunicipality!.trim())
+        .where('location',
+            arrayContains:
+                selectedMunicipality!.trim()) // ✅ Filter by arrayContains
         .snapshots();
   }
 
@@ -77,9 +77,10 @@ class _LocationFilterState extends State<LocationFilter> {
               dropdownDecoratorProps: DropDownDecoratorProps(
                 textAlignVertical: TextAlignVertical.center,
                 dropdownSearchDecoration: InputDecoration(
-                    border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(50),
-                )),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                ),
               ),
               onChanged: (value) {
                 setState(() {
@@ -98,12 +99,22 @@ class _LocationFilterState extends State<LocationFilter> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No se han encontrado resultados para la ubicación introducida.",
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.center,
-                    ),
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.search_off,
+                        size: 100,
+                        color: Colors.grey,
+                      ),
+                      const Center(
+                        child: Text(
+                          "No se han encontrado resultados para la ubicación introducida.",
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
                   );
                 }
 
@@ -119,7 +130,6 @@ class _LocationFilterState extends State<LocationFilter> {
 
                     return GestureDetector(
                       onTap: () {
-                        // Handle navigation or actions on item tap
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -185,7 +195,9 @@ class _LocationFilterState extends State<LocationFilter> {
                                 ),
                               ),
                               subtitle: Text(
-                                data['location'] ?? "No location",
+                                (data['location'] as List<dynamic>?)
+                                        ?.join(", ") ??
+                                    "No location",
                                 style: GoogleFonts.inter(
                                   color: const Color(0xff9C9EA2),
                                   fontWeight: FontWeight.w300,
@@ -201,15 +213,17 @@ class _LocationFilterState extends State<LocationFilter> {
                                     Text(
                                       "€${data['price'].toString()}",
                                       style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
                                     ),
                                     Text(
                                       data['priceType'] ?? "No price type",
                                       style: GoogleFonts.inter(
-                                          color: const Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19),
+                                        color: const Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -224,17 +238,19 @@ class _LocationFilterState extends State<LocationFilter> {
                                           data['ratingCount']?.toString() ??
                                               "0",
                                           style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
                                         ),
                                       ],
                                     ),
                                     Text(
                                       "${data['totalReviews']?.toString() ?? "0"} Reviews",
                                       style: GoogleFonts.inter(
-                                          color: const Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19),
+                                        color: const Color(0xff9C9EA2),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 19,
+                                      ),
                                     ),
                                   ],
                                 ),

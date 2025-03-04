@@ -25,8 +25,6 @@ class _FiltersState extends State<Filters> {
     "Calificación más baja",
     "Más trabajo realizado",
     "Menos trabajo realizado",
-    // You can also add "Ubicación" here if you want to combine it.
-    "Ubicación",
   ];
 
   // This list will store the selected filter(s)
@@ -107,10 +105,19 @@ class _FiltersState extends State<Filters> {
           Expanded(
             child: appliedFilters.isEmpty
                 ? Center(
-                    child: Text(
-                      "No se han seleccionado filtros. Seleccione un filtro.",
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                      textAlign: TextAlign.center,
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.search_off,
+                          size: 100,
+                          color: Colors.grey,
+                        ),
+                        Text(
+                          "No se han seleccionado filtros. Seleccione un filtro.",
+                          style: TextStyle(color: Colors.black, fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
                   )
                 : StreamBuilder<QuerySnapshot>(
