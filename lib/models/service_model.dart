@@ -20,7 +20,7 @@ class ServiceModel {
   String currency;
   String priceType;
   int ratingCount;
-  String location;
+  List location;
   var finalreviews;
 
   ServiceModel(

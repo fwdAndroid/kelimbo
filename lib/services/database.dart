@@ -28,7 +28,7 @@ class Database {
       required String userName,
       required String userImage,
       required String currency,
-      required String location,
+      required List<String> location,
       required String priceType}) async {
     String res = 'Some error occurred';
     try {
