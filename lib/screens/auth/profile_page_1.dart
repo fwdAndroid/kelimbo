@@ -76,7 +76,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                 onPressed: () {
                   showSelectAllDialog();
                 },
-                child: Text("Seleccionar varias ciudades"),
+                child: Text("En Toda España"),
               ),
             ),
 
