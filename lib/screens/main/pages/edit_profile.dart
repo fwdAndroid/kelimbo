@@ -21,14 +21,13 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   bool _isLoading = false;
   Uint8List? _image;
   String? imageUrl;
   List<String> cityNames = [];
-  String? selectedMunicipality;
+  List<String> selectedLocations = []; // List to store selected locations
 
   @override
   void initState() {
@@ -53,7 +52,6 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void fetchData() async {
-    // Fetch data from Firestore
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -61,13 +59,14 @@ class _EditProfileState extends State<EditProfile> {
 
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // Update the controllers with the fetched data
     setState(() {
-      addressController.text = data['location'] ?? '';
-      phoneController.text = (data['phone'] ?? ''); // Convert int to string
-      nameController.text = data['fullName'] ?? ''; // Convert int to string
+      phoneController.text = (data['phone'] ?? '');
+      nameController.text = data['fullName'] ?? '';
       imageUrl = data['image'];
-      selectedMunicipality = data['location'] ?? '';
+
+      // Ensure location is treated as List<String>
+      selectedLocations =
+          (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
     });
   }
 
@@ -98,6 +97,7 @@ class _EditProfileState extends State<EditProfile> {
         ),
         body: Column(
           children: [
+            // Profile Image Section
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
@@ -115,64 +115,96 @@ class _EditProfileState extends State<EditProfile> {
                           ),
               ),
             ),
+
+            // Full Name Input
             Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: TextFormField(
-                  keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(8),
-                    fillColor: textColor,
-                    filled: true,
-                    hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                    hintText: "Nombre y apellido",
-                  ),
-                  controller: nameController,
-                )),
-            Padding(
-                padding: const EdgeInsets.only(
-                    left: 8.0, right: 8, top: 8, bottom: 8),
-                child: TextFormField(
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(8),
-                    fillColor: textColor,
-                    filled: true,
-                    hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                    hintText: "Telefono",
-                  ),
-                  controller: phoneController,
-                )),
-            Text("Cambiar Ubicación"),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownSearch<String>(
-                  items: cityNames,
-                  popupProps: PopupProps.menu(
-                    showSearchBox: true,
-                  ),
-                  dropdownButtonProps: DropdownButtonProps(
-                    color: Colors.blue,
-                  ),
-                  dropdownDecoratorProps: DropDownDecoratorProps(
-                    textAlignVertical: TextAlignVertical.center,
-                    dropdownSearchDecoration: InputDecoration(
-                        border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    )),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      selectedMunicipality = value.toString();
-                    });
-                  },
-                  selectedItem: "Seleccionar ubicación",
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(8),
+                  fillColor: textColor,
+                  filled: true,
+                  hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                  hintText: "Nombre y apellido",
                 ),
+                controller: nameController,
               ),
             ),
+
+            // Phone Number Input
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(8),
+                  fillColor: textColor,
+                  filled: true,
+                  hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                  hintText: "Telefono",
+                ),
+                controller: phoneController,
+              ),
+            ),
+
+            // Location Selection
+            Text("Cambiar Ubicación"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownSearch<String>(
+                items: cityNames,
+                popupProps: PopupProps.menu(
+                  showSearchBox: true,
+                ),
+                dropdownButtonProps: DropdownButtonProps(
+                  color: Colors.blue,
+                ),
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  textAlignVertical: TextAlignVertical.center,
+                  dropdownSearchDecoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  if (value != null && !selectedLocations.contains(value)) {
+                    setState(() {
+                      selectedLocations.add(value);
+                    });
+                  }
+                },
+                selectedItem: "Seleccionar ubicación",
+              ),
+            ),
+
+            // Show Selected Locations as Chips
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: selectedLocations.map((location) {
+                  return Chip(
+                    label: Text(location),
+                    backgroundColor: Colors.purple.shade100,
+                    deleteIcon: Icon(Icons.close, size: 18),
+                    onDeleted: () {
+                      setState(() {
+                        selectedLocations.remove(location);
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+
             Spacer(),
+
+            // Save Button
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: _isLoading
@@ -182,7 +214,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     )
                   : SaveButton(
-                      title: "Editar Perfil",
+                      title: "Guardar Perfil",
                       onTap: () async {
                         setState(() {
                           _isLoading = true;
@@ -198,23 +230,20 @@ class _EditProfileState extends State<EditProfile> {
                         try {
                           await FirebaseFirestore.instance
                               .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser!
-                                  .uid) // Use widget.uuid here
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
                               .update({
                             "fullName": nameController.text,
-                            "phone":
-                                phoneController.text, // Convert string to int
+                            "phone": phoneController.text,
                             "location":
-                                selectedMunicipality, // Convert string to int
+                                selectedLocations, // Save as List<String>
                             "image": downloadUrl,
                           });
                           showMessageBar(
-                              "Perfil actualizado con éxito ", context);
+                              "Perfil actualizado con éxito", context);
                         } catch (e) {
-                          // Handle errors here
-                          print("Error updating service: $e");
+                          print("Error updating profile: $e");
                           showMessageBar(
-                              "No se pudo actualizar el servicio", context);
+                              "No se pudo actualizar el perfil", context);
                         } finally {
                           setState(() {
                             _isLoading = false;
@@ -226,9 +255,8 @@ class _EditProfileState extends State<EditProfile> {
                         }
                       }),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+
+            SizedBox(height: 20),
           ],
         ),
       ),

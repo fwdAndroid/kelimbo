@@ -41,7 +41,9 @@ class _ViewProfileState extends State<ViewProfile> {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
       setState(() {
-        addressController = data['location'] ?? '';
+        addressController =
+            (data['location'] as List<dynamic>?)?.cast<String>().join(", ") ??
+                'No Data'; // Join list into a string
         phoneController = (data['phone'] ?? '').toString();
         nameController = data['fullName'] ?? '';
         emailController = data['email'] ?? '';
@@ -121,7 +123,39 @@ class _ViewProfileState extends State<ViewProfile> {
             buildInfoRow(Icons.person, nameController!),
             buildInfoRow(Icons.mobile_friendly, phoneController!),
             buildInfoRow(Icons.email, emailController!),
-            buildInfoRow(Icons.location_pin, addressController!),
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.location_pin, color: Colors.black),
+                      SizedBox(width: 10),
+                      Text(
+                        "Location:",
+                        style: GoogleFonts.inter(
+                          color: Color(0xff240F51),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Wrap(
+                    spacing: 8.0,
+                    runSpacing: 4.0,
+                    children: [
+                      Chip(
+                        label: Text(addressController?.toString() ?? "No Data"),
+                        backgroundColor: Colors.purple.shade100,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             Spacer(),
             Padding(
               padding: const EdgeInsets.all(8.0),
