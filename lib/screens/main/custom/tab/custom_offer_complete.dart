@@ -33,7 +33,18 @@ class _CustomOfferCompleteState extends State<CustomOfferComplete> {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text('No hay trabajo disponible.'));
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.search_off,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+                Text('No hay trabajo disponible.'),
+              ],
+            ));
           }
 
           return ListView.builder(
