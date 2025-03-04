@@ -125,7 +125,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
                             .set({
                           "fullName": NameController.text.trim(),
                           "phone": phoneController.text.trim(),
-                          "locations":
+                          "location":
                               selectedMunicipalities, // Store as an array
                         }, SetOptions(merge: true));
 

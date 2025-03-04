@@ -181,58 +181,45 @@ class _AuthLoginState extends State<AuthLogin> {
               ? Center(child: CircularProgressIndicator())
               : Center(
                   child: FlutterSocialButton(
-                      buttonType: ButtonType.google,
-                      mini: true,
-                      onTap: () async {
-                        setState(() {
-                          isGoogle = true;
-                        });
+                    buttonType: ButtonType.google,
+                    mini: true,
+                    onTap: () async {
+                      setState(() {
+                        isGoogle = true;
+                      });
 
-                        await AuthMethods().signInWithGoogle();
+                      try {
+                        // Sign in with Google
+                        UserCredential userCredential =
+                            await AuthMethods().signInWithGoogle();
+                        User? user = userCredential.user;
 
-                        try {
-                          // Get the UserCredential object
+                        if (user != null) {
+                          String userId = user.uid;
 
-                          final userDoc = await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                          // Check if user exists in Firestore
+                          DocumentSnapshot userDoc = await FirebaseFirestore
+                              .instance
+                              .collection('users')
+                              .doc(userId)
                               .get();
 
                           if (userDoc.exists) {
-                            // Retrieve user data
-                            final userData = userDoc.data();
-                            final fullName = userData?['fullName'];
-                            final phone = userData?['phone'];
-                            final location = userData?['location'];
-
-                            // Check if any field is null or empty
-                            if ((fullName == null || fullName.isEmpty) ||
-                                (phone == null || phone.isEmpty) ||
-                                (location == null || location.isEmpty)) {
-                              // Navigate to ProfilePage1 to complete the profile
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => ProfilePage1()),
-                              );
-                            } else {
-                              // All fields are valid, navigate to MainDashboard
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (builder) => MainDashboard()),
-                              );
-                            }
+                            // User exists, navigate to the main dashboard
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainDashboard()),
+                            );
                           } else {
-                            // If the user does not exist, create a new document
+                            // User does not exist, create user document
                             await FirebaseFirestore.instance
                                 .collection("users")
-                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .doc(userId)
                                 .set({
-                              "image":
-                                  FirebaseAuth.instance.currentUser!.photoURL,
-                              "email": FirebaseAuth.instance.currentUser!.email,
-                              "uid": FirebaseAuth.instance.currentUser!.uid,
+                              "image": user.photoURL ?? "",
+                              "email": user.email ?? "",
+                              "uid": userId,
                               "password": "Auto Take Password",
                               "confirmPassword": "Auto Take Password",
                               "fullName": "",
@@ -250,20 +237,19 @@ class _AuthLoginState extends State<AuthLogin> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (builder) => ProfilePage1()),
+                                  builder: (context) => ProfilePage1()),
                             );
                           }
-                        } catch (e) {
-                          print("Error during Google Sign-In: $e");
-                          showMessageBar(
-                              "Error during sign-in. Please try again.",
-                              context);
                         }
+                      } catch (e) {
+                        print("Error during Google Sign-In: $e");
+                      }
 
-                        setState(() {
-                          isGoogle = false;
-                        });
-                      }),
+                      setState(() {
+                        isGoogle = false;
+                      });
+                    },
+                  ),
                 ),
           const Spacer(),
           Padding(
