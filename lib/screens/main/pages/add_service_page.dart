@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,8 @@ import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter/services.dart';
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({super.key});
@@ -30,6 +33,9 @@ class _AddServicePageState extends State<AddServicePage> {
 
   var PriceType = ['Por Hora', 'Por Servicio'];
   var currency = ['Euro', 'USD', 'BTC', 'ETH', 'Ğ'];
+
+  List<String> cityNames = [];
+  List<String> selectedMunicipalities = [];
 
   var items = [
     'Acompañamiento',
@@ -59,6 +65,11 @@ class _AddServicePageState extends State<AddServicePage> {
   Uint8List? _image;
   bool isAdded = false;
 
+  initState() {
+    super.initState();
+    loadJsonData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,9 +91,6 @@ class _AddServicePageState extends State<AddServicePage> {
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
             if (!snapshot.hasData || snapshot.data == null) {
               return Center(child: Text('No hay datos disponibles'));
             }
@@ -210,12 +218,47 @@ class _AddServicePageState extends State<AddServicePage> {
                       },
                     ),
                   ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: TextButton(
+                      onPressed: () {
+                        showSelectAllDialog();
+                      },
+                      child: Text("En Toda España"),
+                    ),
+                  ),
+
+                  // Multi-selection dropdown
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownSearch<String>.multiSelection(
+                      items: cityNames,
+                      selectedItems: selectedMunicipalities,
+                      popupProps: PopupPropsMultiSelection.menu(
+                        showSearchBox: true,
+                      ),
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: 'Seleccionar Municipio',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      onChanged: (values) {
+                        setState(() {
+                          selectedMunicipalities = values;
+                        });
+                      },
+                    ),
+                  ),
                   isAdded
                       ? Center(child: CircularProgressIndicator())
                       : SaveButton(
                           title: "Publicar",
                           onTap: () async {
-                            if (validateInputs(context)) {
+                            if (selectedMunicipalities.isEmpty) {
+                              showMessageBar(
+                                  "La ubicación es requerida", context);
+                            } else if (validateInputs(context)) {
                               setState(() {
                                 isAdded = true;
                               });
@@ -225,8 +268,7 @@ class _AddServicePageState extends State<AddServicePage> {
                                   userName: snap['fullName'],
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
-                                  location: List<String>.from(
-                                      snap['location'] ?? []), // FIXED HERE
+                                  location: selectedMunicipalities,
                                   category: dropdownvalue,
                                   currency: currencyType,
                                   priceType: drop,
@@ -294,12 +336,111 @@ class _AddServicePageState extends State<AddServicePage> {
     return compressedImage;
   }
 
+  Future<void> loadJsonData() async {
+    try {
+      String jsonString = await rootBundle.loadString('assets/cities.json');
+      List<dynamic> jsonData = json.decode(jsonString);
+      setState(() {
+        cityNames = jsonData.map((e) => e["Nom"] as String).toList();
+        cityNames.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+      });
+    } catch (e) {
+      print("Error loading JSON: $e");
+    }
+  }
+
   void showMessageBar(String message, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         duration: Duration(seconds: 2),
       ),
+    );
+  }
+
+  /// Function to show the Select All dialog
+  void showSelectAllDialog() {
+    List<String> tempSelected = List.from(selectedMunicipalities);
+    TextEditingController searchController = TextEditingController();
+    List<String> filteredCities = List.from(cityNames);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text("Seleccionar varias ciudades"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Search Input Field
+                  TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      hintText: "Buscar ciudad...",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (query) {
+                      setDialogState(() {
+                        filteredCities = cityNames
+                            .where((city) => city
+                                .toLowerCase()
+                                .contains(query.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  // City List with Checkboxes
+                  Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: filteredCities.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(filteredCities[index]),
+                          value: tempSelected.contains(filteredCities[index]),
+                          onChanged: (bool? value) {
+                            setDialogState(() {
+                              if (value == true) {
+                                if (!tempSelected
+                                    .contains(filteredCities[index])) {
+                                  tempSelected.add(filteredCities[index]);
+                                }
+                              } else {
+                                tempSelected.remove(filteredCities[index]);
+                              }
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close dialog without saving
+                  },
+                  child: Text("Cancelar"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedMunicipalities = List.from(tempSelected);
+                    });
+                    Navigator.pop(context); // Close dialog smoothly
+                  },
+                  child: Text("Confirmar"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

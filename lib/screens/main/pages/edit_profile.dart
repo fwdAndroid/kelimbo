@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +10,6 @@ import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'dart:convert';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -33,22 +31,6 @@ class _EditProfileState extends State<EditProfile> {
   void initState() {
     super.initState();
     fetchData();
-    loadJsonData();
-  }
-
-  Future<void> loadJsonData() async {
-    try {
-      String jsonString = await rootBundle.loadString('assets/cities.json');
-      List<dynamic> jsonData = json.decode(jsonString);
-
-      setState(() {
-        cityNames = jsonData.map((e) => e["Nom"] as String).toList();
-        cityNames.sort((a, b) =>
-            a.toLowerCase().compareTo(b.toLowerCase())); // Sort alphabetically
-      });
-    } catch (e) {
-      print("Error loading JSON: $e");
-    }
   }
 
   void fetchData() async {
@@ -150,58 +132,6 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
 
-            // Location Selection
-            Text("Cambiar Ubicación"),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DropdownSearch<String>(
-                items: cityNames,
-                popupProps: PopupProps.menu(
-                  showSearchBox: true,
-                ),
-                dropdownButtonProps: DropdownButtonProps(
-                  color: Colors.blue,
-                ),
-                dropdownDecoratorProps: DropDownDecoratorProps(
-                  textAlignVertical: TextAlignVertical.center,
-                  dropdownSearchDecoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                ),
-                onChanged: (value) {
-                  if (value != null && !selectedLocations.contains(value)) {
-                    setState(() {
-                      selectedLocations.add(value);
-                    });
-                  }
-                },
-                selectedItem: "Seleccionar ubicación",
-              ),
-            ),
-
-            // Show Selected Locations as Chips
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: selectedLocations.map((location) {
-                  return Chip(
-                    label: Text(location),
-                    backgroundColor: Colors.purple.shade100,
-                    deleteIcon: Icon(Icons.close, size: 18),
-                    onDeleted: () {
-                      setState(() {
-                        selectedLocations.remove(location);
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-
             Spacer(),
 
             // Save Button
@@ -234,8 +164,6 @@ class _EditProfileState extends State<EditProfile> {
                               .update({
                             "fullName": nameController.text,
                             "phone": phoneController.text,
-                            "location":
-                                selectedLocations, // Save as List<String>
                             "image": downloadUrl,
                           });
                           showMessageBar(
