@@ -14,6 +14,7 @@ import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class AddServicePage extends StatefulWidget {
   const AddServicePage({super.key});
@@ -35,6 +36,7 @@ class _AddServicePageState extends State<AddServicePage> {
   var currency = ['Euro', 'USD', 'BTC', 'ETH', 'Ğ'];
 
   List<String> cityNames = [];
+
   List<String> selectedMunicipalities = [];
 
   var items = [
@@ -61,13 +63,15 @@ class _AddServicePageState extends State<AddServicePage> {
     'Turismo',
     'Vehículos'
   ];
+  bool isLoading = true;
 
   Uint8List? _image;
   bool isAdded = false;
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
-    loadJsonData();
+    fetchCities();
   }
 
   @override
@@ -235,8 +239,15 @@ class _AddServicePageState extends State<AddServicePage> {
                       items: cityNames,
                       selectedItems: selectedMunicipalities,
                       popupProps: PopupPropsMultiSelection.menu(
-                        showSearchBox: true,
-                      ),
+                          showSearchBox: true,
+                          searchFieldProps: TextFieldProps(
+                            decoration: InputDecoration(
+                              hintText: "Buscar municipio...",
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          // Custom search function to remove spaces
+                          isFilterOnline: true),
                       dropdownDecoratorProps: DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           labelText: 'Seleccionar Municipio',
@@ -250,6 +261,7 @@ class _AddServicePageState extends State<AddServicePage> {
                       },
                     ),
                   ),
+
                   isAdded
                       ? Center(child: CircularProgressIndicator())
                       : SaveButton(
@@ -336,31 +348,28 @@ class _AddServicePageState extends State<AddServicePage> {
     return compressedImage;
   }
 
-  Future<void> loadJsonData() async {
+  Future<void> fetchCities() async {
+    const String apiUrl =
+        "https://raw.githubusercontent.com/etereo-io/spain-communities-cities-json/master/towns.json";
+
     try {
-      String jsonString = await rootBundle.loadString('assets/cities.json');
-      List<dynamic> jsonData = json.decode(jsonString);
-      setState(() {
-        cityNames = jsonData.map((e) => e["Nom"] as String).toList();
-        cityNames.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-      });
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          cityNames = data.map((item) => item["name"] as String).toList();
+          isLoading = false;
+        });
+      } else {
+        print("Error: ${response.statusCode}");
+      }
     } catch (e) {
-      print("Error loading JSON: $e");
+      print("Error fetching data: $e");
     }
   }
 
-  void showMessageBar(String message, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  /// Function to show the Select All dialog
   void showSelectAllDialog() {
-    List<String> tempSelected = List.from(selectedMunicipalities);
+    List<String> tempSelected = List.from(cityNames); // Preselect all cities ✅
     TextEditingController searchController = TextEditingController();
     List<String> filteredCities = List.from(cityNames);
 
@@ -370,11 +379,10 @@ class _AddServicePageState extends State<AddServicePage> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text("Seleccionar varias ciudades"),
+              title: Text("Seleccionar todas las ciudades"),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Search Input Field
                   TextField(
                     controller: searchController,
                     decoration: InputDecoration(
@@ -393,10 +401,24 @@ class _AddServicePageState extends State<AddServicePage> {
                     },
                   ),
                   SizedBox(height: 10),
-                  // City List with Checkboxes
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Seleccionar todo"),
+                      Checkbox(
+                        value: tempSelected.length == cityNames.length &&
+                            cityNames.isNotEmpty,
+                        onChanged: (bool? value) {
+                          setDialogState(() {
+                            tempSelected =
+                                value == true ? List.from(cityNames) : [];
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                   Expanded(
                     child: ListView.builder(
-                      shrinkWrap: true,
                       itemCount: filteredCities.length,
                       itemBuilder: (context, index) {
                         return CheckboxListTile(
@@ -405,10 +427,7 @@ class _AddServicePageState extends State<AddServicePage> {
                           onChanged: (bool? value) {
                             setDialogState(() {
                               if (value == true) {
-                                if (!tempSelected
-                                    .contains(filteredCities[index])) {
-                                  tempSelected.add(filteredCities[index]);
-                                }
+                                tempSelected.add(filteredCities[index]);
                               } else {
                                 tempSelected.remove(filteredCities[index]);
                               }
@@ -423,7 +442,7 @@ class _AddServicePageState extends State<AddServicePage> {
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.pop(context); // Close dialog without saving
+                    Navigator.pop(context);
                   },
                   child: Text("Cancelar"),
                 ),
@@ -432,7 +451,7 @@ class _AddServicePageState extends State<AddServicePage> {
                     setState(() {
                       selectedMunicipalities = List.from(tempSelected);
                     });
-                    Navigator.pop(context); // Close dialog smoothly
+                    Navigator.pop(context);
                   },
                   child: Text("Confirmar"),
                 ),
