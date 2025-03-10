@@ -24,8 +24,6 @@ class _EditProfileState extends State<EditProfile> {
   bool _isLoading = false;
   Uint8List? _image;
   String? imageUrl;
-  List<String> cityNames = [];
-  List<String> selectedLocations = []; // List to store selected locations
 
   @override
   void initState() {
@@ -45,10 +43,6 @@ class _EditProfileState extends State<EditProfile> {
       phoneController.text = (data['phone'] ?? '');
       nameController.text = data['fullName'] ?? '';
       imageUrl = data['image'];
-
-      // Ensure location is treated as List<String>
-      selectedLocations =
-          (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
     });
   }
 

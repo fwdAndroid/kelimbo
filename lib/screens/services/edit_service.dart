@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,7 @@ import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
+import 'package:http/http.dart' as http;
 
 class EditService extends StatefulWidget {
   final uuid;
@@ -61,11 +63,15 @@ class _EditServiceState extends State<EditService> {
   bool _isLoading = false;
   Uint8List? _image;
   String? imageUrl;
+  List<String> cityNames = [];
+  List<String> selectedLocations = []; // List to store selected locations
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    fetchCities();
   }
 
   void fetchData() async {
@@ -86,6 +92,8 @@ class _EditServiceState extends State<EditService> {
       imageUrl = data['photo'];
       dropdownvalue = data['category'] ?? 'Hogar'; // Set dropdown value
       currencyType = data['currency'] ?? "EURO";
+      selectedLocations =
+          (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
     });
   }
 
@@ -246,55 +254,87 @@ class _EditServiceState extends State<EditService> {
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
+              child: Wrap(
+                spacing: 8.0,
+                children: selectedLocations.map((location) {
+                  return Chip(
+                    label: Text(location),
+                    backgroundColor: Colors.blue.shade100,
+                    deleteIcon: Icon(Icons.cancel, color: Colors.red),
+                    onDeleted: () {
+                      setState(() {
+                        selectedLocations.remove(location);
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: TextButton(
+                onPressed: () {
+                  showSelectAllDialog();
+                },
+                child: const Text("En Toda España"),
+              ),
+            ),
             _isLoading
                 ? Center(child: CircularProgressIndicator())
-                : SaveButton(
-                    title: "Publicar",
-                    onTap: () async {
-                      setState(() {
-                        _isLoading = true;
-                      });
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SaveButton(
+                        title: "Publicar",
+                        onTap: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
 
-                      String? downloadUrl;
-                      if (_image != null) {
-                        downloadUrl = await uploadImageToStorage(_image!);
-                      } else {
-                        downloadUrl = imageUrl;
-                      }
-                      try {
-                        await FirebaseFirestore.instance
-                            .collection("services")
-                            .doc(widget.uuid) // Use widget.uuid here
-                            .update({
-                          "description": descriptionController.text,
-                          "title": serviceNameController
-                              .text, // Convert string to int
-                          "price": int.parse(
-                              priceController.text), // Convert string to int
-                          "photo": downloadUrl,
-                          "pricePerHr": int.parse(discountController.text),
-                          "priceType": drop,
-                          "currency": currencyType,
-                          "category":
-                              dropdownvalue, // Save the selected category
-                        });
-                        showMessageBar(
-                            "Servicio actualizado con éxito ", context);
-                      } catch (e) {
-                        // Handle errors here
-                        print("Error updating service: $e");
-                        showMessageBar(
-                            "No se pudo actualizar el servicio", context);
-                      } finally {
-                        setState(() {
-                          _isLoading = false;
-                        });
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (builder) => MainDashboard()));
-                      }
-                    }),
+                          String? downloadUrl;
+                          if (_image != null) {
+                            downloadUrl = await uploadImageToStorage(_image!);
+                          } else {
+                            downloadUrl = imageUrl;
+                          }
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection("services")
+                                .doc(widget.uuid) // Use widget.uuid here
+                                .update({
+                              "description": descriptionController.text,
+                              "title": serviceNameController
+                                  .text, // Convert string to int
+                              "price": int.parse(priceController
+                                  .text), // Convert string to int
+                              "photo": downloadUrl,
+                              "pricePerHr": int.parse(discountController.text),
+                              "priceType": drop,
+                              "currency": currencyType,
+                              "category":
+                                  dropdownvalue, // Save the selected category
+                              "location":
+                                  selectedLocations, // ✅ Update Firestore with the remaining locations
+                            });
+                            showMessageBar(
+                                "Servicio actualizado con éxito ", context);
+                          } catch (e) {
+                            // Handle errors here
+                            print("Error updating service: $e");
+                            showMessageBar(
+                                "No se pudo actualizar el servicio", context);
+                          } finally {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => MainDashboard()));
+                          }
+                        }),
+                  ),
           ],
         ),
       ),
@@ -307,6 +347,135 @@ class _EditServiceState extends State<EditService> {
         content: Text(message),
         duration: Duration(seconds: 2),
       ),
+    );
+  }
+
+  Future<void> fetchCities() async {
+    const String apiUrl =
+        "https://raw.githubusercontent.com/etereo-io/spain-communities-cities-json/master/towns.json";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          cityNames = data.map((item) => item["name"] as String).toList();
+          isLoading = false;
+        });
+      } else {
+        print("Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
+  void showSelectAllDialog() {
+    List<String> tempSelected =
+        List.from(selectedLocations); // Keep old selections
+    TextEditingController searchController = TextEditingController();
+    List<String> filteredCities = List.from(cityNames);
+
+    // Add listener to remove spaces in real time
+    searchController.addListener(() {
+      String text = searchController.text.replaceAll(' ', '');
+      if (searchController.text != text) {
+        searchController.value = TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
+      }
+    });
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text("Seleccionar todas las ciudades"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: "Buscar ciudad...",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (query) {
+                      setDialogState(() {
+                        filteredCities = cityNames
+                            .where((city) => city
+                                .toLowerCase()
+                                .contains(query.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Seleccionar todo"),
+                      Checkbox(
+                        value: tempSelected.length == cityNames.length &&
+                            cityNames.isNotEmpty,
+                        onChanged: (bool? value) {
+                          setDialogState(() {
+                            tempSelected =
+                                value == true ? List.from(cityNames) : [];
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: filteredCities.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(filteredCities[index]),
+                          value: tempSelected.contains(filteredCities[index]),
+                          onChanged: (bool? value) {
+                            setDialogState(() {
+                              if (value == true) {
+                                tempSelected.add(filteredCities[index]);
+                              } else {
+                                tempSelected.remove(filteredCities[index]);
+                              }
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("Cancelar"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      // ✅ Merge new selections with existing ones (avoid duplicates)
+                      selectedLocations =
+                          {...selectedLocations, ...tempSelected}.toList();
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: Text("Confirmar"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
