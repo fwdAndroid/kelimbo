@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/other/other_user_profile_chat.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
 import 'package:intl/intl.dart';

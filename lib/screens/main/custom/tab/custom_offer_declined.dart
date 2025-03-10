@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_delined_offer_detail.dart';
+import 'package:kelimbo/screens/main/other/offers_profile.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/utils/colors.dart';
 
@@ -68,9 +69,20 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(data['providerImage'] ?? ""),
+                          leading: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => OffersProfile(
+                                          serviceId: data['serviceId'],
+                                          serviceProviderId:
+                                              data['serviceProviderId'])));
+                            },
+                            child: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(data['providerImage'] ?? ""),
+                            ),
                           ),
                           title: Text(
                             data['providerName'],
