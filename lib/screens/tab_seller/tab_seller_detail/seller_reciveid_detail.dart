@@ -32,95 +32,106 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Descripción: ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                SizedBox(
-                  height: 150,
-                  child: Text(
-                    widget.description,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-                Text(
-                  "Precio: ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  widget.price.toString() +
-                      " " +
-                      getCurrencySymbol(widget.currency ?? 'Euro'),
-                  style: TextStyle(fontSize: 16),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8,
-                      bottom: 8,
-                      top: 8,
+        body: GestureDetector(
+            onTap: () {
+              FocusScope.of(context)
+                  .unfocus(); // Dismiss keyboard when tapping outside
+            },
+            child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Descripción: ",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(8),
-                        fillColor: textColor,
-                        filled: true,
-                        hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                        hintText: "Precio",
+                    SizedBox(
+                      height: 150,
+                      child: Text(
+                        widget.description,
+                        style: TextStyle(fontSize: 16),
                       ),
-                      controller: providerPassController,
-                    )),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(
-                    controller: descriptionController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(22)),
-                          borderSide: BorderSide(
-                            color: textColor,
-                          )),
-                      contentPadding: EdgeInsets.all(8),
-                      fillColor: Color(0xffF6F7F9),
-                      hintText: "Descripción",
-                      hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                      border: InputBorder.none,
                     ),
-                  ),
-                ),
-                Spacer(),
-                Center(
-                  child: SaveButton(
-                      title: "Enviar Presupuesto ",
-                      onTap: () async {
-                        if (providerPassController.text.isEmpty) {
-                          showMessageBar("Se requiere precio", context);
-                        } else {
-                          await FirebaseFirestore.instance
-                              .collection("offers")
-                              .doc(widget.uuid)
-                              .update({
-                            "status": "counterOffer",
-                            "price": int.parse(providerPassController.text),
-                            "serviceDescription":
-                                descriptionController.text ?? widget.description
-                          });
-                          showMessageBar("Presupuesto enviado", context);
-                          Navigator.pop(context);
-                        }
-                        // accept the offer
-                      }),
-                ),
-              ],
-            )));
+                    Text(
+                      "Precio: ",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      widget.price.toString() +
+                          " " +
+                          getCurrencySymbol(widget.currency ?? 'Euro'),
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(
+                          left: 8.0,
+                          right: 8,
+                          bottom: 8,
+                          top: 8,
+                        ),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(8),
+                            fillColor: textColor,
+                            filled: true,
+                            hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                            hintText: "Precio",
+                          ),
+                          controller: providerPassController,
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        controller: descriptionController,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                          filled: true,
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(22)),
+                              borderSide: BorderSide(
+                                color: textColor,
+                              )),
+                          contentPadding: EdgeInsets.all(8),
+                          fillColor: Color(0xffF6F7F9),
+                          hintText: "Observaciones",
+                          hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Center(
+                      child: SaveButton(
+                          title: "Enviar Presupuesto ",
+                          onTap: () async {
+                            FocusScope.of(context)
+                                .unfocus(); // Hide keyboard on button
+                            if (providerPassController.text.isEmpty) {
+                              showMessageBar("Se requiere precio", context);
+                            } else {
+                              await FirebaseFirestore.instance
+                                  .collection("offers")
+                                  .doc(widget.uuid)
+                                  .update({
+                                "status": "counterOffer",
+                                "price": int.parse(providerPassController.text),
+                                "serviceDescription":
+                                    descriptionController.text ??
+                                        widget.description
+                              });
+                              showMessageBar("Presupuesto enviado", context);
+                              Navigator.pop(context);
+                            }
+                            // accept the offer
+                          }),
+                    ),
+                  ],
+                ))));
   }
 }

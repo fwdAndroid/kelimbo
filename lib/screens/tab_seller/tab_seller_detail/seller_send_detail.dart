@@ -20,7 +20,6 @@ class SellerSendDetail extends StatefulWidget {
 }
 
 class _SellerSendDetailState extends State<SellerSendDetail> {
-  TextEditingController providerPassController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

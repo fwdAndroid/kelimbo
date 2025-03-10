@@ -46,231 +46,240 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(8),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Descripción:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 150,
-                child: Text(
-                  widget.description,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus(); // Hide keyboard on button
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Descripción:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 150,
+                  child: Text(
+                    widget.description,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  "Precio:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  widget.price.toString() +
+                      " " +
+                      getCurrencySymbol(widget.currency),
                   style: const TextStyle(fontSize: 16),
                 ),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Precio:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.price.toString() +
-                    " " +
-                    getCurrencySymbol(widget.currency),
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "Status:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
-              // Here we use a FutureBuilder to load the offer details
-              FutureBuilder<DocumentSnapshot>(
-                future: FirebaseFirestore.instance
-                    .collection('offers')
-                    .doc(widget.currentOfferId)
-                    .get(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text("Error: ${snapshot.error}");
-                  }
-                  if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const Text("Offer not found.");
-                  }
+                const SizedBox(height: 16),
+                const Text(
+                  "Status:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                // Here we use a FutureBuilder to load the offer details
+                FutureBuilder<DocumentSnapshot>(
+                  future: FirebaseFirestore.instance
+                      .collection('offers')
+                      .doc(widget.currentOfferId)
+                      .get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    }
+                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                      return const Text("Offer not found.");
+                    }
 
-                  final data = snapshot.data!.data() as Map<String, dynamic>;
-                  final isRated = data['isRated'] as bool? ?? false;
+                    final data = snapshot.data!.data() as Map<String, dynamic>;
+                    final isRated = data['isRated'] as bool? ?? false;
 
-                  if (isRated) {
-                    // If the offer is already rated, show a message.
-                    return const Text(
-                      "La oferta está calificada..",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Colors.green,
-                      ),
-                    );
-                  } else {
-                    // If the offer is not rated, show the rating bar.
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Por favor, valora este trabajo:",
-                          style: TextStyle(fontSize: 16),
+                    if (isRated) {
+                      // If the offer is already rated, show a message.
+                      return const Text(
+                        "La oferta está calificada..",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.green,
                         ),
-                        const SizedBox(height: 10),
-                        RatingBar.builder(
-                          initialRating: 0,
-                          minRating: 1,
-                          allowHalfRating: true,
-                          direction: Axis.horizontal,
-                          itemCount: 5,
-                          itemPadding:
-                              const EdgeInsets.symmetric(horizontal: 4.0),
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
+                      );
+                    } else {
+                      // If the offer is not rated, show the rating bar.
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Por favor, valora este trabajo:",
+                            style: TextStyle(fontSize: 16),
                           ),
-                          onRatingUpdate: (newRating) async {
-                            // Update the Firestore document to mark the offer as rated.
-                            setState(() {
-                              rating = newRating;
-                            });
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(
-                            controller: descriptionController,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(22)),
-                                  borderSide: BorderSide(
-                                    color: textColor,
-                                  )),
-                              contentPadding: EdgeInsets.all(8),
-                              fillColor: Color(0xffF6F7F9),
-                              hintText: "Descripción",
-                              hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                              border: InputBorder.none,
+                          const SizedBox(height: 10),
+                          RatingBar.builder(
+                            initialRating: 0,
+                            minRating: 1,
+                            allowHalfRating: true,
+                            direction: Axis.horizontal,
+                            itemCount: 5,
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 4.0),
+                            itemBuilder: (context, _) => const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (newRating) async {
+                              // Update the Firestore document to mark the offer as rated.
+                              setState(() {
+                                rating = newRating;
+                              });
+                            },
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              controller: descriptionController,
+                              maxLines: 4,
+                              decoration: InputDecoration(
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(22)),
+                                    borderSide: BorderSide(
+                                      color: textColor,
+                                    )),
+                                contentPadding: EdgeInsets.all(8),
+                                fillColor: Color(0xffF6F7F9),
+                                hintText: "Descripción",
+                                hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
+                                border: InputBorder.none,
+                              ),
                             ),
                           ),
-                        ),
-                        isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : SaveButton(
-                                title: "Enviar calificación",
-                                onTap: () async {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  try {
-                                    // Reference to the specific service document
-                                    DocumentReference serviceDocRef =
-                                        FirebaseFirestore.instance
-                                            .collection("services")
-                                            .doc(widget.serviceId);
+                          isLoading
+                              ? Center(child: CircularProgressIndicator())
+                              : SaveButton(
+                                  title: "Enviar calificación",
+                                  onTap: () async {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    FocusScope.of(context)
+                                        .unfocus(); // Hide keyboard on button
+                                    try {
+                                      // Reference to the specific service document
+                                      DocumentReference serviceDocRef =
+                                          FirebaseFirestore.instance
+                                              .collection("services")
+                                              .doc(widget.serviceId);
 
-                                    // Retrieve the current document data
-                                    DocumentSnapshot docSnapshot =
-                                        await serviceDocRef.get();
+                                      // Retrieve the current document data
+                                      DocumentSnapshot docSnapshot =
+                                          await serviceDocRef.get();
 
-                                    if (docSnapshot.exists) {
-                                      // Extract current ratings and reviews data
-                                      double currentTotalRate =
-                                          (docSnapshot['totalRate'] ?? 0)
-                                              .toDouble();
-                                      int ratingCount =
-                                          docSnapshot['ratingCount'] ?? 0;
-                                      List<dynamic> finalReviews = List.from(
-                                          docSnapshot['finalreviews'] ?? []);
+                                      if (docSnapshot.exists) {
+                                        // Extract current ratings and reviews data
+                                        double currentTotalRate =
+                                            (docSnapshot['totalRate'] ?? 0)
+                                                .toDouble();
+                                        int ratingCount =
+                                            docSnapshot['ratingCount'] ?? 0;
+                                        List<dynamic> finalReviews = List.from(
+                                            docSnapshot['finalreviews'] ?? []);
 
-                                      // Calculate new rating stats
-                                      double newTotalRate =
-                                          currentTotalRate + rating;
-                                      int newRatingCount = ratingCount + 1;
-                                      double newAverageRating = min(
-                                          newTotalRate / newRatingCount, 5.0);
-                                      String formattedRating =
-                                          newAverageRating.toStringAsFixed(2);
+                                        // Calculate new rating stats
+                                        double newTotalRate =
+                                            currentTotalRate + rating;
+                                        int newRatingCount = ratingCount + 1;
+                                        double newAverageRating = min(
+                                            newTotalRate / newRatingCount, 5.0);
+                                        String formattedRating =
+                                            newAverageRating.toStringAsFixed(2);
 
-                                      // Create the new review object
-                                      Map<String, dynamic> newReview = {
-                                        "jobId": widget.currentOfferId,
-                                        "providerId": widget.providerId,
-                                        "clientName": widget.clientName,
-                                        "clientThought":
-                                            descriptionController.text,
-                                        "totalRate":
-                                            double.parse(formattedRating),
-                                        "photo": widget
-                                            .clientImage, // Optional: Add client image if needed
-                                      };
+                                        // Create the new review object
+                                        Map<String, dynamic> newReview = {
+                                          "jobId": widget.currentOfferId,
+                                          "providerId": widget.providerId,
+                                          "clientName": widget.clientName,
+                                          "clientThought":
+                                              descriptionController.text,
+                                          "totalRate":
+                                              double.parse(formattedRating),
+                                          "photo": widget
+                                              .clientImage, // Optional: Add client image if needed
+                                        };
 
-                                      // Append the new review to the existing list
-                                      finalReviews.add(newReview);
+                                        // Append the new review to the existing list
+                                        finalReviews.add(newReview);
 
-                                      // Update Firestore document with the updated data
-                                      await serviceDocRef.update({
-                                        "totalRate": newTotalRate,
-                                        "ratingCount": newRatingCount,
-                                        "totalReviews":
-                                            double.parse(formattedRating),
-                                        "finalreviews":
-                                            finalReviews, // Update the finalreviews array
-                                        "numberOfJobs": FieldValue.increment(1)
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(widget.providerId)
-                                          .update({
-                                        "totalRate": newTotalRate,
-                                        "ratingCount": newRatingCount,
-                                        "finalreviews":
-                                            finalReviews, // Update the finalreviews array
-                                        "totalReviews":
-                                            double.parse(formattedRating),
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection("offers")
-                                          .doc(widget.currentOfferId)
-                                          .update({
-                                        "isRated": true,
-                                        "totalRate": newTotalRate,
-                                        "ratingCount": newRatingCount,
-                                        "finalreviews":
-                                            finalReviews, // Update the finalreviews array
-                                        "totalReviews":
-                                            double.parse(formattedRating),
-                                      });
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                      showMessageBar(
-                                          "Valoración enviada", context);
-                                      // Navigate to the main dashboard or show a success message
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (builder) =>
-                                                  MainDashboard()));
-                                    } else {
-                                      print("Service document does not exist.");
+                                        // Update Firestore document with the updated data
+                                        await serviceDocRef.update({
+                                          "totalRate": newTotalRate,
+                                          "ratingCount": newRatingCount,
+                                          "totalReviews":
+                                              double.parse(formattedRating),
+                                          "finalreviews":
+                                              finalReviews, // Update the finalreviews array
+                                          "numberOfJobs":
+                                              FieldValue.increment(1)
+                                        });
+                                        await FirebaseFirestore.instance
+                                            .collection("users")
+                                            .doc(widget.providerId)
+                                            .update({
+                                          "totalRate": newTotalRate,
+                                          "ratingCount": newRatingCount,
+                                          "finalreviews":
+                                              finalReviews, // Update the finalreviews array
+                                          "totalReviews":
+                                              double.parse(formattedRating),
+                                        });
+                                        await FirebaseFirestore.instance
+                                            .collection("offers")
+                                            .doc(widget.currentOfferId)
+                                            .update({
+                                          "isRated": true,
+                                          "totalRate": newTotalRate,
+                                          "ratingCount": newRatingCount,
+                                          "finalreviews":
+                                              finalReviews, // Update the finalreviews array
+                                          "totalReviews":
+                                              double.parse(formattedRating),
+                                        });
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        showMessageBar(
+                                            "Valoración enviada", context);
+                                        // Navigate to the main dashboard or show a success message
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (builder) =>
+                                                    MainDashboard()));
+                                      } else {
+                                        print(
+                                            "Service document does not exist.");
+                                      }
+                                    } catch (e) {
+                                      print("Error updating rating: $e");
                                     }
-                                  } catch (e) {
-                                    print("Error updating rating: $e");
-                                  }
-                                },
-                              ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ],
+                                  },
+                                ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
