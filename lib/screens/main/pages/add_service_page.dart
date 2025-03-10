@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +26,13 @@ class _AddServicePageState extends State<AddServicePage> {
   TextEditingController serviceNameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   String dropdownvalue = 'Acompañamiento';
   String currencyType = "Euro";
   String drop = "Por Hora";
 
-  var PriceType = ['Por Hora', 'Por Servicio'];
+  var priceType = ['Por Hora', 'Por Servicio'];
   var currency = ['Euro', 'USD', 'BTC', 'ETH', 'Ğ'];
 
   List<String> cityNames = [];
@@ -72,6 +72,15 @@ class _AddServicePageState extends State<AddServicePage> {
   void initState() {
     super.initState();
     fetchCities();
+    _searchController.addListener(() {
+      String text = _searchController.text.replaceAll(' ', ''); // Remove spaces
+      if (_searchController.text != text) {
+        _searchController.value = TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
+      }
+    });
   }
 
   @override
@@ -95,9 +104,6 @@ class _AddServicePageState extends State<AddServicePage> {
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .snapshots(),
           builder: (context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text('No hay datos disponibles'));
-            }
             var snap = snapshot.data;
             return SingleChildScrollView(
               child: Column(
@@ -120,12 +126,13 @@ class _AddServicePageState extends State<AddServicePage> {
                       decoration: InputDecoration(
                         filled: true,
                         enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(22)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(22)),
                             borderSide: BorderSide(
                               color: textColor,
                             )),
-                        contentPadding: EdgeInsets.all(8),
-                        fillColor: Color(0xffF6F7F9),
+                        contentPadding: const EdgeInsets.all(8),
+                        fillColor: const Color(0xffF6F7F9),
                         hintText: "Descripción",
                         hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
                         border: InputBorder.none,
@@ -186,10 +193,10 @@ class _AddServicePageState extends State<AddServicePage> {
                             value: drop,
                             isExpanded: true,
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            items: PriceType.map((String PriceType) {
+                            items: priceType.map((String priceType) {
                               return DropdownMenuItem(
-                                value: PriceType,
-                                child: Text(PriceType),
+                                value: priceType,
+                                child: Text(priceType),
                               );
                             }).toList(),
                             onChanged: (String? newValue) {
@@ -228,7 +235,7 @@ class _AddServicePageState extends State<AddServicePage> {
                       onPressed: () {
                         showSelectAllDialog();
                       },
-                      child: Text("En Toda España"),
+                      child: const Text("En Toda España"),
                     ),
                   ),
 
@@ -241,14 +248,15 @@ class _AddServicePageState extends State<AddServicePage> {
                       popupProps: PopupPropsMultiSelection.menu(
                           showSearchBox: true,
                           searchFieldProps: TextFieldProps(
-                            decoration: InputDecoration(
+                            controller: _searchController,
+                            decoration: const InputDecoration(
                               hintText: "Buscar municipio...",
                               border: OutlineInputBorder(),
                             ),
                           ),
                           // Custom search function to remove spaces
                           isFilterOnline: true),
-                      dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownDecoratorProps: const DropDownDecoratorProps(
                         dropdownSearchDecoration: InputDecoration(
                           labelText: 'Seleccionar Municipio',
                           border: OutlineInputBorder(),
@@ -263,7 +271,7 @@ class _AddServicePageState extends State<AddServicePage> {
                   ),
 
                   isAdded
-                      ? Center(child: CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : SaveButton(
                           title: "Publicar",
                           onTap: () async {
@@ -373,6 +381,17 @@ class _AddServicePageState extends State<AddServicePage> {
     TextEditingController searchController = TextEditingController();
     List<String> filteredCities = List.from(cityNames);
 
+    // Add listener to remove spaces in real time
+    searchController.addListener(() {
+      String text = searchController.text.replaceAll(' ', ''); // Remove spaces
+      if (searchController.text != text) {
+        searchController.value = TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
+      }
+    });
+
     showDialog(
       context: context,
       builder: (context) {
@@ -385,7 +404,7 @@ class _AddServicePageState extends State<AddServicePage> {
                 children: [
                   TextField(
                     controller: searchController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Buscar ciudad...",
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(),
