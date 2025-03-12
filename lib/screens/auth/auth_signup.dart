@@ -28,8 +28,6 @@ class _SignUpState extends State<SignUp> {
   TextEditingController providerEmailController = TextEditingController();
   TextEditingController reenter = TextEditingController();
   TextEditingController providerPassController = TextEditingController();
-  // TextEditingController locationController = TextEditingController();
-  // TextEditingController phoneController = TextEditingController();
   //Password Check
   bool passwordVisible = false;
   bool passwordVisibleConfrim = false;

@@ -55,10 +55,12 @@ class AuthMethods {
           ratingCount: 0,
           reviews: {},
         );
+
         await firebaseFirestore
             .collection('users')
             .doc(cred.user!.uid)
             .set(userModel.toJson());
+
         res = 'success';
       }
     } catch (e) {

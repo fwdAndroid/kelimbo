@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
                             width: 200,
                           ),
                           Text(
-                            "No results found for '$_searchText'.",
+                            "No se han encontrado resultados para '$_searchText'.",
                             style: TextStyle(color: colorBlack),
                           ),
                         ],
