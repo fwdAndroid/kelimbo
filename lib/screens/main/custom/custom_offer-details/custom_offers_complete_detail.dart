@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
-import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CompleteCustomOfferDetail extends StatefulWidget {
   String uuid;
@@ -26,8 +24,6 @@ class CompleteCustomOfferDetail extends StatefulWidget {
 }
 
 class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
-  TextEditingController descriptionController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,26 +58,6 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                         getCurrencySymbol(widget.currency ?? 'Euro'),
                     style: TextStyle(fontSize: 16),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      controller: descriptionController,
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        filled: true,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(22)),
-                            borderSide: BorderSide(
-                              color: textColor,
-                            )),
-                        contentPadding: EdgeInsets.all(8),
-                        fillColor: Color(0xffF6F7F9),
-                        hintText: "Descripción",
-                        hintStyle: GoogleFonts.nunitoSans(fontSize: 16),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
                   Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -93,25 +69,18 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                             onTap: () async {
                               FocusScope.of(context)
                                   .unfocus(); // Hide keyboard on button
-                              if (descriptionController.text.isEmpty) {
-                                showMessageBar(
-                                    "Por favor, ingrese una descripción",
-                                    context);
-                                return;
-                              } else {
-                                // accept the offer
-                                await FirebaseFirestore.instance
-                                    .collection("offers")
-                                    .doc(widget.uuid)
-                                    .update({
-                                  "status": "start",
-                                  "serviceDescription":
-                                      descriptionController.text
-                                });
 
-                                showMessageBar("Oferta aceptada", context);
-                                Navigator.pop(context);
-                              }
+                              // accept the offer
+                              await FirebaseFirestore.instance
+                                  .collection("offers")
+                                  .doc(widget.uuid)
+                                  .update({
+                                "status": "start",
+                                "serviceDescription": widget.description
+                              });
+
+                              showMessageBar("Oferta aceptada", context);
+                              Navigator.pop(context);
                             }),
                       ),
                       SizedBox(
@@ -119,21 +88,15 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                         child: SaveButton(
                             title: "Rechazar",
                             onTap: () async {
-                              if (descriptionController.text.isEmpty) {
-                                showMessageBar(
-                                    "Por favor, ingrese una observaciones",
-                                    context);
-                                return;
-                              } else {
-                                // accept the offer
-                                await FirebaseFirestore.instance
-                                    .collection("offers")
-                                    .doc(widget.uuid)
-                                    .update({
-                                  "status": "reject",
-                                  "observation": descriptionController.text
-                                });
-                              }
+                              // accept the offer
+                              await FirebaseFirestore.instance
+                                  .collection("offers")
+                                  .doc(widget.uuid)
+                                  .update({
+                                "status": "reject",
+                                "observation": widget.description
+                              });
+
                               showMessageBar("Oferta rechazada", context);
                               Navigator.pop(context);
                             }),
