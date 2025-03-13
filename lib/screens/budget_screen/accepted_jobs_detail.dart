@@ -57,11 +57,7 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Custom Offer",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                Text(
-                  "Description: ",
+                  "Descripción: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
@@ -72,7 +68,7 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
                   ),
                 ),
                 Text(
-                  "Price: ",
+                  "PrecioS: ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
