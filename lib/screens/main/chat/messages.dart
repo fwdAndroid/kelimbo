@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/text_form_field.dart';
-import 'package:intl/intl.dart';
 
 class Messages extends StatefulWidget {
   final String providerId;
@@ -37,17 +36,8 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
-  late String groupChatId;
   ScrollController scrollController = ScrollController();
   TextEditingController messageController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    groupChatId = widget.customerId.hashCode <= widget.providerId.hashCode
-        ? "${widget.customerId}-${widget.providerId}"
-        : "${widget.providerId}-${widget.customerId}";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,92 +101,50 @@ class _MessagesState extends State<Messages> {
               ),
             ),
           ),
-          StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("messages")
-                .doc(groupChatId)
-                .collection(groupChatId)
-                .orderBy("timestamp", descending: false)
-                .snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                return snapshot.data!.docs.isEmpty
-                    ? Expanded(
-                        child: Center(child: Text("No messages yet.")),
-                      )
-                    : Expanded(
-                        child: ListView.builder(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 14),
-                          reverse: false,
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection("messages")
+                  .doc(widget.chatId)
+                  .collection("chats")
+                  .orderBy("timestamp", descending: false)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data!.docs.isEmpty
+                      ? Center(child: Text("Aún no hay mensajes."))
+                      : ListView.builder(
                           controller: scrollController,
-                          shrinkWrap: true,
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             var ds = snapshot.data!.docs[index];
                             final bool isCurrentUserSender =
                                 ds.get("senderId") == currentUserId;
-
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Align(
-                                alignment: isCurrentUserSender
-                                    ? Alignment.topRight
-                                    : Alignment.topLeft,
-                                child: Column(
-                                  crossAxisAlignment: isCurrentUserSender
-                                      ? CrossAxisAlignment.end
-                                      : CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width *
-                                                0.75, // Max width 75% of screen
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: isCurrentUserSender
-                                            ? Color(0xfff0f2f9)
-                                            : Color(0xff668681),
-                                      ),
-                                      padding: EdgeInsets.all(12),
-                                      child: Text(
-                                        ds.get("content"),
-                                        style: TextStyle(
-                                          fontSize: 16, // Increase if needed
-                                          color: isCurrentUserSender
-                                              ? colorBlack
-                                              : colorWhite,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      DateFormat.jm().format(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(ds.get("time")),
-                                        ),
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
+                            return Align(
+                              alignment: isCurrentUserSender
+                                  ? Alignment.topRight
+                                  : Alignment.topLeft,
+                              child: Container(
+                                padding: EdgeInsets.all(12),
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 4, horizontal: 10),
+                                decoration: BoxDecoration(
+                                  color: isCurrentUserSender
+                                      ? Colors.blue[100]
+                                      : Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
+                                child: Text(ds.get("content")),
                               ),
                             );
                           },
-                        ),
-                      );
-              } else if (snapshot.hasError) {
-                return Center(child: Icon(Icons.error_outline));
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            },
+                        );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
           ),
           Align(
             alignment: Alignment.bottomLeft,
@@ -217,7 +165,9 @@ class _MessagesState extends State<Messages> {
                   FloatingActionButton(
                     shape: CircleBorder(),
                     onPressed: () {
-                      sendMessage(messageController.text.trim(), 0);
+                      sendMessage(
+                        messageController.text.trim(),
+                      );
                     },
                     backgroundColor: mainColor,
                     elevation: 0,
@@ -232,45 +182,21 @@ class _MessagesState extends State<Messages> {
     );
   }
 
-  void sendMessage(String content, int type) {
-    if (content.trim().isNotEmpty) {
+  void sendMessage(String content) {
+    if (content.isNotEmpty) {
       messageController.clear();
 
-      final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-      final String senderId = currentUserId;
-      final String receiverId = (currentUserId == widget.customerId)
-          ? widget.providerId
-          : widget.customerId;
-
-      var documentReference = FirebaseFirestore.instance
-          .collection('messages')
-          .doc(groupChatId)
-          .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
-      FirebaseFirestore.instance.runTransaction((transaction) async {
-        await transaction.set(
-          documentReference,
-          {
-            "senderId": senderId,
-            "receiverId": receiverId,
-            "time": DateTime.now().millisecondsSinceEpoch.toString(),
-            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
-            'content': content,
-            'type': type
-          },
-        );
-      }).then((value) {
-        if (type == 0) {
-          updateLastMessage(content); // Now updates both users' last messages
-        }
+      FirebaseFirestore.instance
+          .collection("messages")
+          .doc(widget.chatId)
+          .collection("chats")
+          .add({
+        "senderId": FirebaseAuth.instance.currentUser!.uid,
+        "content": content,
+        "timestamp": FieldValue.serverTimestamp(),
       });
 
-      scrollController.animateTo(0.0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-    } else {
-      // Optionally, show a snackbar or error dialog to inform the user about the empty message
-      print("Message cannot be empty.");
+      updateLastMessage(content);
     }
   }
 

@@ -50,7 +50,7 @@ class HiringService extends StatefulWidget {
 }
 
 class _HiringServiceState extends State<HiringService> {
-  var chatId = Uuid().v4();
+  var newiD = Uuid().v4();
 
   @override
   Widget build(BuildContext context) {
@@ -175,45 +175,37 @@ class _HiringServiceState extends State<HiringService> {
                   SaveButton(
                       title: "Chatear ahora",
                       onTap: () async {
-                        String newChatId = Uuid()
-                            .v4(); // Generate a new chat ID for every new conversation
-
                         await FirebaseFirestore.instance
                             .collection("chats")
-                            .doc(newChatId)
+                            .doc(newiD)
                             .set({
                           "serviceDescription": widget.serviceDescription,
                           "customerName": widget.title,
                           "customerId": widget.uid,
                           "customerPhoto": widget.photo,
                           "customerEmail": widget.userEmail,
-                          "chatId": newChatId, // New chat instance each time
+                          "chatId": newiD,
                           "providerEmail": snap['email'],
                           "providerId": FirebaseAuth.instance.currentUser!.uid,
                           "providerName": snap['fullName'],
                           "providerPhoto": snap['image'],
-                          "timestamp": FieldValue
-                              .serverTimestamp(), // Store timestamp for sorting
                         });
-
                         Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => Messages(
-                              description: widget.serviceDescription,
-                              providerEmail: snap['email'],
-                              customerEmail: widget.userEmail,
-                              chatId: newChatId, // Ensure the chat ID is unique
-                              customerName: widget.title,
-                              customerPhoto: widget.photo,
-                              providerId:
-                                  FirebaseAuth.instance.currentUser!.uid,
-                              providerName: snap['fullName'],
-                              customerId: widget.uid,
-                              providerPhoto: snap['image'],
-                            ),
-                          ),
-                        );
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => Messages(
+                                      description: widget.serviceDescription,
+                                      providerEmail: snap['email'],
+                                      customerEmail: widget.userEmail,
+                                      chatId: newiD,
+                                      customerName: widget.title,
+                                      customerPhoto: widget.photo,
+                                      providerId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      providerName: snap['fullName'],
+                                      customerId: widget.uid,
+                                      providerPhoto: snap['image'],
+                                    )));
                       }),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
