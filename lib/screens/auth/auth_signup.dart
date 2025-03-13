@@ -1,13 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_social_button/flutter_social_button.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kelimbo/screens/auth/app_introduction.dart';
 import 'package:kelimbo/screens/auth/auth_login.dart';
 import 'package:kelimbo/screens/main/main_dashboard.dart';
 import 'package:kelimbo/services/auth_methods.dart';
@@ -32,6 +30,8 @@ class _SignUpState extends State<SignUp> {
   bool passwordVisible = false;
   bool passwordVisibleConfrim = false;
   bool isGoogle = false;
+  bool isChecked = false;
+
   @override
   void initState() {
     super.initState();
@@ -203,6 +203,29 @@ class _SignUpState extends State<SignUp> {
                           ),
                           controller: reenter,
                         )),
+                    CheckboxListTile(
+                      title: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => AppIntroduction()));
+                        },
+                        child: Text(
+                            "TÉRMINOS Y CONDICIONES DE USO DE LA APLICACIÓN"),
+                      ),
+
+                      value: isChecked,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isChecked = value!;
+                        });
+                      },
+                      activeColor: Colors.blue,
+                      checkColor: Colors.white,
+                      controlAffinity:
+                          ListTileControlAffinity.leading, // Checkbox on left
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: isLoading
