@@ -16,6 +16,7 @@ class Salud extends StatefulWidget {
 
 class _SaludState extends State<Salud> {
   final String? currentUserUid = FirebaseAuth.instance.currentUser?.uid;
+  String searchQuery = "";
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,26 @@ class _SaludState extends State<Salud> {
       appBar: AppBar(
         centerTitle: true,
         title: Text("Salud"),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Buscar",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.toLowerCase();
+                });
+              },
+            ),
+          ),
+        ),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
@@ -43,12 +64,38 @@ class _SaludState extends State<Salud> {
                 ),
               );
             }
+            final List<DocumentSnapshot> filteredDocuments =
+                snapshot.data!.docs.where((doc) {
+              final Map<String, dynamic> data =
+                  doc.data() as Map<String, dynamic>;
+              final String userName =
+                  data['userName']?.toString().toLowerCase() ?? '';
+              final String serviceName =
+                  data['title']?.toString().toLowerCase() ?? '';
+              final String location =
+                  data['location']?.toString().toLowerCase() ?? '';
+              final String price =
+                  data['price']?.toString().toLowerCase() ?? '';
+
+              return userName.contains(searchQuery) ||
+                  serviceName.contains(searchQuery) ||
+                  location.contains(searchQuery) ||
+                  price.contains(searchQuery);
+            }).toList();
+
+            if (filteredDocuments.isEmpty) {
+              return Center(
+                child: Text(
+                  "No se han encontrado resultados",
+                  style: TextStyle(color: colorBlack),
+                ),
+              );
+            }
             return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
+                itemCount: filteredDocuments.length,
                 itemBuilder: (index, contrxt) {
-                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
                   final Map<String, dynamic> data =
-                      documents[contrxt].data() as Map<String, dynamic>;
+                      filteredDocuments[contrxt].data() as Map<String, dynamic>;
                   return GestureDetector(
                     onTap: () {
                       if (data['uid'] == currentUserUid) {
