@@ -57,6 +57,10 @@ class _SellerOfferSendToBuyerState extends State<SellerOfferSendToBuyer> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => SellerSendDetail(
+                                serviceId: data['serviceId'],
+                                clientId: data['clientId'],
+                                clientImage: data['clientImage'],
+                                clientName: data['clientName'],
                                 status: data['status'],
                                 uuid: data['uuid'],
                                 description: data['work'],
