@@ -57,6 +57,10 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CompleteSellerDetail(
+                                clientImage: data['clientImage'],
+                                clientName: data['clientName'],
+                                clientId: data['clientId'],
+                                serviceId: data['serviceId'],
                                 status: data['status'],
                                 uuid: data['uuid'],
                                 description: data['work'],
