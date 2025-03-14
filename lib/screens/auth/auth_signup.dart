@@ -233,6 +233,13 @@ class _SignUpState extends State<SignUp> {
                           : SaveButton(
                               title: "Únete",
                               onTap: () async {
+                                if (!isChecked) {
+                                  showMessageBar(
+                                      "Debes aceptar los términos y condiciones para continuar",
+                                      context);
+                                  return;
+                                }
+
                                 if (providerEmailController.text.isEmpty) {
                                   setState(() {
                                     isLoading = false; // Stop the loader
