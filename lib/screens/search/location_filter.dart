@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
+import 'package:http/http.dart' as http;
+import 'package:kelimbo/utils/colors.dart';
 
 class LocationFilter extends StatefulWidget {
   const LocationFilter({Key? key}) : super(key: key);
@@ -17,27 +19,43 @@ class LocationFilter extends StatefulWidget {
 class _LocationFilterState extends State<LocationFilter> {
   List<String> cityNames = [];
   String? selectedMunicipality;
-
+  TextEditingController _searchController = TextEditingController();
+  bool isLoading = true;
   @override
   void initState() {
     super.initState();
-    loadJsonData();
+    fetchCities();
+    _searchController.addListener(() {
+      String text = _searchController.text.replaceAll(' ', ''); // Remove spaces
+      if (_searchController.text != text) {
+        _searchController.value = TextEditingValue(
+          text: text,
+          selection: TextSelection.collapsed(offset: text.length),
+        );
+      }
+    });
   }
 
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  String searchQuery = "";
 
-  Future<void> loadJsonData() async {
+  Future<void> fetchCities() async {
+    const String apiUrl =
+        "https://raw.githubusercontent.com/etereo-io/spain-communities-cities-json/master/towns.json";
+
     try {
-      String jsonString = await rootBundle.loadString('assets/cities.json');
-      List<dynamic> jsonData = json.decode(jsonString);
-
-      setState(() {
-        cityNames = jsonData.map((e) => e["Nom"] as String).toList();
-        cityNames.sort((a, b) =>
-            a.toLowerCase().compareTo(b.toLowerCase())); // Sort alphabetically
-      });
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        setState(() {
+          cityNames = data.map((item) => item["name"] as String).toList();
+          isLoading = false;
+        });
+      } else {
+        print("Error: ${response.statusCode}");
+      }
     } catch (e) {
-      print("Error loading JSON: $e");
+      print("Error fetching data: $e");
     }
   }
 
@@ -60,6 +78,26 @@ class _LocationFilterState extends State<LocationFilter> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Buscar",
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value.toLowerCase();
+                });
+              },
+            ),
+          ),
+        ),
         title: const Text("Filtrar por ubicación"),
       ),
       body: Column(
@@ -117,13 +155,41 @@ class _LocationFilterState extends State<LocationFilter> {
                     ],
                   );
                 }
+                final List<DocumentSnapshot> filteredDocuments =
+                    snapshot.data!.docs.where((doc) {
+                  final Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                  final String userName =
+                      data['userName']?.toString().toLowerCase() ?? '';
+                  final String serviceName =
+                      data['title']?.toString().toLowerCase() ?? '';
+                  final String location =
+                      data['location']?.toString().toLowerCase() ?? '';
+                  final String price =
+                      data['price']?.toString().toLowerCase() ?? '';
+
+                  return userName.contains(searchQuery) ||
+                      serviceName.contains(searchQuery) ||
+                      location.contains(searchQuery) ||
+                      price.contains(searchQuery);
+                }).toList();
+
+                if (filteredDocuments.isEmpty) {
+                  return Center(
+                    child: Text(
+                      "No se han encontrado resultados",
+                      style: TextStyle(color: colorBlack),
+                    ),
+                  );
+                }
 
                 return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
+                  itemCount: filteredDocuments.length,
                   itemBuilder: (context, index) {
+                    final Map<String, dynamic> data =
+                        filteredDocuments[index].data() as Map<String, dynamic>;
                     final DocumentSnapshot document =
                         snapshot.data!.docs[index];
-                    final data = document.data() as Map<String, dynamic>;
                     final List<dynamic> favorites = data['favorite'] ?? [];
 
                     bool isFavorite = favorites.contains(currentUserId);
