@@ -207,7 +207,7 @@ class _FiltersState extends State<Filters> {
                                           NetworkImage(data['userImage']),
                                     ),
                                     title: Text(
-                                      data['userName'],
+                                      data['title'],
                                       style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16),

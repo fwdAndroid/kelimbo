@@ -254,7 +254,7 @@ class _LocationFilterState extends State<LocationFilter> {
                                     NetworkImage(data['photo'] ?? ""),
                               ),
                               title: Text(
-                                data['category'] ?? "No category",
+                                data['title'] ?? "No Title",
                                 style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
