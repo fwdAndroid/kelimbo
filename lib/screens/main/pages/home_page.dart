@@ -39,23 +39,6 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Column(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Filters()));
-                      },
-                      child: Align(
-                        alignment: AlignmentDirectional.topEnd,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0, right: 20, bottom: 8),
-                          child: Image.asset(
-                            "assets/filters.png",
-                            height: 20,
-                          ),
-                        ),
-                      ),
-                    ),
                     Center(
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -100,7 +83,20 @@ class _HomePageState extends State<HomePage> {
                                         });
                                       },
                                     ),
-                            )
+                            ),
+                            const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Filters()));
+                              },
+                              child: Image.asset(
+                                "assets/filters.png",
+                                height: 20,
+                              ),
+                            ),
                           ],
                         ),
                       ),
