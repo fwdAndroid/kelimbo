@@ -57,6 +57,10 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CustomDeclinedOfferDetail(
+                                clientId: data['clientId'],
+                                clientImage: data['clientImage'],
+                                clientName: data['clientName'],
+                                serviceId: data['serviceId'],
                                 status: data['status'],
                                 uuid: data['uuid'],
                                 description: data['serviceDescription'],
