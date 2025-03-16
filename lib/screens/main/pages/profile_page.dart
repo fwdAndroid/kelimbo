@@ -298,19 +298,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: iconColor,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SaveButton(
-                    title: "Cerrar sesión",
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return LogoutWidget();
-                        },
-                      );
-                    }),
-              )
             ],
           ),
         ),
