@@ -13,7 +13,6 @@ import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
 import 'package:kelimbo/widgets/logout_widget.dart';
-import 'package:kelimbo/widgets/save_button.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

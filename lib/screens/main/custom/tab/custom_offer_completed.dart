@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_offers_complete_detail.dart';
 import 'package:kelimbo/screens/main/other/offers_profile.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/seller_provider/buyer_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class CustomOfferCompleted extends StatefulWidget {
@@ -16,42 +16,37 @@ class CustomOfferCompleted extends StatefulWidget {
 
 class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
   @override
+  void initState() {
+    super.initState();
+    // Fetch offers when the widget is initialized
+    Provider.of<BuyerProvider>(context, listen: false).fetchCounterOffers();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("offers")
-            .where("clientId",
-                isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-            .where("status", isEqualTo: "counterOffer")
-            .snapshots(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      body: Consumer<BuyerProvider>(
+        builder: (context, provider, child) {
+          if (provider.counterOffers.isEmpty) {
             return Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.search_off,
-                  size: 100,
-                  color: Colors.grey,
-                ),
-                Text('No hay trabajo disponible.'),
-              ],
-            ));
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.search_off,
+                    size: 100,
+                    color: Colors.grey,
+                  ),
+                  Text('No hay trabajo disponible.'),
+                ],
+              ),
+            );
           }
 
           return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
+            itemCount: provider.counterOffers.length,
             itemBuilder: (context, index) {
-              final Map<String, dynamic> data =
-                  snapshot.data!.docs[index].data() as Map<String, dynamic>;
+              final data = provider.counterOffers[index];
               return GestureDetector(
                   onTap: () {
                     Navigator.push(
