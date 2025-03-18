@@ -246,10 +246,19 @@ class _AddServicePageState extends State<AddServicePage> {
                       setState(() {
                         isChecked = value!;
                         if (isChecked) {
-                          selectedMunicipalities =
-                              List.from(cityNames); // Select all cities
+                          // Show a message when all cities are selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Todas las ciudades han sido seleccionadas."),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+
+                          // Store all cities in Firebase and update selectedMunicipalities
+                          selectedMunicipalities = List.from(cityNames);
                         } else {
-                          selectedMunicipalities.clear(); // Deselect all
+                          selectedMunicipalities.clear(); // Clear selection
                         }
                       });
                     },
@@ -258,23 +267,14 @@ class _AddServicePageState extends State<AddServicePage> {
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
 
-                  // Align(
-                  //   alignment: Alignment.topLeft,
-                  //   child: TextButton(
-                  //     onPressed: () {
-                  //       showSelectAllDialog();
-                  //     },
-                  //     child: const Text("En Toda España"),
-                  //   ),
-                  // ),
-
                   // Multi-selection dropdown
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownSearch<String>.multiSelection(
-                      items: cityNames,
-                      selectedItems: selectedMunicipalities,
-                      popupProps: PopupPropsMultiSelection.menu(
+                  if (!isChecked) // Show dropdown only if isChecked is false
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DropdownSearch<String>.multiSelection(
+                        items: cityNames,
+                        selectedItems: selectedMunicipalities,
+                        popupProps: PopupPropsMultiSelection.menu(
                           showSearchBox: true,
                           searchFieldProps: TextFieldProps(
                             controller: _searchController,
@@ -283,31 +283,28 @@ class _AddServicePageState extends State<AddServicePage> {
                               border: OutlineInputBorder(),
                             ),
                           ),
-                          // Custom search function to remove spaces
-                          isFilterOnline: true),
-                      dropdownDecoratorProps: const DropDownDecoratorProps(
-                        dropdownSearchDecoration: InputDecoration(
-                          labelText: 'Seleccionar Municipio',
-                          border: OutlineInputBorder(),
+                          isFilterOnline: true,
                         ),
+                        dropdownDecoratorProps: const DropDownDecoratorProps(
+                          dropdownSearchDecoration: InputDecoration(
+                            labelText: 'Seleccionar Municipio',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                        onChanged: (values) {
+                          setState(() {
+                            selectedMunicipalities = values;
+                          });
+                        },
                       ),
-                      onChanged: (values) {
-                        setState(() {
-                          selectedMunicipalities = values;
-                        });
-                      },
                     ),
-                  ),
 
                   isAdded
                       ? const Center(child: CircularProgressIndicator())
                       : SaveButton(
                           title: "Publicar",
                           onTap: () async {
-                            if (selectedMunicipalities.isEmpty) {
-                              showMessageBar(
-                                  "La ubicación es requerida", context);
-                            } else if (validateInputs(context)) {
+                            if (validateInputs(context)) {
                               setState(() {
                                 isAdded = true;
                               });
@@ -317,8 +314,10 @@ class _AddServicePageState extends State<AddServicePage> {
                                   userName: snap['fullName'],
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
-                                  location:
-                                      selectedMunicipalities, // All cities if checked
+                                  location: isChecked
+                                      ? cityNames
+                                      : selectedMunicipalities, // ✅ Save all if checked
+
                                   category: dropdownvalue,
                                   currency: currencyType,
                                   priceType: drop,
