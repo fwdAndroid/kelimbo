@@ -92,7 +92,7 @@ class _SellerOfferSendToBuyerState extends State<SellerOfferSendToBuyer> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Descripciónes de puestos de trabajo",
+                            "Servicio Solicitado",
                             style: TextStyle(
                                 color: colorBlack,
                                 fontWeight: FontWeight.bold,

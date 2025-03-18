@@ -25,8 +25,9 @@ class _LocationFilterState extends State<LocationFilter> {
   void initState() {
     super.initState();
     fetchCities();
+
     _searchController.addListener(() {
-      String text = _searchController.text.replaceAll(' ', ''); // Remove spaces
+      String text = _searchController.text.trim(); // Trim spaces
       if (_searchController.text != text) {
         _searchController.value = TextEditingValue(
           text: text,
@@ -84,7 +85,7 @@ class _LocationFilterState extends State<LocationFilter> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: "Buscar",
+                hintText: "¿Qué necesitas?",
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
@@ -108,6 +109,9 @@ class _LocationFilterState extends State<LocationFilter> {
               items: cityNames,
               popupProps: PopupProps.menu(
                 showSearchBox: true,
+                searchFieldProps: TextFieldProps(
+                  controller: _searchController,
+                ),
               ),
               dropdownButtonProps: DropdownButtonProps(
                 color: Colors.blue,
