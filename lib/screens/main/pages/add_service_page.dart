@@ -64,6 +64,7 @@ class _AddServicePageState extends State<AddServicePage> {
     'Vehículos'
   ];
   bool isLoading = true;
+  bool isChecked = false;
 
   Uint8List? _image;
   bool isAdded = false;
@@ -229,15 +230,43 @@ class _AddServicePageState extends State<AddServicePage> {
                       },
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: TextButton(
-                      onPressed: () {
-                        showSelectAllDialog();
-                      },
-                      child: const Text("En Toda España"),
+                  CheckboxListTile(
+                    title: Text(
+                      "Seleccionar Todas las Ciudades",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
+                    subtitle:
+                        Text("Se seleccionarán todas las ciudades de España"),
+                    secondary: Icon(Icons.location_pin),
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isChecked = value!;
+                        if (isChecked) {
+                          selectedMunicipalities =
+                              List.from(cityNames); // Select all cities
+                        } else {
+                          selectedMunicipalities.clear(); // Deselect all
+                        }
+                      });
+                    },
+                    activeColor: Colors.blue,
+                    checkColor: Colors.white,
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
+
+                  // Align(
+                  //   alignment: Alignment.topLeft,
+                  //   child: TextButton(
+                  //     onPressed: () {
+                  //       showSelectAllDialog();
+                  //     },
+                  //     child: const Text("En Toda España"),
+                  //   ),
+                  // ),
 
                   // Multi-selection dropdown
                   Padding(
@@ -288,7 +317,8 @@ class _AddServicePageState extends State<AddServicePage> {
                                   userName: snap['fullName'],
                                   userImage: snap['image'],
                                   userEmail: snap['email'],
-                                  location: selectedMunicipalities,
+                                  location:
+                                      selectedMunicipalities, // All cities if checked
                                   category: dropdownvalue,
                                   currency: currencyType,
                                   priceType: drop,
@@ -374,111 +404,5 @@ class _AddServicePageState extends State<AddServicePage> {
     } catch (e) {
       print("Error fetching data: $e");
     }
-  }
-
-  void showSelectAllDialog() {
-    List<String> tempSelected = List.from(cityNames); // Preselect all cities ✅
-    TextEditingController searchController = TextEditingController();
-    List<String> filteredCities = List.from(cityNames);
-
-    // Add listener to remove spaces in real time
-    searchController.addListener(() {
-      String text = searchController.text.replaceAll(' ', ''); // Remove spaces
-      if (searchController.text != text) {
-        searchController.value = TextEditingValue(
-          text: text,
-          selection: TextSelection.collapsed(offset: text.length),
-        );
-      }
-    });
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text("Seleccionar todas las ciudades"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      hintText: "Buscar ciudad...",
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (query) {
-                      setDialogState(() {
-                        filteredCities = cityNames
-                            .where((city) => city
-                                .toLowerCase()
-                                .contains(query.toLowerCase()))
-                            .toList();
-                      });
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Seleccionar todo"),
-                      Checkbox(
-                        value: tempSelected.length == cityNames.length &&
-                            cityNames.isNotEmpty,
-                        onChanged: (bool? value) {
-                          setDialogState(() {
-                            tempSelected =
-                                value == true ? List.from(cityNames) : [];
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: filteredCities.length,
-                      itemBuilder: (context, index) {
-                        return CheckboxListTile(
-                          title: Text(filteredCities[index]),
-                          value: tempSelected.contains(filteredCities[index]),
-                          onChanged: (bool? value) {
-                            setDialogState(() {
-                              if (value == true) {
-                                tempSelected.add(filteredCities[index]);
-                              } else {
-                                tempSelected.remove(filteredCities[index]);
-                              }
-                            });
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text("Cancelar"),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      selectedMunicipalities = List.from(tempSelected);
-                    });
-                    Navigator.pop(context);
-                  },
-                  child: Text("Confirmar"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
   }
 }
