@@ -54,7 +54,7 @@ class _UserRatingsState extends State<UserRatings> {
                       : Icon(Icons.person),
                   title: Text(review['clientName'] ?? 'No Name'),
                   subtitle: Text(review['clientThought'] ?? 'No Thoughts'),
-                  trailing: Text("Rating: ${review['totalRate'] ?? 0}"),
+                  trailing: Text("Valoración: ${review['totalRate'] ?? 0}"),
                 ),
               );
             },
