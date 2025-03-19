@@ -41,6 +41,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
     return Scaffold(
         appBar: AppBar(),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
               child: GestureDetector(
@@ -124,7 +125,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Descripciónes de puestos de trabajo",
+                "Servicio Solicitado",
                 style: TextStyle(
                     color: colorBlack,
                     fontWeight: FontWeight.bold,
@@ -133,8 +134,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 300,
+              child: Expanded(
                 child: Text(
                   widget.description,
                   style: TextStyle(fontSize: 16),
@@ -160,19 +160,28 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
+                "observaciones : ",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                widget.observation.toString(),
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
                 "Estado: ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
-            Text("Rechazado ",
-                style: TextStyle(fontSize: 16, color: Colors.red)),
-            Text(
-              "observaciones : ",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            Text(
-              widget.observation.toString(),
-              style: TextStyle(fontSize: 16),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Rechazado ",
+                  style: TextStyle(fontSize: 16, color: Colors.red)),
             ),
           ],
         ));

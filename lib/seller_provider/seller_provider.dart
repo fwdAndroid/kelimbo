@@ -17,21 +17,6 @@ class SellerReceivedProvider with ChangeNotifier {
   List<Map<String, dynamic>> get declinedOffers => _declinedOffers;
   List<Map<String, dynamic>> get completedOffers => _completedOffers;
 
-  Future<void> fetchReceivedOffers() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    final snapshot = await FirebaseFirestore.instance
-        .collection("offers")
-        .where("serviceProviderId", isEqualTo: user.uid)
-        .where("status", isEqualTo: "send")
-        .get();
-
-    _receivedOffers =
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
-    notifyListeners();
-  }
-
   Future<void> fetchSentOffers() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;

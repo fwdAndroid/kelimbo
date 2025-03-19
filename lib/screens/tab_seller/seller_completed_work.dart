@@ -19,7 +19,7 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
     super.initState();
     // Fetch declined offers when the widget is initialized
     Provider.of<SellerReceivedProvider>(context, listen: false)
-        .fetchDeclinedOffers();
+        .fetchCompleteOffers();
   }
 
   @override
@@ -27,7 +27,7 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
     return Scaffold(
       body: Consumer<SellerReceivedProvider>(
         builder: (context, provider, child) {
-          if (provider.declinedOffers.isEmpty) {
+          if (provider.completedOffers.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

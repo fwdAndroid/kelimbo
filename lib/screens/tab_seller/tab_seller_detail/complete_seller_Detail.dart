@@ -122,7 +122,7 @@ class _CompleteSellerDetailState extends State<CompleteSellerDetail> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Descripciónes de puestos de trabajo",
+                "Servicio solicitado",
                 style: TextStyle(
                     color: colorBlack,
                     fontWeight: FontWeight.bold,
@@ -131,8 +131,7 @@ class _CompleteSellerDetailState extends State<CompleteSellerDetail> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                height: 300,
+              child: Expanded(
                 child: Text(
                   widget.description,
                   style: TextStyle(fontSize: 16),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/screens/tab_seller/tab_seller_detail/accept_seller_detail.dart';
 import 'package:kelimbo/seller_provider/seller_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,18 +49,23 @@ class _SellerOfferAcceptedState extends State<SellerOfferAccepted> {
               final data = provider.acceptedOffers[index];
               return GestureDetector(
                 onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => SellerSendDetail(
-                  //       status: data['status'],
-                  //       uuid: data['uuid'],
-                  //       description: data['work'],
-                  //       currency: data['currencyType'],
-                  //       price: data['price'],
-                  //     ),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AcceptSellerDetail(
+                        clientEmail: data['clientEmail'],
+                        clientId: data['clientId'],
+                        clientImage: data['clientImage'],
+                        clientName: data['clientName'],
+                        serviceId: data['serviceId'],
+                        status: data['status'],
+                        uuid: data['uuid'],
+                        description: data['work'],
+                        currency: data['currencyType'],
+                        price: data['price'],
+                      ),
+                    ),
+                  );
                 },
                 child: Card(
                   child: Column(

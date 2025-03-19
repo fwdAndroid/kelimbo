@@ -11,7 +11,7 @@ import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 
 // ignore: must_be_immutable
-class SellerReceivedDetail extends StatefulWidget {
+class AcceptSellerDetail extends StatefulWidget {
   String uuid;
   String description;
   int price;
@@ -22,7 +22,7 @@ class SellerReceivedDetail extends StatefulWidget {
   String clientEmail;
   String clientId;
   String serviceId;
-  SellerReceivedDetail(
+  AcceptSellerDetail(
       {super.key,
       required this.status,
       required this.uuid,
@@ -36,10 +36,10 @@ class SellerReceivedDetail extends StatefulWidget {
       required this.price});
 
   @override
-  State<SellerReceivedDetail> createState() => _SellerReceivedDetailState();
+  State<AcceptSellerDetail> createState() => _AcceptSellerDetailState();
 }
 
-class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
+class _AcceptSellerDetailState extends State<AcceptSellerDetail> {
   TextEditingController providerPassController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 

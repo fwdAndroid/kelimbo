@@ -59,6 +59,7 @@ class _SellerOfferSendToBuyerState extends State<SellerOfferSendToBuyer> {
                         clientName: data['clientName'],
                         status: data['status'],
                         uuid: data['uuid'],
+                        clientEmail: data['clientEmail'],
                         description: data['work'],
                         currency: data['currencyType'],
                         price: data['price'],

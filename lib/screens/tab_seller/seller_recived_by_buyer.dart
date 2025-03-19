@@ -57,6 +57,7 @@ class _SellerReceivedByBuyerState extends State<SellerReceivedByBuyer> {
                         clientId: data['clientId'],
                         serviceId: data['serviceId'],
                         status: data['status'],
+                        clientEmail: data['clientEmail'],
                         uuid: data['uuid'],
                         description: data['work'],
                         currency: data['currencyType'],
