@@ -27,7 +27,7 @@ class _CustomOfferCompleteState extends State<CustomOfferComplete> {
     return Scaffold(
       body: Consumer<BuyerProvider>(
         builder: (context, provider, child) {
-          if (provider.completeOffers.isEmpty) {
+          if (provider.buyercompleteOffers.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -44,9 +44,9 @@ class _CustomOfferCompleteState extends State<CustomOfferComplete> {
           }
 
           return ListView.builder(
-            itemCount: provider.completeOffers.length,
+            itemCount: provider.buyercompleteOffers.length,
             itemBuilder: (context, index) {
-              final data = provider.completeOffers[index];
+              final data = provider.buyercompleteOffers[index];
               return GestureDetector(
                   onTap: () {
                     Navigator.push(

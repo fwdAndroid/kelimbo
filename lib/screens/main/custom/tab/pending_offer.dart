@@ -28,7 +28,7 @@ class _PendingOfferState extends State<PendingOffer> {
     return Scaffold(
       body: Consumer<BuyerProvider>(
         builder: (context, provider, child) {
-          if (provider.pendingOffers.isEmpty) {
+          if (provider.buyerpendingOffers.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -45,9 +45,9 @@ class _PendingOfferState extends State<PendingOffer> {
           }
 
           return ListView.builder(
-            itemCount: provider.pendingOffers.length,
+            itemCount: provider.buyerpendingOffers.length,
             itemBuilder: (context, index) {
-              final data = provider.pendingOffers[index];
+              final data = provider.buyerpendingOffers[index];
               return GestureDetector(
                   onTap: () {
                     // Navigator.push(

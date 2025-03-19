@@ -27,7 +27,7 @@ class _CurrentJobState extends State<CurrentJob> {
     return Scaffold(
       body: Consumer<BuyerProvider>(
         builder: (context, provider, child) {
-          if (provider.startOffers.isEmpty) {
+          if (provider.buyerstartOffers.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -44,9 +44,9 @@ class _CurrentJobState extends State<CurrentJob> {
           }
 
           return ListView.builder(
-            itemCount: provider.startOffers.length,
+            itemCount: provider.buyerstartOffers.length,
             itemBuilder: (context, index) {
-              final data = provider.startOffers[index];
+              final data = provider.buyerstartOffers[index];
               return GestureDetector(
                   onTap: () {
                     Navigator.push(

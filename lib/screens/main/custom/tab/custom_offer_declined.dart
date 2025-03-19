@@ -28,7 +28,7 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
     return Scaffold(
       body: Consumer<BuyerProvider>(
         builder: (context, provider, child) {
-          if (provider.declineOffers.isEmpty) {
+          if (provider.buyerdeclineOffers.isEmpty) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -45,9 +45,9 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
           }
 
           return ListView.builder(
-            itemCount: provider.declineOffers.length,
+            itemCount: provider.buyerdeclineOffers.length,
             itemBuilder: (context, index) {
-              final data = provider.declineOffers[index];
+              final data = provider.buyerdeclineOffers[index];
               return GestureDetector(
                   onTap: () {
                     Navigator.push(

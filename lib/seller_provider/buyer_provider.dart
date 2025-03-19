@@ -3,17 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 class BuyerProvider with ChangeNotifier {
-  List<Map<String, dynamic>> _pendingOffers = [];
-  List<Map<String, dynamic>> _startOffers = [];
-  List<Map<String, dynamic>> _counterOffers = [];
-  List<Map<String, dynamic>> _declineOffers = [];
-  List<Map<String, dynamic>> _completeOffers = [];
+  List<Map<String, dynamic>> _buyerpendingOffers = [];
+  List<Map<String, dynamic>> _buyerstartOffers = [];
+  List<Map<String, dynamic>> _buyercounterOffers = [];
+  List<Map<String, dynamic>> _buyerdeclineOffers = [];
+  List<Map<String, dynamic>> _buyercompleteOffers = [];
 
-  List<Map<String, dynamic>> get pendingOffers => _pendingOffers;
-  List<Map<String, dynamic>> get counterOffers => _counterOffers;
-  List<Map<String, dynamic>> get startOffers => _startOffers;
-  List<Map<String, dynamic>> get declineOffers => _declineOffers;
-  List<Map<String, dynamic>> get completeOffers => _completeOffers;
+  List<Map<String, dynamic>> get buyerpendingOffers => _buyerpendingOffers;
+  List<Map<String, dynamic>> get buyercounterOffers => _buyercounterOffers;
+  List<Map<String, dynamic>> get buyerstartOffers => _buyerstartOffers;
+  List<Map<String, dynamic>> get buyerdeclineOffers => _buyerdeclineOffers;
+  List<Map<String, dynamic>> get buyercompleteOffers => _buyercompleteOffers;
 
   Future<void> fetchPendingdOffers() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -25,7 +25,7 @@ class BuyerProvider with ChangeNotifier {
         .where("status", isEqualTo: "send")
         .get();
 
-    _pendingOffers =
+    _buyerpendingOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
@@ -40,7 +40,7 @@ class BuyerProvider with ChangeNotifier {
         .where("status", isEqualTo: "counterOffer")
         .get();
 
-    _counterOffers =
+    _buyercounterOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
@@ -55,7 +55,7 @@ class BuyerProvider with ChangeNotifier {
         .where("status", isEqualTo: "start")
         .get();
 
-    _counterOffers =
+    _buyerstartOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
@@ -70,7 +70,7 @@ class BuyerProvider with ChangeNotifier {
         .where("status", isEqualTo: "reject")
         .get();
 
-    _counterOffers =
+    _buyerdeclineOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
@@ -85,7 +85,7 @@ class BuyerProvider with ChangeNotifier {
         .where("status", isEqualTo: "complete")
         .get();
 
-    _counterOffers =
+    _buyercompleteOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
