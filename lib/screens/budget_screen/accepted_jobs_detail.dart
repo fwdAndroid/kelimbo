@@ -56,26 +56,35 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Descripción: ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Descripción: ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                 ),
-                SizedBox(
-                  height: 300,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
                     widget.serviceDescription,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
-                Text(
-                  "PrecioS: ",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    "Precio: ",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                 ),
-                Text(
-                  widget.price.toString() +
-                      " " +
-                      getCurrencySymbol(widget.currency ?? 'Euro'),
-                  style: TextStyle(fontSize: 16),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    widget.price.toString() +
+                        " " +
+                        getCurrencySymbol(widget.currency ?? 'Euro'),
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
                 Spacer(),
                 Padding(

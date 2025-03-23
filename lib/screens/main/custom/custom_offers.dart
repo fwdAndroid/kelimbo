@@ -13,19 +13,6 @@ class CustomOffers extends StatelessWidget {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //             builder: (builder) => const SendCustomOffers()));
-        //   },
-        //   child: Icon(
-        //     Icons.add,
-        //     color: colorWhite,
-        //   ),
-        //   backgroundColor: mainColor,
-        // ),
         appBar: AppBar(
           bottom: const TabBar(
             isScrollable: true,

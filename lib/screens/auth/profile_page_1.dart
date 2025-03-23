@@ -24,7 +24,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          "Paso 1",
+          "Tú información",
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
@@ -60,7 +60,13 @@ class _ProfilePage1State extends State<ProfilePage1> {
             ),
 
             // "Select All" button with dialog
-
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "Tu dirección de correo electrónico y tu teléfono NO serán visibles para los demás usuarios",
+                textAlign: TextAlign.center,
+              ),
+            ),
             isLoading
                 ? CircularProgressIndicator()
                 : SaveButton(

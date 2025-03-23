@@ -82,7 +82,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  "Status:",
+                  "Estado:",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
@@ -106,7 +106,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                     if (isRated) {
                       // If the offer is already rated, show a message.
                       return const Text(
-                        "La oferta está calificada..",
+                        "La oferta está valorada..",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -166,7 +166,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                           isLoading
                               ? Center(child: CircularProgressIndicator())
                               : SaveButton(
-                                  title: "Enviar calificación",
+                                  title: "Enviar Valoración",
                                   onTap: () async {
                                     setState(() {
                                       isLoading = true;
