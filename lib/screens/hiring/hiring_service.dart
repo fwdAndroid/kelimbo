@@ -210,7 +210,7 @@ class _HiringServiceState extends State<HiringService> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SaveButton(
-                        title: "Solicitar Presupuesto",
+                        title: "Solicitar presupuesto",
                         onTap: () {
                           Navigator.push(
                               context,
