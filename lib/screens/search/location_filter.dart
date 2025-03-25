@@ -265,13 +265,18 @@ class _LocationFilterState extends State<LocationFilter> {
                                 ),
                               ),
                               subtitle: Text(
-                                (data['location'] as List<dynamic>?)
-                                        ?.join(", ") ??
-                                    "No location",
+                                (data['location'] != null &&
+                                        (data['location'] as List<dynamic>)
+                                                .length >
+                                            10)
+                                    ? "Todas las ciudades de España"
+                                    : (data['location'] as List<dynamic>?)
+                                            ?.join(", ") ??
+                                        "No location",
                                 style: GoogleFonts.inter(
                                   color: const Color(0xff9C9EA2),
                                   fontWeight: FontWeight.w300,
-                                  fontSize: 15,
+                                  fontSize: 13,
                                 ),
                               ),
                             ),
