@@ -181,12 +181,15 @@ class _HomePageState extends State<HomePage> {
                 final docs = snapshot.data!.docs;
                 final filteredDocs = docs.where((doc) {
                   final data = doc.data() as Map<String, dynamic>;
-                  return data.values.any((value) =>
-                      value != null &&
-                      value
-                          .toString()
-                          .toLowerCase()
-                          .contains(_searchText.toLowerCase()));
+                  final title = data['title']?.toString().toLowerCase() ?? '';
+                  final category =
+                      data['category']?.toString().toLowerCase() ?? '';
+                  final subcategory =
+                      data['subcategory']?.toString().toLowerCase() ?? '';
+
+                  return title.contains(_searchText) ||
+                      category.contains(_searchText) ||
+                      subcategory.contains(_searchText);
                 }).toList();
 
                 if (filteredDocs.isEmpty) {
