@@ -8,12 +8,13 @@ class ServiceModel {
   String description;
   String title;
   String category;
+  String subcategory; // Add this field
   int numberOfJobs;
   String uid;
   List favorite;
-  double totalRate; // Stores the total rate
-  int totalReviews; // Stores the total number of reviews
-  Map<String, int> reviews; // Stores reviews with corresponding ratings
+  double totalRate;
+  int totalReviews;
+  Map<String, int> reviews;
   String userName;
   String userImage;
   String userEmail;
@@ -23,34 +24,37 @@ class ServiceModel {
   List location;
   var finalreviews;
 
-  ServiceModel(
-      {required this.uid,
-      required this.title,
-      required this.price,
-      required this.ratingCount,
-      required this.pricePerHr,
-      required this.description,
-      required this.photo,
-      required this.category,
-      required this.favorite,
-      required this.reviews,
-      required this.totalRate,
-      required this.userName,
-      required this.userImage,
-      required this.numberOfJobs,
-      required this.userEmail,
-      required this.totalReviews,
-      required this.currency,
-      required this.priceType,
-      required this.finalreviews,
-      required this.location,
-      required this.uuid});
+  ServiceModel({
+    required this.uid,
+    required this.title,
+    required this.price,
+    required this.ratingCount,
+    required this.pricePerHr,
+    required this.description,
+    required this.photo,
+    required this.category,
+    required this.subcategory, // Add to constructor
+    required this.favorite,
+    required this.reviews,
+    required this.totalRate,
+    required this.userName,
+    required this.userImage,
+    required this.numberOfJobs,
+    required this.userEmail,
+    required this.totalReviews,
+    required this.currency,
+    required this.priceType,
+    required this.finalreviews,
+    required this.location,
+    required this.uuid,
+  });
 
   Map<String, dynamic> toJson() => {
         'price': price,
         'uid': uid,
         'userName': userName,
         'userImage': userImage,
+        'subcategory': subcategory, // Include in JSON
         'userEmail': userEmail,
         'pricePerHr': pricePerHr,
         'description': description,
@@ -62,38 +66,40 @@ class ServiceModel {
         'priceType': priceType,
         'ratingCount': ratingCount,
         'uuid': uuid,
-        'totalRate': totalRate, // Include in toJson
-        'totalReviews': totalReviews, // Include in toJson
-        'reviews': reviews, // Include reviews as a list of strings
+        'totalRate': totalRate,
+        'totalReviews': totalReviews,
+        'reviews': reviews,
         'location': location,
         'finalreviews': finalreviews,
         'numberOfJobs': numberOfJobs,
       };
+
   static ServiceModel fromSnap(DocumentSnapshot snaps) {
     var snapshot = snaps.data() as Map<String, dynamic>;
 
     return ServiceModel(
-        photo: snapshot['photo'],
-        uid: snapshot['uid'],
-        priceType: snapshot['priceType'],
-        currency: snapshot['currency'],
-        favorite: snapshot['favorite'],
-        numberOfJobs: snapshot['numberOfJobs'],
-        title: snapshot['title'],
-        ratingCount: snapshot['ratingCount'],
-        description: snapshot['description'],
-        price: snapshot['price'],
-        userName: snapshot['userName'],
-        userImage: snapshot['userImage'],
-        userEmail: snapshot['userEmail'],
-        pricePerHr: snapshot['pricePerHr'],
-        location: snapshot['location'],
-        finalreviews: snapshot['finalreviews'],
-        category: snapshot['category'],
-        totalRate: snapshot['totalRate'], // Fetch from snapshot
-        totalReviews: snapshot['totalReviews'], // Fetch from snapshot
-        reviews: Map<String, int>.from(
-            snapshot['reviews']), // Fetch reviews map from snapshot
-        uuid: snapshot['uuid']);
+      photo: snapshot['photo'],
+      uid: snapshot['uid'],
+      priceType: snapshot['priceType'],
+      subcategory: snapshot['subcategory'] ?? '', // Handle potential null
+      currency: snapshot['currency'],
+      favorite: snapshot['favorite'],
+      numberOfJobs: snapshot['numberOfJobs'],
+      title: snapshot['title'],
+      ratingCount: snapshot['ratingCount'],
+      description: snapshot['description'],
+      price: snapshot['price'],
+      userName: snapshot['userName'],
+      userImage: snapshot['userImage'],
+      userEmail: snapshot['userEmail'],
+      pricePerHr: snapshot['pricePerHr'],
+      location: snapshot['location'],
+      finalreviews: snapshot['finalreviews'],
+      category: snapshot['category'],
+      totalRate: snapshot['totalRate']?.toDouble() ?? 0.0, // Handle conversion
+      totalReviews: snapshot['totalReviews'] ?? 0,
+      reviews: Map<String, int>.from(snapshot['reviews'] ?? {}),
+      uuid: snapshot['uuid'],
+    );
   }
 }

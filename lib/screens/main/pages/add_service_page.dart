@@ -68,11 +68,14 @@ class _AddServicePageState extends State<AddServicePage> {
 
   Uint8List? _image;
   bool isAdded = false;
+  String selectedSubcategory = ''; // Add this with your other state variables
 
   @override
   void initState() {
     super.initState();
     fetchCities();
+    fetchSubcategories(
+        dropdownvalue); // Fetch subcategories for initial category
     _searchController.addListener(() {
       String text = _searchController.text.replaceAll(' ', ''); // Remove spaces
       if (_searchController.text != text) {
@@ -82,6 +85,41 @@ class _AddServicePageState extends State<AddServicePage> {
         );
       }
     });
+  }
+
+  List<String> subcategories = [];
+  Future<void> fetchSubcategories(String category) async {
+    try {
+      // Query the categories collection for the document where 'category' matches
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('categories')
+          .where('category', isEqualTo: category)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var doc = querySnapshot.docs.first;
+        if (doc['subcategories'] != null) {
+          setState(() {
+            // Cast the subcategories to List<String>
+            subcategories = List<String>.from(doc['subcategories']);
+          });
+        } else {
+          setState(() {
+            subcategories = []; // No subcategories found
+          });
+        }
+      } else {
+        setState(() {
+          subcategories = []; // No document found for this category
+        });
+      }
+    } catch (e) {
+      print('Error fetching subcategories: $e');
+      setState(() {
+        subcategories = [];
+      });
+    }
   }
 
   @override
@@ -170,9 +208,39 @@ class _AddServicePageState extends State<AddServicePage> {
                         setState(() {
                           dropdownvalue = newValue!;
                         });
+                        fetchSubcategories(
+                            newValue!); // Fetch subcategories when category changes
                       },
                     ),
                   ),
+                  if (subcategories.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8),
+                      child: DropdownButtonFormField<String>(
+                        value: subcategories.contains(selectedSubcategory)
+                            ? selectedSubcategory
+                            : subcategories.first,
+                        isExpanded: true,
+                        icon: const Icon(Icons.keyboard_arrow_down),
+                        items: subcategories.map((String subcategory) {
+                          return DropdownMenuItem<String>(
+                            value: subcategory,
+                            child: Text(subcategory),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedSubcategory = newValue!;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Subcategoría',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+
                   Row(
                     children: [
                       Expanded(
@@ -326,6 +394,8 @@ class _AddServicePageState extends State<AddServicePage> {
                                   description: descriptionController.text,
                                   pricePerHer: 0,
                                   file: _image, // Image is now optional
+                                  subcategory:
+                                      selectedSubcategory, // Add this line
                                 );
 
                                 Navigator.push(

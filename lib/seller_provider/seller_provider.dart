@@ -58,7 +58,7 @@ class SellerReceivedProvider with ChangeNotifier {
         .get();
 
     _offers =
-        snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+        snapshot.docs.map((doc) => {"uuid": doc.id, ...doc.data()}).toList();
     notifyListeners();
   }
 
@@ -89,6 +89,12 @@ class SellerReceivedProvider with ChangeNotifier {
 
     _declinedOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+    notifyListeners();
+  }
+
+  //rEMOVED oFFER
+  void removeOffer(String uuid) {
+    _offers.removeWhere((offer) => offer['uuid'] == uuid);
     notifyListeners();
   }
 }

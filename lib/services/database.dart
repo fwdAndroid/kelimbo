@@ -29,7 +29,8 @@ class Database {
       required String userImage,
       required String currency,
       required List<String> location,
-      required String priceType}) async {
+      required String priceType,
+      required String subcategory}) async {
     String res = 'Some error occurred';
     try {
       if (title.isNotEmpty && category.isNotEmpty) {
@@ -56,6 +57,7 @@ class Database {
           numberOfJobs: 0,
           location: location,
           finalreviews: [],
+          subcategory: subcategory,
           userEmail: userEmail,
           userImage: userImage,
           userName: userName,
