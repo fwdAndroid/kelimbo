@@ -36,7 +36,7 @@ class RatingScreen extends StatefulWidget {
 
 class _RatingScreenState extends State<RatingScreen> {
   TextEditingController descriptionController = TextEditingController();
-  double rating = 3;
+  double rating = 0;
 
   @override
   Widget build(BuildContext context) {
