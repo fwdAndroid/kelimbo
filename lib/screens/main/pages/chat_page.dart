@@ -64,7 +64,17 @@ class _ChatPageState extends State<ChatPage> {
               }
 
               final customerChats = customerSnapshot.data?.docs ?? [];
-              final allChats = [...providerChats, ...customerChats];
+
+              // Combine providerChats and customerChats, filtering out those with "No Message"
+              final allChats =
+                  [...providerChats, ...customerChats].where((chatDoc) {
+                final chatData = chatDoc.data() as Map<String, dynamic>;
+                final String lastMessage = chatData['lastMessageByCustomer'] ??
+                    chatData['lastMessageByProvider'] ??
+                    "No Message";
+                return lastMessage !=
+                    "No Message"; // Exclude chats with "No Message"
+              }).toList();
 
               if (allChats.isEmpty) {
                 return Center(
