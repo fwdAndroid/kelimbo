@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/seller_provider/buyer_provider.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/save_button.dart';
+import 'package:provider/provider.dart';
 
 class CompleteCustomOfferDetail extends StatefulWidget {
   String uuid;
@@ -41,12 +43,9 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                     "Descripción: ",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  SizedBox(
-                    height: 250,
-                    child: Text(
-                      widget.description,
-                      style: TextStyle(fontSize: 16),
-                    ),
+                  Text(
+                    widget.description,
+                    style: TextStyle(fontSize: 16),
                   ),
                   Text(
                     "Precio: ",
@@ -67,20 +66,22 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                         child: SaveButton(
                             title: "Aceptar",
                             onTap: () async {
-                              FocusScope.of(context)
-                                  .unfocus(); // Hide keyboard on button
+                              if (mounted) {
+                                Provider.of<BuyerProvider>(context,
+                                        listen: false)
+                                    .buyerremoveOffer(widget.uuid, "start");
 
-                              // accept the offer
-                              await FirebaseFirestore.instance
-                                  .collection("offers")
-                                  .doc(widget.uuid)
-                                  .update({
-                                "status": "start",
-                                "serviceDescription": widget.description
-                              });
+                                await FirebaseFirestore.instance
+                                    .collection("offers")
+                                    .doc(widget.uuid)
+                                    .update({
+                                  "status": "start",
+                                  "serviceDescription": widget.description
+                                });
 
-                              showMessageBar("Oferta aceptada", context);
-                              Navigator.pop(context);
+                                showMessageBar("Oferta aceptada", context);
+                                Navigator.pop(context);
+                              }
                             }),
                       ),
                       SizedBox(
@@ -89,16 +90,22 @@ class _CompleteCustomOfferDetailState extends State<CompleteCustomOfferDetail> {
                             title: "Rechazar",
                             onTap: () async {
                               // accept the offer
-                              await FirebaseFirestore.instance
-                                  .collection("offers")
-                                  .doc(widget.uuid)
-                                  .update({
-                                "status": "reject",
-                                "observation": widget.description
-                              });
+                              if (mounted) {
+                                Provider.of<BuyerProvider>(context,
+                                        listen: false)
+                                    .buyerremoveOffer(widget.uuid, "reject");
 
-                              showMessageBar("Oferta rechazada", context);
-                              Navigator.pop(context);
+                                await FirebaseFirestore.instance
+                                    .collection("offers")
+                                    .doc(widget.uuid)
+                                    .update({
+                                  "status": "reject",
+                                  "observation": widget.description
+                                });
+
+                                showMessageBar("Oferta rechazada", context);
+                                Navigator.pop(context);
+                              }
                             }),
                       )
                     ],

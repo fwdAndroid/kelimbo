@@ -89,4 +89,28 @@ class BuyerProvider with ChangeNotifier {
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
+
+  //Remove vallue from Reject
+  void buyerremoveOffer(String uuid, String newStatus) {
+    // Find the offer in the counter offer list
+    final removedOffer = _buyercounterOffers.firstWhere(
+      (offer) => offer['uuid'] == uuid,
+      orElse: () => {},
+    );
+
+    // Remove from counter offers
+    _buyercounterOffers.removeWhere((offer) => offer['uuid'] == uuid);
+
+    // Move to the appropriate list based on status change
+    if (removedOffer.isNotEmpty) {
+      removedOffer['status'] = newStatus; // Update the status in memory
+      if (newStatus == "reject") {
+        _buyerdeclineOffers.add(removedOffer);
+      } else if (newStatus == "start") {
+        _buyerstartOffers.add(removedOffer);
+      }
+    }
+
+    notifyListeners();
+  }
 }
