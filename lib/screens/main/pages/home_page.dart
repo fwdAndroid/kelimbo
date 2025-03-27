@@ -183,13 +183,10 @@ class _HomePageState extends State<HomePage> {
                   final data = doc.data() as Map<String, dynamic>;
                   final title = data['title']?.toString().toLowerCase() ?? '';
                   final category =
-                      data['category']?.toString().toLowerCase() ?? '';
-                  final subcategory =
-                      data['subcategory']?.toString().toLowerCase() ?? '';
+                      data['description']?.toString().toLowerCase() ?? '';
 
                   return title.contains(_searchText) ||
-                      category.contains(_searchText) ||
-                      subcategory.contains(_searchText);
+                      category.contains(_searchText);
                 }).toList();
 
                 if (filteredDocs.isEmpty) {
