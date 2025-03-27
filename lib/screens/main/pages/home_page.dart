@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/search/filters.dart';
+import 'package:kelimbo/screens/search/location_filter.dart';
 import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/category_widget.dart';
 import 'package:kelimbo/widgets/popular_service_widget.dart';
@@ -29,7 +30,6 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           // SliverAppBar containing the search bar, filter button and CategoryWidget
           SliverAppBar(
-            actions: [],
             backgroundColor: Color(0xFFEFEFFB),
             automaticallyImplyLeading: false,
             pinned: false,
@@ -103,6 +103,15 @@ class _HomePageState extends State<HomePage> {
                                       },
                                     ),
                             ),
+                            GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LocationFilter(),
+                                      ));
+                                },
+                                child: Icon(Icons.location_pin)),
                           ],
                         ),
                       ),

@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:group_button/group_button.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
-import 'package:kelimbo/screens/search/location_filter.dart';
 import 'package:kelimbo/utils/colors.dart';
-import 'package:kelimbo/widgets/save_button.dart';
 
 class Filters extends StatefulWidget {
   const Filters({Key? key}) : super(key: key);
@@ -84,23 +82,7 @@ class _FiltersState extends State<Filters> {
           ),
           const SizedBox(height: 20),
           // SaveButton for location filtering (navigates to a LocationFilter screen)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 200,
-              child: SaveButton(
-                title: "Ubicación",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LocationFilter(),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+
           // Expanded widget displays the query results or an appropriate message.
           Expanded(
             child: appliedFilters.isEmpty

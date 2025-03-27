@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/categories/categories_filters.dart';
+import 'package:kelimbo/screens/categories/location_filter_category.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
@@ -45,19 +46,36 @@ class _VehiclescatState extends State<Vehiclescat> {
           preferredSize: Size.fromHeight(60.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "Buscar",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Buscar",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchQuery = value.toLowerCase();
+                      });
+                    },
+                  ),
                 ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.toLowerCase();
-                });
-              },
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LocationFilterCategory(
+                              locationCategory: "Vehículos",
+                            ),
+                          ));
+                    },
+                    child: Icon(Icons.location_pin)),
+              ],
             ),
           ),
         ),
@@ -155,7 +173,7 @@ class _VehiclescatState extends State<Vehiclescat> {
                               backgroundImage: NetworkImage(data['userImage']),
                             ),
                             title: Text(
-                              data['userName'],
+                              data['title'],
                               style: GoogleFonts.inter(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
