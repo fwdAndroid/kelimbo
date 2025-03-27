@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/categories/categories_filters.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/services/edit_service.dart';
@@ -21,6 +22,22 @@ class _BellazaState extends State<Bellaza> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CategoriesFilters(
+                            categoryName: "Belleza",
+                          )));
+            },
+            child: Image.asset(
+              "assets/filters.png",
+              height: 20,
+            ),
+          ),
+        ],
         centerTitle: true,
         title: Text("Belleza"),
         bottom: PreferredSize(

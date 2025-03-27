@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
         slivers: [
           // SliverAppBar containing the search bar, filter button and CategoryWidget
           SliverAppBar(
+            actions: [],
             backgroundColor: Color(0xFFEFEFFB),
             automaticallyImplyLeading: false,
             pinned: false,
@@ -39,6 +40,24 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Column(
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Filters()));
+                          },
+                          child: Image.asset(
+                            "assets/filters.png",
+                            height: 20,
+                          ),
+                        ),
+                      ),
+                    ),
                     Center(
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -83,19 +102,6 @@ class _HomePageState extends State<HomePage> {
                                         });
                                       },
                                     ),
-                            ),
-                            const SizedBox(width: 10),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => Filters()));
-                              },
-                              child: Image.asset(
-                                "assets/filters.png",
-                                height: 20,
-                              ),
                             ),
                           ],
                         ),
