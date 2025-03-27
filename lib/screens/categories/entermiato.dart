@@ -103,19 +103,14 @@ class _EntermiatoState extends State<Entermiato> {
                 snapshot.data!.docs.where((doc) {
               final Map<String, dynamic> data =
                   doc.data() as Map<String, dynamic>;
-              final String userName =
-                  data['userName']?.toString().toLowerCase() ?? '';
+
               final String serviceName =
                   data['title']?.toString().toLowerCase() ?? '';
               final String location =
-                  data['location']?.toString().toLowerCase() ?? '';
-              final String price =
-                  data['price']?.toString().toLowerCase() ?? '';
+                  data['description']?.toString().toLowerCase() ?? '';
 
-              return userName.contains(searchQuery) ||
-                  serviceName.contains(searchQuery) ||
-                  location.contains(searchQuery) ||
-                  price.contains(searchQuery);
+              return serviceName.contains(searchQuery) ||
+                  location.contains(searchQuery);
             }).toList();
 
             if (filteredDocuments.isEmpty) {

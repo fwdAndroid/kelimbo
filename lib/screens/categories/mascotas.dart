@@ -104,18 +104,12 @@ class _MascotasState extends State<Mascotas> {
               final Map<String, dynamic> data =
                   doc.data() as Map<String, dynamic>;
               final String userName =
-                  data['userName']?.toString().toLowerCase() ?? '';
+                  data['description']?.toString().toLowerCase() ?? '';
               final String serviceName =
                   data['title']?.toString().toLowerCase() ?? '';
-              final String location =
-                  data['location']?.toString().toLowerCase() ?? '';
-              final String price =
-                  data['price']?.toString().toLowerCase() ?? '';
 
               return userName.contains(searchQuery) ||
-                  serviceName.contains(searchQuery) ||
-                  location.contains(searchQuery) ||
-                  price.contains(searchQuery);
+                  serviceName.contains(searchQuery);
             }).toList();
 
             if (filteredDocuments.isEmpty) {
