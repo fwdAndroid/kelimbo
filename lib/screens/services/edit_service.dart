@@ -71,11 +71,36 @@ class _EditServiceState extends State<EditService> {
   List<String> filteredCities = [];
   bool showLocationDropdown = false;
 
+  List<String> previousSelectedLocations = [];
+  bool hasInitialSelection = false;
+
   @override
   void initState() {
     super.initState();
     fetchData();
     fetchCities();
+  }
+
+  void toggleAllCities(bool? value) {
+    if (value == null) return;
+
+    setState(() {
+      showAllCities = value;
+      if (value) {
+        // When selecting all cities, save the current selection
+        if (selectedLocations.length < cityNames.length) {
+          previousSelectedLocations = List.from(selectedLocations);
+        }
+        selectedLocations = List.from(cityNames);
+      } else {
+        // When deselecting all cities, restore previous selection if it exists
+        if (hasInitialSelection || previousSelectedLocations.isNotEmpty) {
+          selectedLocations = List.from(previousSelectedLocations);
+        } else {
+          selectedLocations.clear();
+        }
+      }
+    });
   }
 
   void fetchData() async {
@@ -97,6 +122,8 @@ class _EditServiceState extends State<EditService> {
         currencyType = data['currency'] ?? "EURO";
         selectedLocations =
             (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
+        previousSelectedLocations = List.from(selectedLocations);
+        hasInitialSelection = selectedLocations.isNotEmpty;
 
         // Initialize showAllCities based on whether all cities are selected
         if (selectedLocations.length == cityNames.length &&
@@ -145,19 +172,6 @@ class _EditServiceState extends State<EditService> {
         showAllCities = true;
       } else {
         showAllCities = false;
-      }
-    });
-  }
-
-  void toggleAllCities(bool? value) {
-    if (value == null) return;
-
-    setState(() {
-      showAllCities = value;
-      if (value) {
-        selectedLocations = List.from(cityNames);
-      } else {
-        selectedLocations.clear();
       }
     });
   }
@@ -318,9 +332,9 @@ class _EditServiceState extends State<EditService> {
                           value: showAllCities,
                           onChanged: toggleAllCities,
                         ),
-                        // Show dropdown only when not all cities are selected
+                        // Show the rest only when not all cities are selected
                         if (!showAllCities) ...[
-                          // Show search dropdown
+                          // Search and dropdown
                           TextField(
                             decoration: InputDecoration(
                               hintText: "Buscar ciudad...",
@@ -356,7 +370,7 @@ class _EditServiceState extends State<EditService> {
                                 },
                               ),
                             ),
-                          // Show chips for selected locations (only if less than 10)
+                          // Show chips for selected locations only if less than 10
                           if (selectedLocations.isNotEmpty &&
                               selectedLocations.length < 10)
                             Wrap(
@@ -371,6 +385,12 @@ class _EditServiceState extends State<EditService> {
                                   onDeleted: () {
                                     setState(() {
                                       selectedLocations.remove(location);
+                                      // Update previous selection if we're modifying it
+                                      if (previousSelectedLocations
+                                          .contains(location)) {
+                                        previousSelectedLocations
+                                            .remove(location);
+                                      }
                                     });
                                   },
                                 );
