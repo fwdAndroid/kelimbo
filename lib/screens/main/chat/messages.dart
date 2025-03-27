@@ -54,29 +54,29 @@ class _MessagesState extends State<Messages> {
         centerTitle: true,
         title: GestureDetector(
           onTap: () {},
-          child: Column(
+          child: Row(
+            mainAxisSize: MainAxisSize.min, // Prevent extra spacing issues
             children: [
-              const SizedBox(
-                height: 3,
-              ),
               CircleAvatar(
-                radius: 20,
+                radius: 20, // Avatar size
                 backgroundImage: NetworkImage(
                   FirebaseAuth.instance.currentUser!.uid == widget.customerId
                       ? widget.providerPhoto
                       : widget.customerPhoto,
                 ),
               ),
-              const SizedBox(height: 2),
               Text(
                 FirebaseAuth.instance.currentUser!.uid == widget.customerId
                     ? widget.providerName
                     : widget.customerName,
                 style: GoogleFonts.inter(
                   fontWeight: FontWeight.w500,
-                  color: colorBlack,
-                  fontSize: 14,
+                  color: Colors.black,
+                  fontSize: 16, // Adjust font size
                 ),
+                textAlign: TextAlign.center, // Center align text
+                maxLines: 2, // Ensure text wraps if long
+                overflow: TextOverflow.ellipsis, // Prevent overflow issues
               ),
             ],
           ),
