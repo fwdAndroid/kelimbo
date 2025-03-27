@@ -64,8 +64,12 @@ class _EditServiceState extends State<EditService> {
   Uint8List? _image;
   String? imageUrl;
   List<String> cityNames = [];
-  List<String> selectedLocations = []; // List to store selected locations
+  List<String> selectedLocations = [];
   bool isLoading = true;
+  bool showAllCities = false;
+  String? searchQuery;
+  List<String> filteredCities = [];
+  bool showLocationDropdown = false;
 
   @override
   void initState() {
@@ -75,26 +79,32 @@ class _EditServiceState extends State<EditService> {
   }
 
   void fetchData() async {
-    // Fetch data from Firestore
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection('services')
         .doc(widget.uuid)
         .get();
 
-    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    if (doc.exists) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    // Update the controllers with the fetched data
-    setState(() {
-      serviceNameController.text = data['title'] ?? '';
-      descriptionController.text = data['description'] ?? '';
-      priceController.text = (data['price'] ?? 0).toString();
-      discountController.text = (data['pricePerHr'] ?? 0).toString();
-      imageUrl = data['photo'];
-      dropdownvalue = data['category'] ?? 'Hogar'; // Set dropdown value
-      currencyType = data['currency'] ?? "EURO";
-      selectedLocations =
-          (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
-    });
+      setState(() {
+        serviceNameController.text = data['title'] ?? '';
+        descriptionController.text = data['description'] ?? '';
+        priceController.text = (data['price'] ?? 0).toString();
+        discountController.text = (data['pricePerHr'] ?? 0).toString();
+        imageUrl = data['photo'];
+        dropdownvalue = data['category'] ?? 'Hogar';
+        currencyType = data['currency'] ?? "EURO";
+        selectedLocations =
+            (data['location'] as List<dynamic>?)?.cast<String>() ?? [];
+
+        // Initialize showAllCities based on whether all cities are selected
+        if (selectedLocations.length == cityNames.length &&
+            cityNames.isNotEmpty) {
+          showAllCities = true;
+        }
+      });
+    }
   }
 
   Future<void> selectImage() async {
@@ -112,6 +122,44 @@ class _EditServiceState extends State<EditService> {
     UploadTask uploadTask = ref.putData(image);
     TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
+  }
+
+  void filterCities(String query) {
+    setState(() {
+      searchQuery = query;
+      filteredCities = cityNames
+          .where((city) => city.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void toggleLocationSelection(String location) {
+    setState(() {
+      if (selectedLocations.contains(location)) {
+        selectedLocations.remove(location);
+      } else {
+        selectedLocations.add(location);
+      }
+      // If we've selected all cities, update the checkbox
+      if (selectedLocations.length == cityNames.length) {
+        showAllCities = true;
+      } else {
+        showAllCities = false;
+      }
+    });
+  }
+
+  void toggleAllCities(bool? value) {
+    if (value == null) return;
+
+    setState(() {
+      showAllCities = value;
+      if (value) {
+        selectedLocations = List.from(cityNames);
+      } else {
+        selectedLocations.clear();
+      }
+    });
   }
 
   @override
@@ -267,41 +315,78 @@ class _EditServiceState extends State<EditService> {
                       children: [
                         CheckboxListTile(
                           title: Text("Todas las ciudades de España"),
-                          value: selectedLocations.length == cityNames.length,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true) {
-                                selectedLocations = List.from(cityNames);
-                              } else {
-                                selectedLocations
-                                    .clear(); // This clears the list
-                              }
-                            });
-                          },
+                          value: showAllCities,
+                          onChanged: toggleAllCities,
                         ),
-                        if (selectedLocations.isNotEmpty &&
-                            selectedLocations.length != cityNames.length)
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: 4.0,
-                            children: selectedLocations.map((location) {
-                              return Chip(
-                                label: Text(location),
-                                backgroundColor: Colors.blue.shade100,
-                                deleteIcon:
-                                    Icon(Icons.cancel, color: Colors.red),
-                                onDeleted: () {
-                                  setState(() {
-                                    selectedLocations.remove(location);
-                                  });
-                                },
-                              );
-                            }).toList(),
+                        // Show dropdown only when not all cities are selected
+                        if (!showAllCities) ...[
+                          // Show search dropdown
+                          TextField(
+                            decoration: InputDecoration(
+                              hintText: "Buscar ciudad...",
+                              prefixIcon: Icon(Icons.search),
+                            ),
+                            onChanged: filterCities,
+                            onTap: () {
+                              setState(() {
+                                showLocationDropdown = true;
+                              });
+                            },
                           ),
+                          if (showLocationDropdown && searchQuery != null)
+                            Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: ListView.builder(
+                                itemCount: filteredCities.length,
+                                itemBuilder: (context, index) {
+                                  final city = filteredCities[index];
+                                  return ListTile(
+                                    title: Text(city),
+                                    trailing: selectedLocations.contains(city)
+                                        ? Icon(Icons.check, color: Colors.green)
+                                        : null,
+                                    onTap: () {
+                                      toggleLocationSelection(city);
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          // Show chips for selected locations (only if less than 10)
+                          if (selectedLocations.isNotEmpty &&
+                              selectedLocations.length < 10)
+                            Wrap(
+                              spacing: 8.0,
+                              runSpacing: 4.0,
+                              children: selectedLocations.map((location) {
+                                return Chip(
+                                  label: Text(location),
+                                  backgroundColor: Colors.blue.shade100,
+                                  deleteIcon:
+                                      Icon(Icons.cancel, color: Colors.red),
+                                  onDeleted: () {
+                                    setState(() {
+                                      selectedLocations.remove(location);
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          // Show count if more than 10 locations selected
+                          if (selectedLocations.length >= 10)
+                            Text(
+                              "${selectedLocations.length} ciudades seleccionadas",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                        ],
                       ],
                     ),
                   if (cityNames.isEmpty && isLoading)
-                    CircularProgressIndicator(),
+                    Center(child: CircularProgressIndicator()),
                   if (cityNames.isEmpty && !isLoading)
                     Text("No se pudieron cargar las ubicaciones"),
                 ],
@@ -327,26 +412,21 @@ class _EditServiceState extends State<EditService> {
                           try {
                             await FirebaseFirestore.instance
                                 .collection("services")
-                                .doc(widget.uuid) // Use widget.uuid here
+                                .doc(widget.uuid)
                                 .update({
                               "description": descriptionController.text,
-                              "title": serviceNameController
-                                  .text, // Convert string to int
-                              "price": int.parse(priceController
-                                  .text), // Convert string to int
+                              "title": serviceNameController.text,
+                              "price": int.parse(priceController.text),
                               "photo": downloadUrl,
                               "pricePerHr": int.parse(discountController.text),
                               "priceType": drop,
                               "currency": currencyType,
-                              "category":
-                                  dropdownvalue, // Save the selected category
-                              "location":
-                                  selectedLocations, // ✅ Update Firestore with the remaining locations
+                              "category": dropdownvalue,
+                              "location": selectedLocations,
                             });
                             showMessageBar(
                                 "Servicio actualizado con éxito ", context);
                           } catch (e) {
-                            // Handle errors here
                             print("Error updating service: $e");
                             showMessageBar(
                                 "No se pudo actualizar el servicio", context);
@@ -387,12 +467,22 @@ class _EditServiceState extends State<EditService> {
         setState(() {
           cityNames = data.map((item) => item["name"] as String).toList();
           isLoading = false;
+          // Initialize showAllCities if all cities are selected
+          if (selectedLocations.length == cityNames.length) {
+            showAllCities = true;
+          }
         });
       } else {
         print("Error: ${response.statusCode}");
+        setState(() {
+          isLoading = false;
+        });
       }
     } catch (e) {
       print("Error fetching data: $e");
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 }
