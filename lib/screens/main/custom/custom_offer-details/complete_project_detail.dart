@@ -41,6 +41,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
   double rating = 3;
   TextEditingController descriptionController = TextEditingController();
   bool isLoading = false;
+  Map<String, dynamic>? existingRatingData;
 
   @override
   Widget build(BuildContext context) {
@@ -61,12 +62,9 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                SizedBox(
-                  height: 150,
-                  child: Text(
-                    widget.description,
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                Text(
+                  widget.description,
+                  style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -104,14 +102,108 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                     final isRated = data['isRated'] as bool? ?? false;
 
                     if (isRated) {
-                      // If the offer is already rated, show a message.
-                      return const Text(
-                        "La oferta está valorada..",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.green,
-                        ),
+                      // If the offer is already rated, show the rating details
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('services')
+                            .doc(widget.serviceId)
+                            .get(),
+                        builder: (context, serviceSnapshot) {
+                          if (serviceSnapshot.hasError) {
+                            return Text(
+                                "Error loading rating: ${serviceSnapshot.error}");
+                          }
+                          if (!serviceSnapshot.hasData ||
+                              !serviceSnapshot.data!.exists) {
+                            return const Text("Service data not found");
+                          }
+
+                          final serviceData = serviceSnapshot.data!.data()
+                              as Map<String, dynamic>;
+                          final reviews =
+                              serviceData['finalreviews'] as List<dynamic>? ??
+                                  [];
+
+                          // Find the review for this specific job
+                          Map<String, dynamic>? jobReview;
+                          for (var review in reviews) {
+                            if (review['jobId'] == widget.currentOfferId) {
+                              jobReview = review;
+                              break;
+                            }
+                          }
+
+                          if (jobReview == null) {
+                            return const Text("No rating details found");
+                          }
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Valoración:",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const Text(
+                                "La oferta está valorada..",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  RatingBar.builder(
+                                    initialRating:
+                                        jobReview['totalRate']?.toDouble() ?? 0,
+                                    minRating: 0,
+                                    maxRating: 5,
+                                    ignoreGestures:
+                                        true, // Make it non-interactive
+                                    itemSize: 30,
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    onRatingUpdate: (rating) {},
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    "${jobReview['totalRate']?.toStringAsFixed(1) ?? '0.0'}/5",
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                              if (jobReview['clientThought'] != null &&
+                                  jobReview['clientThought']
+                                      .toString()
+                                      .isNotEmpty)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Comentario:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      jobReview['clientThought'],
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                            ],
+                          );
+                        },
                       );
                     } else {
                       // If the offer is not rated, show the rating bar.
@@ -136,7 +228,6 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                               color: Colors.amber,
                             ),
                             onRatingUpdate: (newRating) async {
-                              // Update the Firestore document to mark the offer as rated.
                               setState(() {
                                 rating = newRating;
                               });
@@ -212,8 +303,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                               descriptionController.text,
                                           "totalRate":
                                               double.parse(formattedRating),
-                                          "photo": widget
-                                              .clientImage, // Optional: Add client image if needed
+                                          "photo": widget.clientImage,
                                         };
 
                                         // Append the new review to the existing list
@@ -225,8 +315,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                           "ratingCount": newRatingCount,
                                           "totalReviews":
                                               double.parse(formattedRating),
-                                          "finalreviews":
-                                              finalReviews, // Update the finalreviews array
+                                          "finalreviews": finalReviews,
                                           "numberOfJobs":
                                               FieldValue.increment(1)
                                         });
@@ -236,8 +325,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                             .update({
                                           "totalRate": newTotalRate,
                                           "ratingCount": newRatingCount,
-                                          "finalreviews":
-                                              finalReviews, // Update the finalreviews array
+                                          "finalreviews": finalReviews,
                                           "totalReviews":
                                               double.parse(formattedRating),
                                         });
@@ -248,8 +336,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                           "isRated": true,
                                           "totalRate": newTotalRate,
                                           "ratingCount": newRatingCount,
-                                          "finalreviews":
-                                              finalReviews, // Update the finalreviews array
+                                          "finalreviews": finalReviews,
                                           "totalReviews":
                                               double.parse(formattedRating),
                                         });
@@ -258,7 +345,6 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                                         });
                                         showMessageBar(
                                             "Valoración enviada", context);
-                                        // Navigate to the main dashboard or show a success message
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -282,6 +368,15 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  void showMessageBar(String message, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
       ),
     );
   }
