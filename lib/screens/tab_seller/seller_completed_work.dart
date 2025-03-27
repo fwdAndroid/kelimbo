@@ -17,7 +17,7 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
   @override
   void initState() {
     super.initState();
-    // Fetch declined offers when the widget is initialized
+    // Fetch completed offers when the widget is initialized
     Provider.of<SellerReceivedProvider>(context, listen: false)
         .fetchCompleteOffers();
   }
@@ -44,9 +44,9 @@ class _SellerCompletedWorkState extends State<SellerCompletedWork> {
           }
 
           return ListView.builder(
-            itemCount: provider.declinedOffers.length,
+            itemCount: provider.completedOffers.length,
             itemBuilder: (context, index) {
-              final data = provider.declinedOffers[index];
+              final data = provider.completedOffers[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(

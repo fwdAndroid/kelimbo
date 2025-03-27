@@ -87,7 +87,7 @@ class SellerReceivedProvider with ChangeNotifier {
         .where("status", isEqualTo: "complete")
         .get();
 
-    _declinedOffers =
+    _completedOffers =
         snapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
     notifyListeners();
   }
