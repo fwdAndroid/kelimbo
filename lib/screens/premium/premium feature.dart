@@ -53,23 +53,20 @@ class _PremiumFeatureState extends State<PremiumFeature> {
   // Share message on WhatsApp to unlock PRO
   Future<void> shareOnWhatsApp() async {
     String message =
-        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí (enlace a la página web)";
+        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí: https://play.google.com/store";
+
     String whatsappUrl = "whatsapp://send?text=${Uri.encodeComponent(message)}";
 
     if (await canLaunch(whatsappUrl)) {
       await launch(whatsappUrl);
-      // After sharing on WhatsApp, update share count
       updateShareCount();
     } else {
-      // Redirect to Play Store or App Store if WhatsApp is not installed
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(
-                "WhatsApp no está instalado en este dispositivo. Redireccionamiento a la instalación.")),
+            content: Text("WhatsApp no está instalado en este dispositivo.")),
       );
 
-      String playStoreUrl =
-          "https://play.google.com/store/apps/details?id=com.whatsapp";
+      String playStoreUrl = "https://play.google.com/store";
       if (await canLaunch(playStoreUrl)) {
         await launch(playStoreUrl);
       }
@@ -156,7 +153,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
               SizedBox(height: 10),
               buildSubscriptionBenefits(),
               ElevatedButton(
-                onPressed: subscription == "basic" ? showUpgradeMessage : null,
+                onPressed: showUpgradeMessage,
                 child: Text("Usar la función Premium"),
               ),
               if (shareCount >= 20)
