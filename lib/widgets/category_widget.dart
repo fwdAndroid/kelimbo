@@ -2,13 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/categories/bellaza.dart';
-import 'package:kelimbo/screens/categories/entermiato.dart';
-import 'package:kelimbo/screens/categories/hogar.dart';
-import 'package:kelimbo/screens/categories/mascotas.dart';
-import 'package:kelimbo/screens/categories/photography.dart';
-import 'package:kelimbo/screens/categories/salud.dart';
-import 'package:kelimbo/screens/categories/turismo.dart';
-import 'package:kelimbo/screens/categories/vehiclescat.dart';
 
 class CategoryWidget extends StatefulWidget {
   const CategoryWidget({super.key});
@@ -31,21 +24,61 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             _buildCategory(
-                context, "Hogar", "assets/home_category.png", HogarClass()),
+                context,
+                "Hogar",
+                "assets/home_category.png",
+                CategoryPage(
+                  categoryName: 'Hogar',
+                )),
             _buildCategory(
-                context, "Salud", "assets/health_category.png", Salud()),
+                context,
+                "Salud",
+                "assets/health_category.png",
+                CategoryPage(
+                  categoryName: 'Salud',
+                )),
             _buildCategory(
-                context, "Turismo", "assets/turism_category.png", Turismo()),
-            _buildCategory(context, "Entrenamiento",
-                "assets/trainning_category.png", Entermiato()),
+                context,
+                "Turismo",
+                "assets/turism_category.png",
+                CategoryPage(
+                  categoryName: 'Turismo',
+                )),
             _buildCategory(
-                context, "Mascotas", "assets/pets_category.png", Mascotas()),
-            _buildCategory(context, "Vehículos", "assets/vehicle_category.png",
-                Vehiclescat()),
-            _buildCategory(context, "Fotografía y vídeo",
-                "assets/photography_category.png", Photography()),
+                context,
+                "Entrenamiento",
+                "assets/trainning_category.png",
+                CategoryPage(
+                  categoryName: 'Entrenamiento',
+                )),
             _buildCategory(
-                context, "Belleza", "assets/beauty_category.png", Bellaza()),
+                context,
+                "Mascotas",
+                "assets/pets_category.png",
+                CategoryPage(
+                  categoryName: 'Mascotas',
+                )),
+            _buildCategory(
+                context,
+                "Vehículos",
+                "assets/vehicle_category.png",
+                CategoryPage(
+                  categoryName: 'Vehículos',
+                )),
+            _buildCategory(
+                context,
+                "Fotografía y vídeo",
+                "assets/photography_category.png",
+                CategoryPage(
+                  categoryName: 'Fotografía y video',
+                )),
+            _buildCategory(
+                context,
+                "Belleza",
+                "assets/beauty_category.png",
+                CategoryPage(
+                  categoryName: 'Belleza',
+                )),
           ],
         ),
       ),
