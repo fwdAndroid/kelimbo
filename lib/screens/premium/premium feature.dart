@@ -53,7 +53,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
   // Share message on WhatsApp to unlock PRO
   Future<void> shareOnWhatsApp() async {
     String message =
-        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí: https://play.google.com/store";
+        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí: https://play.google.com/store  https://www.apple.com/app-store/";
 
     String whatsappUrl = "whatsapp://send?text=${Uri.encodeComponent(message)}";
 
