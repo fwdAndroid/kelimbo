@@ -13,6 +13,7 @@ import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
 import 'package:kelimbo/widgets/logout_widget.dart';
+import 'package:kelimbo/widgets/save_button.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -272,29 +273,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: iconColor,
                 ),
               ),
-              ListTile(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return LogoutWidget();
-                    },
-                  );
-                },
-                title: Text(
-                  "Salir ",
-                  style: GoogleFonts.workSans(
-                      fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  color: colorBlack,
-                ),
-              ),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8),
-                child: Divider(
-                  color: iconColor,
+                padding: const EdgeInsets.all(8.0),
+                child: SaveButton(
+                  title: "Fin de Sesión",
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return LogoutWidget();
+                      },
+                    );
+                  },
                 ),
               ),
             ],
