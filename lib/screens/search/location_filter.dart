@@ -21,13 +21,24 @@ class _LocationFilterState extends State<LocationFilter> {
   String? selectedMunicipality;
   TextEditingController _searchController = TextEditingController();
   bool isLoading = true;
+
+  // Filter options and state
+  final List<String> filterOptions = [
+    "Precio más alto",
+    "Precio más bajo",
+    "Calificación más alta",
+    "Calificación más baja",
+    "Más trabajo realizado",
+    "Menos trabajo realizado",
+  ];
+  List<String> _appliedFilters = [];
+
   @override
   void initState() {
     super.initState();
     fetchCities();
-
     _searchController.addListener(() {
-      String text = _searchController.text.trim(); // Trim spaces
+      String text = _searchController.text.trim();
       if (_searchController.text != text) {
         _searchController.value = TextEditingValue(
           text: text,
@@ -60,19 +71,68 @@ class _LocationFilterState extends State<LocationFilter> {
     }
   }
 
-  Stream<QuerySnapshot> _getFilteredQuery() {
-    final servicesCollection =
-        FirebaseFirestore.instance.collection("services");
+  void _showFilterMenu(BuildContext context) async {
+    final selectedFilter = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Ordenar por:',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Divider(),
+            ...filterOptions.map((filter) {
+              return ListTile(
+                title: Text(filter),
+                onTap: () => Navigator.pop(context, filter),
+              );
+            }).toList(),
+          ],
+        );
+      },
+    );
 
-    if (selectedMunicipality == null || selectedMunicipality!.trim().isEmpty) {
-      return servicesCollection.snapshots();
+    if (selectedFilter != null) {
+      setState(() {
+        _appliedFilters = [selectedFilter];
+      });
+    }
+  }
+
+  Query _buildQuery() {
+    Query query = FirebaseFirestore.instance.collection("services");
+
+    // Apply location filter first if selected
+    if (selectedMunicipality != null &&
+        selectedMunicipality!.trim().isNotEmpty) {
+      query =
+          query.where('location', arrayContains: selectedMunicipality!.trim());
     }
 
-    return servicesCollection
-        .where('location',
-            arrayContains:
-                selectedMunicipality!.trim()) // ✅ Filter by arrayContains
-        .snapshots();
+    // Then apply sorting filters
+    if (_appliedFilters.contains("Precio más alto")) {
+      query = query.orderBy("price", descending: true);
+    } else if (_appliedFilters.contains("Precio más bajo")) {
+      query = query.orderBy("price");
+    } else if (_appliedFilters.contains("Calificación más alta")) {
+      query = query.orderBy("totalReviews", descending: true);
+    } else if (_appliedFilters.contains("Calificación más baja")) {
+      query = query.orderBy("totalReviews");
+    } else if (_appliedFilters.contains("Más trabajo realizado")) {
+      query = query.orderBy("numberOfJobs", descending: true);
+    } else if (_appliedFilters.contains("Menos trabajo realizado")) {
+      query = query.orderBy("numberOfJobs");
+    }
+
+    return query;
   }
 
   @override
@@ -80,26 +140,53 @@ class _LocationFilterState extends State<LocationFilter> {
     return Scaffold(
       appBar: AppBar(
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "¿Qué necesitas?",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          preferredSize: Size.fromHeight(100.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "¿Qué necesitas?",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value.toLowerCase();
+                    });
+                  },
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.toLowerCase();
-                });
-              },
-            ),
+              if (_appliedFilters.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    children: [
+                      Chip(
+                        label: Text(_appliedFilters.first),
+                        onDeleted: () {
+                          setState(() {
+                            _appliedFilters.clear();
+                          });
+                        },
+                      ),
+                      Spacer(),
+                    ],
+                  ),
+                ),
+            ],
           ),
         ),
         title: const Text("Filtrar por ubicación"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () => _showFilterMenu(context),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -122,19 +209,20 @@ class _LocationFilterState extends State<LocationFilter> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                   ),
+                  hintText: "Seleccionar ubicación",
                 ),
               ),
               onChanged: (value) {
                 setState(() {
-                  selectedMunicipality = value.toString();
+                  selectedMunicipality = value;
                 });
               },
-              selectedItem: "Seleccionar ubicación",
+              selectedItem: selectedMunicipality,
             ),
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _getFilteredQuery(),
+              stream: _buildQuery().snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -159,6 +247,7 @@ class _LocationFilterState extends State<LocationFilter> {
                     ],
                   );
                 }
+
                 final List<DocumentSnapshot> filteredDocuments =
                     snapshot.data!.docs.where((doc) {
                   final Map<String, dynamic> data =
@@ -167,8 +256,9 @@ class _LocationFilterState extends State<LocationFilter> {
                       data['userName']?.toString().toLowerCase() ?? '';
                   final String serviceName =
                       data['title']?.toString().toLowerCase() ?? '';
-                  final String location =
-                      data['location']?.toString().toLowerCase() ?? '';
+                  final String location = data['location'] is List
+                      ? (data['location'] as List).join(", ").toLowerCase()
+                      : data['location']?.toString().toLowerCase() ?? '';
                   final String price =
                       data['price']?.toString().toLowerCase() ?? '';
 
@@ -192,10 +282,8 @@ class _LocationFilterState extends State<LocationFilter> {
                   itemBuilder: (context, index) {
                     final Map<String, dynamic> data =
                         filteredDocuments[index].data() as Map<String, dynamic>;
-                    final DocumentSnapshot document =
-                        snapshot.data!.docs[index];
+                    final DocumentSnapshot document = filteredDocuments[index];
                     final List<dynamic> favorites = data['favorite'] ?? [];
-
                     bool isFavorite = favorites.contains(currentUserId);
 
                     return GestureDetector(
@@ -225,6 +313,8 @@ class _LocationFilterState extends State<LocationFilter> {
                         );
                       },
                       child: Card(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         child: Column(
                           children: [
                             ListTile(
@@ -280,57 +370,64 @@ class _LocationFilterState extends State<LocationFilter> {
                                 ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "€${data['price'].toString()}",
-                                      style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      data['priceType'] ?? "No price type",
-                                      style: GoogleFonts.inter(
-                                        color: const Color(0xff9C9EA2),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 16),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.star,
-                                            color: Colors.yellow),
-                                        Text(
-                                          data['ratingCount']?.toString() ??
-                                              "0",
-                                          style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "€${data['price'].toString()}",
+                                        style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
                                         ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${data['totalReviews']?.toString() ?? "0"} Reviews",
-                                      style: GoogleFonts.inter(
-                                        color: const Color(0xff9C9EA2),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      Text(
+                                        data['priceType'] ?? "No price type",
+                                        style: GoogleFonts.inter(
+                                          color: const Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Image.asset("assets/line.png",
+                                      height: 40, width: 52),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star,
+                                              color: Colors.yellow),
+                                          Text(
+                                            data['totalReviews']?.toString() ??
+                                                "0",
+                                            style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "${data['ratingCount']?.toString() ?? "0"} Reviews",
+                                        style: GoogleFonts.inter(
+                                          color: const Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
+                            SizedBox(height: 16),
                           ],
                         ),
                       ),
