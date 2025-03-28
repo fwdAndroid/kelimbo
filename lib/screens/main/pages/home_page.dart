@@ -22,6 +22,19 @@ class _HomePageState extends State<HomePage> {
   String _searchText = '';
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
+  String removeDiacritics(String str) {
+    var withDia =
+        'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+    var withoutDia =
+        'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+
+    for (int i = 0; i < withDia.length; i++) {
+      str = str.replaceAll(withDia[i], withoutDia[i]);
+    }
+
+    return str;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -196,12 +209,18 @@ class _HomePageState extends State<HomePage> {
                 final docs = snapshot.data!.docs;
                 final filteredDocs = docs.where((doc) {
                   final data = doc.data() as Map<String, dynamic>;
-                  final title = data['title']?.toString().toLowerCase() ?? '';
-                  final category =
-                      data['description']?.toString().toLowerCase() ?? '';
+                  final title = removeDiacritics(
+                      data['title']?.toString().toLowerCase() ?? '');
+                  final description = removeDiacritics(
+                      data['description']?.toString().toLowerCase() ?? '');
+                  final category = removeDiacritics(
+                      data['category']?.toString().toLowerCase() ?? '');
+                  final searchNormalized =
+                      removeDiacritics(_searchText.toLowerCase());
 
-                  return title.contains(_searchText) ||
-                      category.contains(_searchText);
+                  return title.contains(searchNormalized) ||
+                      description.contains(searchNormalized) ||
+                      category.contains(searchNormalized);
                 }).toList();
 
                 if (filteredDocs.isEmpty) {

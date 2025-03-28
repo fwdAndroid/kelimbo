@@ -19,6 +19,20 @@ class Bellaza extends StatefulWidget {
 class _BellazaState extends State<Bellaza> {
   final String? currentUserUid = FirebaseAuth.instance.currentUser?.uid;
   String searchQuery = "";
+
+  String removeDiacritics(String str) {
+    var withDia =
+        'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+    var withoutDia =
+        'AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz';
+
+    for (int i = 0; i < withDia.length; i++) {
+      str = str.replaceAll(withDia[i], withoutDia[i]);
+    }
+
+    return str;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,13 +116,18 @@ class _BellazaState extends State<Bellaza> {
                 snapshot.data!.docs.where((doc) {
               final Map<String, dynamic> data =
                   doc.data() as Map<String, dynamic>;
-              final String userName =
-                  data['description']?.toString().toLowerCase() ?? '';
-              final String serviceName =
-                  data['title']?.toString().toLowerCase() ?? '';
+              final title = removeDiacritics(
+                  data['title']?.toString().toLowerCase() ?? '');
+              final description = removeDiacritics(
+                  data['description']?.toString().toLowerCase() ?? '');
+              final category = removeDiacritics(
+                  data['category']?.toString().toLowerCase() ?? '');
+              final searchNormalized =
+                  removeDiacritics(searchQuery.toLowerCase());
 
-              return userName.contains(searchQuery) ||
-                  serviceName.contains(searchQuery);
+              return title.contains(searchNormalized) ||
+                  description.contains(searchNormalized) ||
+                  category.contains(searchNormalized);
             }).toList();
 
             if (filteredDocuments.isEmpty) {
