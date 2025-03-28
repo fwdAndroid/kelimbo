@@ -55,6 +55,11 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CompleteCustomOfferDetail(
+                        providerName: data['providerName'],
+                        serviceProviderId: data['serviceProviderId'],
+                        providerImage: data['providerImage'],
+                        serviceId: data['serviceId'],
+                        providerEmail: data['providerEmail'],
                         status: data['status'],
                         uuid: data['uuid'],
                         description: data['work'],
@@ -113,6 +118,31 @@ class _CustomOfferCompletedState extends State<CustomOfferCompleted> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(data['work'] ?? 'No description available'),
                       ),
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CompleteCustomOfferDetail(
+                                      providerName: data['providerName'],
+                                      serviceProviderId:
+                                          data['serviceProviderId'],
+                                      providerImage: data['providerImage'],
+                                      serviceId: data['serviceId'],
+                                      providerEmail: data['providerEmail'],
+                                      status: data['status'],
+                                      uuid: data['uuid'],
+                                      description: data['work'],
+                                      currency: data['currencyType'],
+                                      price: data['price'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Text("Ver detalle")))
                     ],
                   ),
                 ),
