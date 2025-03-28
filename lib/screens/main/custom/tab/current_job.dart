@@ -122,7 +122,43 @@ class _CurrentJobState extends State<CurrentJob> {
                           padding: const EdgeInsets.all(8.0),
                           child:
                               Text(data['work'] ?? 'No description available'),
-                        )
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AcceptedJobsDetail(
+                                        serviceId: data['serviceId'],
+                                        currency: data['currencyType'],
+                                        clientName: data['clientName'],
+                                        clientEmail: data['clientEmail'],
+                                        clientId: data['clientId'],
+                                        clientImage: data['clientImage'],
+                                        status: data['status'],
+                                        totalRating:
+                                            data['totalRating'].toString(),
+                                        providerEmail: data['providerEmail'],
+                                        providerImage: data['providerImage'],
+                                        providerName: data['providerName'],
+                                        priceprehr: data['pricePerHr']
+                                            .toString()
+                                            .toString(),
+                                        work: data['work'],
+                                        serviceDescription:
+                                            data['serviceDescription'],
+                                        price: data['price'].toString(),
+                                        serviceProviderId:
+                                            data['serviceProviderId'],
+                                        uuid: data['uuid'],
+                                        serviceTitle: data['serviceTitle'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text("Ver detalle")))
                       ],
                     ),
                   ));
