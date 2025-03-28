@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/main/custom/custom_offers.dart';
 import 'package:kelimbo/screens/premium/premium%20feature.dart';
+import 'package:kelimbo/screens/profile_pages/legal_document.dart';
 import 'package:kelimbo/screens/profile_pages/view_profile.dart';
 import 'package:kelimbo/screens/profile_pages/recent_works.dart';
 import 'package:kelimbo/screens/rating/rating_list_user.dart';
 import 'package:kelimbo/screens/services/my_services.dart';
 import 'package:kelimbo/screens/services/user_profile.dart';
 import 'package:kelimbo/utils/colors.dart';
-import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/delete_widgets.dart';
 import 'package:kelimbo/widgets/logout_widget.dart';
 import 'package:kelimbo/widgets/save_button.dart';
@@ -226,11 +226,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               ListTile(
                 onTap: () {
-                  showMessageBar(
-                      "La política de privacidad se muestra más adelante",
-                      context);
-                  // Navigator.push(context,
-                  //     MaterialPageRoute(builder: (builder) => CompletedJobs()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (builder) => LegalDocument()));
                 },
                 title: Text(
                   "Información legal",
