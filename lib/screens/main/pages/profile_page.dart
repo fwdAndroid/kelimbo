@@ -273,7 +273,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SaveButton(
-                  title: "Fin de Sesión",
+                  title: "Cerrar Sesión",
                   onTap: () {
                     showDialog(
                       context: context,

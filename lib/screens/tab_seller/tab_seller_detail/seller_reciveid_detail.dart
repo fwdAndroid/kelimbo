@@ -241,7 +241,7 @@ class _SellerReceivedDetailState extends State<SellerReceivedDetail> {
                     const SizedBox(height: 10),
                     Center(
                       child: SaveButton(
-                        title: "Enviar Presupuesto",
+                        title: "Enviar presupuestos",
                         onTap: () async {
                           FocusScope.of(context).unfocus(); // Hide keyboard
 
