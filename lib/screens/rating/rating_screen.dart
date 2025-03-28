@@ -103,7 +103,7 @@ class _RatingScreenState extends State<RatingScreen> {
             ),
           ),
           SaveButton(
-            title: "Enviar Valoración ",
+            title: "Enviar valoración ",
             onTap: () async {
               try {
                 // Reference to the specific service document
@@ -212,7 +212,7 @@ class _RatingScreenState extends State<RatingScreen> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (builder) => MainDashboard()));
               },
-              child: Text("Más Tarde")),
+              child: Text("Más tarde")),
         ],
       ),
     );

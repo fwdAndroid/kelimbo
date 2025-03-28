@@ -53,6 +53,7 @@ class _CustomOfferCompleteState extends State<CustomOfferComplete> {
                         context,
                         MaterialPageRoute(
                             builder: (builder) => CompleteProjectDetail(
+                                  providerImage: data['providerImage'] ?? "",
                                   clientImage: data['clientImage'] ?? "",
                                   clientName: data['clientName'] ?? "",
                                   currentOfferId: data['uuid'] ?? "",
@@ -111,6 +112,39 @@ class _CustomOfferCompleteState extends State<CustomOfferComplete> {
                           padding: const EdgeInsets.all(8.0),
                           child:
                               Text(data['work'] ?? 'No description available'),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CompleteProjectDetail(
+                                              providerImage:
+                                                  data['providerImage'] ?? "",
+                                              clientImage:
+                                                  data['clientImage'] ?? "",
+                                              clientName:
+                                                  data['clientName'] ?? "",
+                                              currentOfferId:
+                                                  data['uuid'] ?? "",
+                                              serviceId:
+                                                  data['serviceId'] ?? "",
+                                              description:
+                                                  data['serviceDescription'] ??
+                                                      "",
+                                              price: data['price'].toString(),
+                                              providerName:
+                                                  data['providerName'] ?? "",
+                                              currency: data['currencyType'],
+                                              providerId:
+                                                  data['serviceProviderId'] ??
+                                                      "W",
+                                            )));
+                              },
+                              child: Text("Ver detalles")),
                         )
                       ],
                     ),

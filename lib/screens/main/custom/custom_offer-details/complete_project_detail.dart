@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kelimbo/screens/main/other/offers_profile.dart';
+import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/utils/colors.dart';
-import 'package:kelimbo/utils/image_utils.dart';
 import 'package:kelimbo/widgets/currecysymbal.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'dart:math';
@@ -14,6 +15,7 @@ class CompleteProjectDetail extends StatefulWidget {
   final String price;
   final String providerName;
   final String providerId;
+  final String providerImage;
   final String description;
   final String currency;
   final String currentOfferId;
@@ -24,6 +26,7 @@ class CompleteProjectDetail extends StatefulWidget {
     Key? key,
     required this.serviceId,
     required this.description,
+    required this.providerImage,
     required this.price,
     required this.providerName,
     required this.currency,
@@ -57,6 +60,88 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OffersProfile(
+                            serviceId: widget.serviceId,
+                            serviceProviderId: widget.providerId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundImage: NetworkImage(widget.providerImage),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      widget.providerName,
+                      style: GoogleFonts.inter(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection("users")
+                      .where("uid", isEqualTo: widget.providerId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return const SizedBox();
+                    }
+                    var clientData = snapshot.data!.docs.first.data()
+                        as Map<String, dynamic>;
+
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RatingList(
+                                  serviceId: widget.serviceId,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.star, color: Colors.yellow),
+                              Text(
+                                clientData['totalReviews'].toString(),
+                                style: GoogleFonts.inter(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 19,
+                                  color: const Color(0xff9C9EA2),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Número de trabajos: "),
+                            Text(clientData['numberofjobs'].toString()),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
                 const Text(
                   "Descripción:",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -257,7 +342,7 @@ class _CompleteProjectDetailState extends State<CompleteProjectDetail> {
                           isLoading
                               ? Center(child: CircularProgressIndicator())
                               : SaveButton(
-                                  title: "Enviar Valoración",
+                                  title: "Enviar valoración",
                                   onTap: () async {
                                     setState(() {
                                       isLoading = true;
