@@ -103,6 +103,30 @@ class _SellerOfferSendToBuyerState extends State<SellerOfferSendToBuyer> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(data['work'] ?? 'No description available'),
                       ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SellerSendDetail(
+                                    clientImage: data['clientImage'],
+                                    clientName: data['clientName'],
+                                    clientId: data['clientId'],
+                                    serviceId: data['serviceId'],
+                                    status: data['status'],
+                                    clientEmail: data['clientEmail'],
+                                    uuid: data['uuid'],
+                                    description: data['work'],
+                                    currency: data['currencyType'],
+                                    price: data['price'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text("Ver detalle")),
+                      )
                     ],
                   ),
                 ),
