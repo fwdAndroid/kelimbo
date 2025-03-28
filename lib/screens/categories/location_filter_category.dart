@@ -22,11 +22,21 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
   TextEditingController _searchController = TextEditingController();
   bool isLoading = true;
 
+  // Filter options and state
+  final List<String> filterOptions = [
+    "Precio más alto",
+    "Precio más bajo",
+    "Calificación más alta",
+    "Calificación más baja",
+    "Más trabajo realizado",
+    "Menos trabajo realizado",
+  ];
+  List<String> _appliedFilters = [];
+
   @override
   void initState() {
     super.initState();
     fetchCities();
-
     _searchController.addListener(() {
       String text = _searchController.text.trim();
       if (_searchController.text != text) {
@@ -61,47 +71,124 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
     }
   }
 
-  Stream<QuerySnapshot> _getFilteredQuery() {
-    final servicesCollection =
-        FirebaseFirestore.instance.collection("services");
+  void _showFilterMenu(BuildContext context) async {
+    final selectedFilter = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Ordenar por:',
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Divider(),
+            ...filterOptions.map((filter) {
+              return ListTile(
+                title: Text(filter),
+                onTap: () => Navigator.pop(context, filter),
+              );
+            }).toList(),
+          ],
+        );
+      },
+    );
 
-    Query query = servicesCollection.where('category',
-        isEqualTo: widget.locationCategory);
+    if (selectedFilter != null) {
+      setState(() {
+        _appliedFilters = [selectedFilter];
+      });
+    }
+  }
 
+  Query _buildQuery() {
+    // Start with base query filtered by category
+    Query query = FirebaseFirestore.instance
+        .collection("services")
+        .where('category', isEqualTo: widget.locationCategory);
+
+    // Apply location filter if selected
     if (selectedMunicipality != null &&
         selectedMunicipality!.trim().isNotEmpty) {
       query =
           query.where('location', arrayContains: selectedMunicipality!.trim());
     }
 
-    return query.snapshots();
+    // Apply sorting filters
+    if (_appliedFilters.contains("Precio más alto")) {
+      query = query.orderBy("price", descending: true);
+    } else if (_appliedFilters.contains("Precio más bajo")) {
+      query = query.orderBy("price");
+    } else if (_appliedFilters.contains("Calificación más alta")) {
+      query = query.orderBy("totalReviews", descending: true);
+    } else if (_appliedFilters.contains("Calificación más baja")) {
+      query = query.orderBy("totalReviews");
+    } else if (_appliedFilters.contains("Más trabajo realizado")) {
+      query = query.orderBy("numberOfJobs", descending: true);
+    } else if (_appliedFilters.contains("Menos trabajo realizado")) {
+      query = query.orderBy("numberOfJobs");
+    }
+
+    return query;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.filter_list),
+            onPressed: () => _showFilterMenu(context),
+          ),
+        ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: "¿Qué necesitas?",
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+          preferredSize: Size.fromHeight(100.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "¿Qué necesitas?",
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value.toLowerCase();
+                    });
+                  },
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value.toLowerCase();
-                });
-              },
-            ),
+              if (_appliedFilters.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    children: [
+                      Chip(
+                        label: Text(_appliedFilters.first),
+                        onDeleted: () {
+                          setState(() {
+                            _appliedFilters.clear();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+            ],
           ),
         ),
-        title: const Text("Filtrar por ubicación"),
+        title: Text("${widget.locationCategory} - Filtrar por ubicación"),
       ),
       body: Column(
         children: [
@@ -137,7 +224,7 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _getFilteredQuery(),
+              stream: _buildQuery().snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -154,7 +241,7 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                       ),
                       Center(
                         child: Text(
-                          "No se han encontrado servicios en esta ubicación para la categoría ${widget.locationCategory}.",
+                          "No se han encontrado servicios en esta ubicación para ${widget.locationCategory}.",
                           style: TextStyle(fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
@@ -171,8 +258,9 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                       data['userName']?.toString().toLowerCase() ?? '';
                   final String serviceName =
                       data['title']?.toString().toLowerCase() ?? '';
-                  final String location =
-                      data['location']?.toString().toLowerCase() ?? '';
+                  final String location = data['location'] is List
+                      ? (data['location'] as List).join(", ").toLowerCase()
+                      : data['location']?.toString().toLowerCase() ?? '';
                   final String price =
                       data['price']?.toString().toLowerCase() ?? '';
 
@@ -198,7 +286,6 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                         filteredDocuments[index].data() as Map<String, dynamic>;
                     final DocumentSnapshot document = filteredDocuments[index];
                     final List<dynamic> favorites = data['favorite'] ?? [];
-
                     bool isFavorite = favorites.contains(currentUserId);
 
                     return GestureDetector(
@@ -228,6 +315,8 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                         );
                       },
                       child: Card(
+                        margin:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         child: Column(
                           children: [
                             ListTile(
@@ -283,57 +372,64 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                                 ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "€${data['price'].toString()}",
-                                      style: GoogleFonts.inter(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Text(
-                                      data['priceType'] ?? "No price type",
-                                      style: GoogleFonts.inter(
-                                        color: const Color(0xff9C9EA2),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 16),
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const Icon(Icons.star,
-                                            color: Colors.yellow),
-                                        Text(
-                                          data['ratingCount']?.toString() ??
-                                              "0",
-                                          style: GoogleFonts.inter(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        "€${data['price'].toString()}",
+                                        style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
                                         ),
-                                      ],
-                                    ),
-                                    Text(
-                                      "${data['totalReviews']?.toString() ?? "0"} Reviews",
-                                      style: GoogleFonts.inter(
-                                        color: const Color(0xff9C9EA2),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 19,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                      Text(
+                                        data['priceType'] ?? "No price type",
+                                        style: GoogleFonts.inter(
+                                          color: const Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Image.asset("assets/line.png",
+                                      height: 40, width: 52),
+                                  Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star,
+                                              color: Colors.yellow),
+                                          Text(
+                                            data['totalReviews']?.toString() ??
+                                                "0",
+                                            style: GoogleFonts.inter(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        "${data['ratingCount']?.toString() ?? "0"} Reviews",
+                                        style: GoogleFonts.inter(
+                                          color: const Color(0xff9C9EA2),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 19,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
+                            SizedBox(height: 16),
                           ],
                         ),
                       ),
