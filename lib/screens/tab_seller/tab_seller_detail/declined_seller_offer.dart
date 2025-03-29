@@ -6,7 +6,7 @@ import 'package:kelimbo/screens/main/pages/favourite_page.dart';
 import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/utils/colors.dart';
 
-class CustomDeclinedOfferDetail extends StatefulWidget {
+class SellerDeclinedOfferDetail extends StatefulWidget {
   String uuid;
   String description;
   int price;
@@ -15,11 +15,11 @@ class CustomDeclinedOfferDetail extends StatefulWidget {
   String status;
   String clientImage;
   String clientName;
-  String serviceProviderId;
+  String clientId;
   String providerImage;
   String providerName;
   String serviceId;
-  CustomDeclinedOfferDetail(
+  SellerDeclinedOfferDetail(
       {super.key,
       required this.status,
       required this.uuid,
@@ -30,16 +30,16 @@ class CustomDeclinedOfferDetail extends StatefulWidget {
       required this.observation,
       required this.clientImage,
       required this.clientName,
-      required this.serviceProviderId,
+      required this.clientId,
       required this.serviceId,
       required this.price});
 
   @override
-  State<CustomDeclinedOfferDetail> createState() =>
-      _CustomDeclinedOfferDetailState();
+  State<SellerDeclinedOfferDetail> createState() =>
+      _SellerDeclinedOfferDetailState();
 }
 
-class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
+class _SellerDeclinedOfferDetailState extends State<SellerDeclinedOfferDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,12 +55,12 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
                       MaterialPageRoute(
                           builder: (builder) => OffersProfile(
                               serviceId: widget.serviceId,
-                              serviceProviderId: widget.serviceProviderId)));
+                              serviceProviderId: widget.clientId)));
                 },
                 child: CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                    widget.providerImage,
+                    widget.clientImage,
                   ),
                 ),
               ),
@@ -69,7 +69,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  widget.providerName,
+                  widget.clientName,
                   style: GoogleFonts.inter(
                       fontWeight: FontWeight.bold, fontSize: 16),
                 ),
@@ -78,7 +78,7 @@ class _CustomDeclinedOfferDetailState extends State<CustomDeclinedOfferDetail> {
             StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("users")
-                    .where("uid", isEqualTo: widget.serviceProviderId)
+                    .where("uid", isEqualTo: widget.clientId)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kelimbo/screens/budget_screen/accepted_jobs_detail.dart';
 import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_delined_offer_detail.dart';
 import 'package:kelimbo/screens/main/other/offers_profile.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
@@ -54,7 +53,9 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => CustomDeclinedOfferDetail(
-                                clientId: data['clientId'],
+                                serviceProviderId: data['serviceProviderId'],
+                                providerImage: data['providerImage'],
+                                providerName: data['providerName'],
                                 clientImage: data['clientImage'],
                                 clientName: data['clientName'],
                                 serviceId: data['serviceId'],
@@ -112,7 +113,37 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                               data['work'] ?? 'No hay descripción disponible'),
-                        )
+                        ),
+                        Align(
+                            alignment: Alignment.bottomRight,
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustomDeclinedOfferDetail(
+                                                  serviceProviderId:
+                                                      data['serviceProviderId'],
+                                                  providerImage:
+                                                      data['providerImage'],
+                                                  providerName:
+                                                      data['providerName'],
+                                                  clientImage:
+                                                      data['clientImage'],
+                                                  clientName:
+                                                      data['clientName'],
+                                                  serviceId: data['serviceId'],
+                                                  status: data['status'],
+                                                  uuid: data['uuid'],
+                                                  description: data[
+                                                      'serviceDescription'],
+                                                  observation:
+                                                      data['observation'],
+                                                  currency: data['currency'],
+                                                  price: data['price'])));
+                                },
+                                child: Text("Ver detalle")))
                       ],
                     ),
                   ));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kelimbo/screens/main/pages/favourite_page.dart';
+import 'package:kelimbo/screens/tab_seller/tab_seller_detail/declined_seller_offer.dart';
 import 'package:kelimbo/seller_provider/seller_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,10 +53,12 @@ class _SellerOfferDeclinedState extends State<SellerOfferDeclined> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CustomDeclinedOfferDetail(
+                      builder: (context) => SellerDeclinedOfferDetail(
                         observation: data['observation'],
                         clientId: data['clientId'],
                         clientImage: data['clientImage'],
+                        providerImage: data['providerImage'],
+                        providerName: data['providerName'],
                         clientName: data['clientName'],
                         serviceId: data['serviceId'],
                         status: data['status'],
@@ -103,6 +106,33 @@ class _SellerOfferDeclinedState extends State<SellerOfferDeclined> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(data['work'] ?? 'No description available'),
                       ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      SellerDeclinedOfferDetail(
+                                    observation: data['observation'],
+                                    clientId: data['clientId'],
+                                    clientImage: data['clientImage'],
+                                    providerImage: data['providerImage'],
+                                    providerName: data['providerName'],
+                                    clientName: data['clientName'],
+                                    serviceId: data['serviceId'],
+                                    status: data['status'],
+                                    uuid: data['uuid'],
+                                    description: data['serviceDescription'],
+                                    currency: data['currency'],
+                                    price: data['price'],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text("Ver detalle")),
+                      )
                     ],
                   ),
                 ),
