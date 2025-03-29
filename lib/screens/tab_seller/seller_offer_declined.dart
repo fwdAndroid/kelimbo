@@ -4,7 +4,6 @@ import 'package:kelimbo/screens/tab_seller/tab_seller_detail/declined_seller_off
 import 'package:kelimbo/seller_provider/seller_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kelimbo/screens/main/custom/custom_offer-details/custom_delined_offer_detail.dart';
 import 'package:kelimbo/utils/colors.dart';
 
 class SellerOfferDeclined extends StatefulWidget {

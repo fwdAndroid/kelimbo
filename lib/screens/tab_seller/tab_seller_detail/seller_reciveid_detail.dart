@@ -6,7 +6,6 @@ import 'package:kelimbo/screens/main/chat/messages.dart';
 import 'package:kelimbo/screens/main/other/offers_profile.dart';
 import 'package:kelimbo/screens/rating/rating_list.dart';
 import 'package:kelimbo/seller_provider/seller_provider.dart';
-import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/save_button.dart';
 import 'package:provider/provider.dart';
 
