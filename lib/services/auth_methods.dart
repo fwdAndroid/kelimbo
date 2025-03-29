@@ -38,6 +38,7 @@ class AuthMethods {
         );
         //Add User to the database with modal
         UserModel userModel = UserModel(
+          membership: "basic",
           numberofjobs: 0,
           confrimPassword: pass,
           uid: cred.user!.uid,

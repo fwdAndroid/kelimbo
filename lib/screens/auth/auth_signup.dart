@@ -374,6 +374,7 @@ class _SignUpState extends State<SignUp> {
                                         "totalReviews": 0,
                                         "ratingCount": 0,
                                         "reviews": {},
+                                        "membership": "basic"
                                       });
 
                                       // Navigate to ProfilePage1 for new users

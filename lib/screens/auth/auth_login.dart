@@ -232,6 +232,7 @@ class _AuthLoginState extends State<AuthLogin> {
                               "totalReviews": 0,
                               "ratingCount": 0,
                               "reviews": {},
+                              "membership": "basic",
                             });
 
                             // Navigate to ProfilePage1 for new users

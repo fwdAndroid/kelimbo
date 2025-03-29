@@ -13,6 +13,7 @@ class UserModel {
   String phone;
   int ratingCount;
   int numberofjobs;
+  String membership;
   double totalRate; // Stores the total rate
   int totalReviews; // Stores the total number of reviews
   Map<String, int> reviews; // Stores reviews with corresponding ratings
@@ -21,6 +22,7 @@ class UserModel {
       {required this.uid,
       required this.email,
       required this.ratingCount,
+      required this.membership,
       required this.password,
       required this.confrimPassword,
       required this.image,
@@ -51,6 +53,7 @@ class UserModel {
         'finalreviews': finalreviews,
         'totalRate': totalRate,
         'ratingCount': ratingCount,
+        'membership': membership,
         'totalReviews': totalReviews, // Include in toJs
         'reviews': reviews, // Include reviews as a list of strings
       };
@@ -63,6 +66,7 @@ class UserModel {
       image: snapshot['image'],
       uid: snapshot['uid'],
       password: snapshot['password'],
+      membership: snapshot['membership'],
       fullName: snapshot['fullName'],
       email: snapshot['email'],
       confrimPassword: snapshot['confrimPassword'],
