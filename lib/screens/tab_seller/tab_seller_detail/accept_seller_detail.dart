@@ -64,164 +64,161 @@ class _AcceptSellerDetailState extends State<AcceptSellerDetail> {
                     return Center(child: Text('Loading...'));
                   }
                   var snap = snapshot.data;
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (builder) => OffersProfile(
-                                          serviceId: widget.serviceId,
-                                          serviceProviderId: widget.clientId)));
-                            },
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundImage: NetworkImage(
-                                widget.clientImage,
-                              ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => OffersProfile(
+                                        serviceId: widget.serviceId,
+                                        serviceProviderId: widget.clientId)));
+                          },
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundImage: NetworkImage(
+                              widget.clientImage,
                             ),
                           ),
                         ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              widget.clientName,
-                              style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                          ),
-                        ),
-                        StreamBuilder(
-                            stream: FirebaseFirestore.instance
-                                .collection("users")
-                                .where("uid", isEqualTo: widget.clientId)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              if (!snapshot.hasData) {
-                                return const Center(
-                                  child: Text(""),
-                                );
-                              }
-                              var userData = snapshot.data!.docs.first.data()
-                                  as Map<String, dynamic>;
-                              return Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (builder) => RatingList(
-                                                    serviceId: widget.serviceId,
-                                                  )));
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                        ),
-                                        Text(
-                                          userData['totalReviews'].toString(),
-                                          style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 19,
-                                              color: Color(0xff9C9EA2)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Número de trabajos: "),
-                                      Text(userData['numberofjobs'].toString()),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            }),
-                        Padding(
+                      ),
+                      Center(
+                        child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Servicio solicitado",
-                            style: TextStyle(
-                                color: colorBlack,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.description,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "Precio: ",
-                            style: TextStyle(
+                            widget.clientName,
+                            style: GoogleFonts.inter(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            widget.price.toString() +
-                                " " +
-                                getCurrencySymbol(widget.currency ?? 'Euro'),
-                            style: TextStyle(fontSize: 16),
-                          ),
+                      ),
+                      StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection("users")
+                              .where("uid", isEqualTo: widget.clientId)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const Center(
+                                child: Text(""),
+                              );
+                            }
+                            var userData = snapshot.data!.docs.first.data()
+                                as Map<String, dynamic>;
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) => RatingList(
+                                                  serviceId: widget.serviceId,
+                                                )));
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.star,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        userData['totalReviews'].toString(),
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 19,
+                                            color: Color(0xff9C9EA2)),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Número de trabajos: "),
+                                    Text(userData['numberofjobs'].toString()),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Servicio solicitado",
+                          style: TextStyle(
+                              color: colorBlack,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
                         ),
-                        Center(
-                          child: SaveButton(
-                              title: "Chatear ahora",
-                              onTap: () async {
-                                await FirebaseFirestore.instance
-                                    .collection("chats")
-                                    .doc(widget.serviceId)
-                                    .set({
-                                  "serviceDescription": widget.description,
-                                  "customerName": widget.clientName,
-                                  "customerId": widget.clientId,
-                                  "customerPhoto": widget.clientImage,
-                                  "customerEmail": widget.clientEmail,
-                                  "chatId": widget.serviceId,
-                                  "providerEmail": snap['email'],
-                                  "providerId":
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  "providerName": snap['fullName'],
-                                  "providerPhoto": snap['image'],
-                                });
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (builder) => Messages(
-                                              description: widget.description,
-                                              providerEmail: snap['email'],
-                                              customerEmail: widget.clientEmail,
-                                              chatId: widget.serviceId,
-                                              customerName: widget.clientName,
-                                              customerPhoto: widget.clientImage,
-                                              providerId: FirebaseAuth
-                                                  .instance.currentUser!.uid,
-                                              providerName: snap['fullName'],
-                                              customerId: widget.clientId,
-                                              providerPhoto: snap['image'],
-                                            )));
-                              }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.description,
+                          style: TextStyle(fontSize: 16),
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Precio: ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          widget.price.toString() +
+                              " " +
+                              getCurrencySymbol(widget.currency ?? 'Euro'),
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Center(
+                        child: SaveButton(
+                            title: "Chatear ahora",
+                            onTap: () async {
+                              await FirebaseFirestore.instance
+                                  .collection("chats")
+                                  .doc(widget.serviceId)
+                                  .set({
+                                "serviceDescription": widget.description,
+                                "customerName": widget.clientName,
+                                "customerId": widget.clientId,
+                                "customerPhoto": widget.clientImage,
+                                "customerEmail": widget.clientEmail,
+                                "chatId": widget.serviceId,
+                                "providerEmail": snap['email'],
+                                "providerId":
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                "providerName": snap['fullName'],
+                                "providerPhoto": snap['image'],
+                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => Messages(
+                                            description: widget.description,
+                                            providerEmail: snap['email'],
+                                            customerEmail: widget.clientEmail,
+                                            chatId: widget.serviceId,
+                                            customerName: widget.clientName,
+                                            customerPhoto: widget.clientImage,
+                                            providerId: FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            providerName: snap['fullName'],
+                                            customerId: widget.clientId,
+                                            providerPhoto: snap['image'],
+                                          )));
+                            }),
+                      ),
+                    ],
                   );
                 })));
   }

@@ -131,11 +131,9 @@ class _CompleteSellerDetailState extends State<CompleteSellerDetail> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Expanded(
-                child: Text(
-                  widget.description,
-                  style: TextStyle(fontSize: 16),
-                ),
+              child: Text(
+                widget.description,
+                style: TextStyle(fontSize: 16),
               ),
             ),
             Padding(

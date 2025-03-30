@@ -148,14 +148,11 @@ class _SellerSendDetailState extends State<SellerSendDetail> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Expanded(
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
                           widget.description,
                           style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
+                        )),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
