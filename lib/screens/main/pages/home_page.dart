@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/screens/search/location_filter.dart';
-import 'package:kelimbo/utils/colors.dart';
 import 'package:kelimbo/widgets/category_widget.dart';
 import 'package:kelimbo/widgets/popular_service_widget.dart';
 

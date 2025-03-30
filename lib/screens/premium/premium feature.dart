@@ -62,7 +62,9 @@ class _PremiumFeatureState extends State<PremiumFeature> {
     });
 
     String message =
-        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. Descárgatela aquí (enlace de descarga de la aplicación) o encuentra más información aquí: https://play.google.com/store  https://www.apple.com/app-store/";
+        "Estoy usando una nueva aplicación que te va a interesar, se llama Kelimbo. "
+        "Descárgatela aquí: https://play.google.com/store/apps/details?id=com.kelimbo.app "
+        "o encuentra más información aquí: https://kelimbo.com";
 
     String whatsappUrl = "whatsapp://send?text=${Uri.encodeComponent(message)}";
 
