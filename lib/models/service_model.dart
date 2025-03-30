@@ -23,9 +23,11 @@ class ServiceModel {
   int ratingCount;
   List location;
   var finalreviews;
+  DateTime dateTime;
 
   ServiceModel({
     required this.uid,
+    required this.dateTime,
     required this.title,
     required this.price,
     required this.ratingCount,
@@ -72,6 +74,7 @@ class ServiceModel {
         'location': location,
         'finalreviews': finalreviews,
         'numberOfJobs': numberOfJobs,
+        "dateTime": dateTime,
       };
 
   static ServiceModel fromSnap(DocumentSnapshot snaps) {
@@ -84,6 +87,7 @@ class ServiceModel {
       subcategory: snapshot['subcategory'] ?? '', // Handle potential null
       currency: snapshot['currency'],
       favorite: snapshot['favorite'],
+      dateTime: snapshot['dateTime'],
       numberOfJobs: snapshot['numberOfJobs'],
       title: snapshot['title'],
       ratingCount: snapshot['ratingCount'],

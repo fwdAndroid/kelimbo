@@ -55,6 +55,7 @@ class Database {
           currency: currency,
           priceType: priceType,
           numberOfJobs: 0,
+          dateTime: DateTime.now(),
           location: location,
           finalreviews: [],
           subcategory: subcategory,
