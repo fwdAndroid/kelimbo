@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                                   });
                                 },
                                 decoration: const InputDecoration(
-                                  hintText: '¿Como podemos ayudarte?',
+                                  hintText: '¿Cómo podemos ayudarte?',
                                   border: InputBorder.none,
                                 ),
                               ),
