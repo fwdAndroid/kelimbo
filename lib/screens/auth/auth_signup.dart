@@ -212,7 +212,11 @@ class _SignUpState extends State<SignUp> {
                                   builder: (builder) => AppIntroduction()));
                         },
                         child: Text(
-                            "TÉRMINOS Y CONDICIONES DE USO DE LA APLICACIÓN"),
+                          "He leído y acepto la política de privacidad y los términos y condiciones de uso de la aplicación",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
 
                       value: isChecked,

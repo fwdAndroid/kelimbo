@@ -23,7 +23,7 @@ class _ProfilePage1State extends State<ProfilePage1> {
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(
-          "Tú información",
+          "Tu información",
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
