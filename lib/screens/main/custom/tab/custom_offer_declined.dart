@@ -102,7 +102,7 @@ class _CustomOfferDeclinedState extends State<CustomOfferDeclined> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            "Descripciónes de puestos de trabajo",
+                            "Trabajo solicitado",
                             style: TextStyle(
                                 color: colorBlack,
                                 fontWeight: FontWeight.bold,

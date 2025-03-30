@@ -186,51 +186,54 @@ class _AcceptedJobsDetailState extends State<AcceptedJobsDetail> {
                   Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SaveButton(
-                      title: "Chatear ahora",
-                      onTap: () async {
-                        await FirebaseFirestore.instance
-                            .collection("chats")
-                            .doc(widget.serviceId)
-                            .set({
-                          "serviceDescription": widget.serviceDescription,
-                          "customerName": widget.providerName,
-                          "customerId": widget.serviceProviderId,
-                          "customerPhoto": widget.providerImage,
-                          "customerEmail": widget.providerEmail,
-                          "chatId": widget.serviceId,
-                          "providerEmail": userData['email'],
-                          "providerId": FirebaseAuth.instance.currentUser!.uid,
-                          "providerName": userData['fullName'],
-                          "providerPhoto": userData['image'],
-                        });
+                    child: Center(
+                      child: SaveButton(
+                        title: "Chatear ahora",
+                        onTap: () async {
+                          await FirebaseFirestore.instance
+                              .collection("chats")
+                              .doc(widget.serviceId)
+                              .set({
+                            "serviceDescription": widget.serviceDescription,
+                            "customerName": widget.providerName,
+                            "customerId": widget.serviceProviderId,
+                            "customerPhoto": widget.providerImage,
+                            "customerEmail": widget.providerEmail,
+                            "chatId": widget.serviceId,
+                            "providerEmail": userData['email'],
+                            "providerId":
+                                FirebaseAuth.instance.currentUser!.uid,
+                            "providerName": userData['fullName'],
+                            "providerPhoto": userData['image'],
+                          });
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Messages(
-                              description: widget.serviceDescription,
-                              providerEmail: userData['email'],
-                              customerEmail: widget.providerEmail,
-                              chatId: widget.serviceId,
-                              customerName: widget.providerName,
-                              customerPhoto: widget.providerImage,
-                              providerId:
-                                  FirebaseAuth.instance.currentUser!.uid,
-                              providerName: userData['fullName'],
-                              customerId: widget.serviceProviderId,
-                              providerPhoto: userData['image'],
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Messages(
+                                description: widget.serviceDescription,
+                                providerEmail: userData['email'],
+                                customerEmail: widget.providerEmail,
+                                chatId: widget.serviceId,
+                                customerName: widget.providerName,
+                                customerPhoto: widget.providerImage,
+                                providerId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                providerName: userData['fullName'],
+                                customerId: widget.serviceProviderId,
+                                providerPhoto: userData['image'],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: SaveButton(
-                          title: "Marcar como completa",
+                          title: "Marcar como completada",
                           onTap: () async {
                             await FirebaseFirestore.instance
                                 .collection("offers")
