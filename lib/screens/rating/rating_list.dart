@@ -12,7 +12,6 @@ class RatingList extends StatefulWidget {
 class _RatingListState extends State<RatingList> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print(widget.serviceId);
   }
@@ -24,7 +23,7 @@ class _RatingListState extends State<RatingList> {
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('services')
-            .doc(widget.serviceId) // Replace with your document ID
+            .doc(widget.serviceId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -35,13 +34,33 @@ class _RatingListState extends State<RatingList> {
             return Center(child: Text("No se han encontrado reseñas"));
           }
 
-          // Get the `finalreviews` list
           List<dynamic> finalReviews = snapshot.data!.get('finalreviews') ?? [];
+
+          if (finalReviews.isEmpty) {
+            return Center(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: 40,
+                  ),
+                ),
+                Text("No hay reseñas disponibles"),
+              ],
+            ));
+          }
 
           return ListView.builder(
             itemCount: finalReviews.length,
             itemBuilder: (context, index) {
               var review = finalReviews[index];
+              bool hasRating = review['totalRate'] != null;
+
               return Card(
                 child: ListTile(
                   leading: review['userImage'] != null
@@ -52,9 +71,19 @@ class _RatingListState extends State<RatingList> {
                           fit: BoxFit.cover,
                         )
                       : Icon(Icons.person),
-                  title: Text(review['clientName'] ?? 'No Name'),
-                  subtitle: Text(review['clientThought'] ?? 'No Thoughts'),
-                  trailing: Text("Valoración: ${review['totalRate'] ?? 0}"),
+                  title: Text(review['clientName'] ?? 'Nombre no disponible'),
+                  subtitle: Text(review['clientThought'] ?? 'Sin comentarios'),
+                  trailing: hasRating
+                      ? Text("Valoración: ${review['totalRate']}")
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star_border, color: Colors.grey),
+                            SizedBox(width: 4),
+                            Text("Sin valoración aún",
+                                style: TextStyle(color: Colors.grey)),
+                          ],
+                        ),
                 ),
               );
             },
