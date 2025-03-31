@@ -97,6 +97,9 @@ class _CategoryPageState extends State<CategoryPage> {
       query = query.orderBy("numberOfJobs", descending: true);
     } else if (_appliedFilters.contains("Menos trabajo realizado")) {
       query = query.orderBy("numberOfJobs");
+    } else {
+      // DEFAULT: Sort by dateTime (newest first)
+      query = query.orderBy("dateTime", descending: true);
     }
 
     return query;
