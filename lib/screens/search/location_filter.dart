@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:http/http.dart' as http;
@@ -17,12 +16,15 @@ class LocationFilter extends StatefulWidget {
 }
 
 class _LocationFilterState extends State<LocationFilter> {
-  List<String> cityNames = [];
+  List<String> allCityNames = [];
+  List<String> availableCityNames = [];
   String? selectedMunicipality;
   TextEditingController _searchController = TextEditingController();
+  TextEditingController _dropdownSearchController = TextEditingController();
   bool isLoading = true;
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  String searchQuery = "";
 
-  // Filter options and state
   final List<String> filterOptions = [
     "Precio más alto",
     "Precio más bajo",
@@ -36,23 +38,49 @@ class _LocationFilterState extends State<LocationFilter> {
   @override
   void initState() {
     super.initState();
-    fetchCities();
-    _searchController.addListener(() {
-      String text = _searchController.text.trim();
-      if (_searchController.text != text) {
-        _searchController.value = TextEditingValue(
-          text: text,
-          selection: TextSelection.collapsed(offset: text.length),
-        );
-      }
+    _searchController.addListener(_onSearchChanged);
+    _dropdownSearchController.addListener(_onDropdownSearchChanged);
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _dropdownSearchController.removeListener(_onDropdownSearchChanged);
+    _searchController.dispose();
+    _dropdownSearchController.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    String text = _searchController.text.trim();
+    if (_searchController.text != text) {
+      _searchController.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    }
+  }
+
+  void _onDropdownSearchChanged() {
+    setState(() {
+      selectedMunicipality = _dropdownSearchController.text.trim();
     });
   }
 
-  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-  String searchQuery = "";
+  Future<void> _loadData() async {
+    try {
+      await fetchCities();
+      await fetchAvailableLocations();
+      setState(() => isLoading = false);
+    } catch (e) {
+      print("Error loading data: $e");
+      setState(() => isLoading = false);
+    }
+  }
 
   Future<void> fetchCities() async {
-    const String apiUrl =
+    const apiUrl =
         "https://raw.githubusercontent.com/etereo-io/spain-communities-cities-json/master/towns.json";
 
     try {
@@ -60,14 +88,43 @@ class _LocationFilterState extends State<LocationFilter> {
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         setState(() {
-          cityNames = data.map((item) => item["name"] as String).toList();
-          isLoading = false;
+          allCityNames = data.map((item) => item["name"] as String).toList();
         });
       } else {
-        print("Error: ${response.statusCode}");
+        throw Exception("Failed to load cities: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error fetching data: $e");
+      print("Error fetching cities: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> fetchAvailableLocations() async {
+    try {
+      final querySnapshot =
+          await FirebaseFirestore.instance.collection('services').get();
+
+      final Set<String> uniqueLocations = {};
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        if (data['location'] is List) {
+          final locations = (data['location'] as List).cast<String>();
+          uniqueLocations.addAll(locations);
+        }
+      }
+
+      setState(() {
+        availableCityNames = allCityNames
+            .where((city) => uniqueLocations.contains(city))
+            .toList();
+
+        if (availableCityNames.isEmpty) {
+          availableCityNames = allCityNames;
+        }
+      });
+    } catch (e) {
+      print("Error fetching available locations: $e");
+      setState(() => availableCityNames = allCityNames);
     }
   }
 
@@ -89,35 +146,41 @@ class _LocationFilterState extends State<LocationFilter> {
               ),
             ),
             Divider(),
-            ...filterOptions.map((filter) {
-              return ListTile(
-                title: Text(filter),
-                onTap: () => Navigator.pop(context, filter),
-              );
-            }).toList(),
+            ...filterOptions
+                .map((filter) => ListTile(
+                      title: Text(filter),
+                      onTap: () => Navigator.pop(context, filter),
+                    ))
+                .toList(),
           ],
         );
       },
     );
 
     if (selectedFilter != null) {
-      setState(() {
-        _appliedFilters = [selectedFilter];
-      });
+      setState(() => _appliedFilters = [selectedFilter]);
     }
   }
 
   Query _buildQuery() {
     Query query = FirebaseFirestore.instance.collection("services");
 
-    // Apply location filter first if selected
+    // SOLUTION 1: If you've created the composite index in Firestore
+    query = query.where('uid', isNotEqualTo: currentUserId);
+
     if (selectedMunicipality != null &&
         selectedMunicipality!.trim().isNotEmpty) {
       query =
           query.where('location', arrayContains: selectedMunicipality!.trim());
     }
 
-    // Then apply sorting filters
+    // SOLUTION 2: If you prefer client-side filtering (comment out the uid filter above)
+    // if (selectedMunicipality != null && selectedMunicipality!.trim().isNotEmpty) {
+    //   query = query.where('location', arrayContains: selectedMunicipality!.trim());
+    // }
+    // Note: You'll need to filter out current user's services in the StreamBuilder
+
+    // Apply sorting
     if (_appliedFilters.contains("Precio más alto")) {
       query = query.orderBy("price", descending: true);
     } else if (_appliedFilters.contains("Precio más bajo")) {
@@ -146,6 +209,7 @@ class _LocationFilterState extends State<LocationFilter> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  controller: _searchController,
                   decoration: InputDecoration(
                     hintText: "¿Qué necesitas?",
                     prefixIcon: Icon(Icons.search),
@@ -153,11 +217,8 @@ class _LocationFilterState extends State<LocationFilter> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      searchQuery = value.toLowerCase();
-                    });
-                  },
+                  onChanged: (value) =>
+                      setState(() => searchQuery = value.toLowerCase()),
                 ),
               ),
               if (_appliedFilters.isNotEmpty)
@@ -167,11 +228,8 @@ class _LocationFilterState extends State<LocationFilter> {
                     children: [
                       Chip(
                         label: Text(_appliedFilters.first),
-                        onDeleted: () {
-                          setState(() {
-                            _appliedFilters.clear();
-                          });
-                        },
+                        onDeleted: () =>
+                            setState(() => _appliedFilters.clear()),
                       ),
                       Spacer(),
                     ],
@@ -193,11 +251,14 @@ class _LocationFilterState extends State<LocationFilter> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownSearch<String>(
-              items: cityNames,
+              items: availableCityNames,
               popupProps: PopupProps.menu(
                 showSearchBox: true,
                 searchFieldProps: TextFieldProps(
-                  controller: _searchController,
+                  controller: _dropdownSearchController,
+                  decoration: InputDecoration(
+                    hintText: "Buscar ubicación...",
+                  ),
                 ),
               ),
               dropdownButtonProps: DropdownButtonProps(
@@ -212,232 +273,231 @@ class _LocationFilterState extends State<LocationFilter> {
                   hintText: "Seleccionar ubicación",
                 ),
               ),
-              onChanged: (value) {
-                setState(() {
-                  selectedMunicipality = value;
-                });
-              },
+              onChanged: (value) => setState(() {
+                selectedMunicipality = value;
+                _dropdownSearchController.text = value ?? "";
+              }),
               selectedItem: selectedMunicipality,
             ),
           ),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _buildQuery().snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+          if (isLoading)
+            Center(child: CircularProgressIndicator())
+          else
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _buildQuery().snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.search_off,
-                        size: 100,
-                        color: Colors.grey,
-                      ),
-                      const Center(
-                        child: Text(
-                          "No se han encontrado resultados para la ubicación introducida.",
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return _buildNoResultsWidget();
+                  }
+
+                  // If using SOLUTION 2 (client-side filtering), add this filter:
+                  // final filteredDocs = snapshot.data!.docs.where((doc) {
+                  //   final data = doc.data() as Map<String, dynamic>;
+                  //   return data['uid'] != currentUserId;
+                  // }).toList();
+
+                  // If using SOLUTION 1 (composite index), use this:
+                  final filteredDocs = _filterDocuments(snapshot.data!.docs);
+
+                  if (filteredDocs.isEmpty) {
+                    return _buildNoResultsWidget();
+                  }
+
+                  return ListView.builder(
+                    itemCount: filteredDocs.length,
+                    itemBuilder: (context, index) =>
+                        _buildServiceCard(filteredDocs[index]),
                   );
-                }
-
-                final List<DocumentSnapshot> filteredDocuments =
-                    snapshot.data!.docs.where((doc) {
-                  final Map<String, dynamic> data =
-                      doc.data() as Map<String, dynamic>;
-                  final String userName =
-                      data['userName']?.toString().toLowerCase() ?? '';
-                  final String serviceName =
-                      data['title']?.toString().toLowerCase() ?? '';
-                  final String location = data['location'] is List
-                      ? (data['location'] as List).join(", ").toLowerCase()
-                      : data['location']?.toString().toLowerCase() ?? '';
-                  final String price =
-                      data['price']?.toString().toLowerCase() ?? '';
-
-                  return userName.contains(searchQuery) ||
-                      serviceName.contains(searchQuery) ||
-                      location.contains(searchQuery) ||
-                      price.contains(searchQuery);
-                }).toList();
-
-                if (filteredDocuments.isEmpty) {
-                  return Center(
-                    child: Text(
-                      "No se han encontrado resultados",
-                      style: TextStyle(color: colorBlack),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: filteredDocuments.length,
-                  itemBuilder: (context, index) {
-                    final Map<String, dynamic> data =
-                        filteredDocuments[index].data() as Map<String, dynamic>;
-                    final DocumentSnapshot document = filteredDocuments[index];
-                    final List<dynamic> favorites = data['favorite'] ?? [];
-                    bool isFavorite = favorites.contains(currentUserId);
-
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => HiringService(
-                              serviceDescription: data['description'],
-                              serviceId: data['uuid'],
-                              currencyType: data['currency'],
-                              price: data['price'].toString(),
-                              userEmail: data['userEmail'],
-                              userImage: data['userImage'],
-                              userName: data['userName'],
-                              category: data['category'],
-                              totalReviews: data['totalReviews'].toString(),
-                              uuid: data['uuid'],
-                              uid: data['uid'],
-                              totalRating: data['totalRate'].toString(),
-                              title: data['title'],
-                              perHrPrice: data['pricePerHr'].toString(),
-                              photo: data['photo'],
-                              description: data['description'],
-                            ),
-                          ),
-                        );
-                      },
-                      child: Card(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              trailing: IconButton(
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: isFavorite ? Colors.red : Colors.grey,
-                                ),
-                                onPressed: () async {
-                                  if (isFavorite) {
-                                    await FirebaseFirestore.instance
-                                        .collection('services')
-                                        .doc(document.id)
-                                        .update({
-                                      'favorite': FieldValue.arrayRemove(
-                                          [currentUserId])
-                                    });
-                                  } else {
-                                    await FirebaseFirestore.instance
-                                        .collection('services')
-                                        .doc(document.id)
-                                        .update({
-                                      'favorite':
-                                          FieldValue.arrayUnion([currentUserId])
-                                    });
-                                  }
-                                },
-                              ),
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    NetworkImage(data['photo'] ?? ""),
-                              ),
-                              title: Text(
-                                data['title'] ?? "No Title",
-                                style: GoogleFonts.inter(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              subtitle: Text(
-                                (data['location'] != null &&
-                                        (data['location'] as List<dynamic>)
-                                                .length >
-                                            10)
-                                    ? "Todas las ciudades de España"
-                                    : (data['location'] as List<dynamic>?)
-                                            ?.join(", ") ??
-                                        "No location",
-                                style: GoogleFonts.inter(
-                                  color: const Color(0xff9C9EA2),
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Text(
-                                        "€${data['price'].toString()}",
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                      Text(
-                                        data['priceType'] ?? "No price type",
-                                        style: GoogleFonts.inter(
-                                          color: const Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Image.asset("assets/line.png",
-                                      height: 40, width: 52),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(Icons.star,
-                                              color: Colors.yellow),
-                                          Text(
-                                            data['totalReviews']?.toString() ??
-                                                "0",
-                                            style: GoogleFonts.inter(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        "${data['ratingCount']?.toString() ?? "0"} Reviews",
-                                        style: GoogleFonts.inter(
-                                          color: const Color(0xff9C9EA2),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(height: 16),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+                },
+              ),
             ),
-          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNoResultsWidget() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.search_off, size: 100, color: Colors.grey),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            "No se han encontrado resultados para la búsqueda actual.",
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<DocumentSnapshot> _filterDocuments(List<DocumentSnapshot> docs) {
+    return docs.where((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      final userName = data['userName']?.toString().toLowerCase() ?? '';
+      final serviceName = data['title']?.toString().toLowerCase() ?? '';
+      final location = data['location'] is List
+          ? (data['location'] as List).join(", ").toLowerCase()
+          : data['location']?.toString().toLowerCase() ?? '';
+      final price = data['price']?.toString().toLowerCase() ?? '';
+
+      if (searchQuery.isEmpty) return true;
+
+      return userName.contains(searchQuery) ||
+          serviceName.contains(searchQuery) ||
+          location.contains(searchQuery) ||
+          price.contains(searchQuery);
+    }).toList();
+  }
+
+  Widget _buildServiceCard(DocumentSnapshot document) {
+    final data = document.data() as Map<String, dynamic>;
+    final favorites = data['favorite'] ?? [];
+    final isFavorite = favorites.contains(currentUserId);
+
+    return GestureDetector(
+      onTap: () => _navigateToServiceDetail(context, data),
+      child: Card(
+        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          children: [
+            ListTile(
+              trailing: IconButton(
+                icon: Icon(Icons.favorite,
+                    color: isFavorite ? Colors.red : Colors.grey),
+                onPressed: () => _toggleFavorite(document, isFavorite),
+              ),
+              leading: CircleAvatar(
+                  backgroundImage: NetworkImage(data['photo'] ?? "")),
+              title: Text(
+                data['title'] ?? "No Title",
+                style: GoogleFonts.inter(
+                    fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              subtitle: Text(
+                _formatLocation(data['location']),
+                style: GoogleFonts.inter(
+                  color: const Color(0xff9C9EA2),
+                  fontWeight: FontWeight.w300,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildPriceInfo(data),
+                  Image.asset("assets/line.png", height: 40, width: 52),
+                  _buildRatingInfo(data),
+                ],
+              ),
+            ),
+            SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _formatLocation(dynamic location) {
+    if (location == null) return "No location";
+    if (location is List && location.length > 10)
+      return "Todas las ciudades de España";
+    if (location is List) return location.join(", ");
+    return location.toString();
+  }
+
+  Widget _buildPriceInfo(Map<String, dynamic> data) {
+    return Column(
+      children: [
+        Text(
+          "€${data['price'].toString()}",
+          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        Text(
+          data['priceType'] ?? "No price type",
+          style: GoogleFonts.inter(
+            color: const Color(0xff9C9EA2),
+            fontWeight: FontWeight.bold,
+            fontSize: 19,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRatingInfo(Map<String, dynamic> data) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.star, color: Colors.yellow),
+            Text(
+              data['totalReviews']?.toString() ?? "0",
+              style:
+                  GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ],
+        ),
+        Text(
+          "${data['ratingCount']?.toString() ?? "0"} Reviews",
+          style: GoogleFonts.inter(
+            color: const Color(0xff9C9EA2),
+            fontWeight: FontWeight.bold,
+            fontSize: 19,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _toggleFavorite(DocumentSnapshot doc, bool isFavorite) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('services')
+          .doc(doc.id)
+          .update({
+        'favorite': isFavorite
+            ? FieldValue.arrayRemove([currentUserId])
+            : FieldValue.arrayUnion([currentUserId])
+      });
+    } catch (e) {
+      print("Error toggling favorite: $e");
+    }
+  }
+
+  void _navigateToServiceDetail(
+      BuildContext context, Map<String, dynamic> data) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (builder) => HiringService(
+          serviceDescription: data['description'],
+          serviceId: data['uuid'],
+          currencyType: data['currency'],
+          price: data['price'].toString(),
+          userEmail: data['userEmail'],
+          userImage: data['userImage'],
+          userName: data['userName'],
+          category: data['category'],
+          totalReviews: data['totalReviews'].toString(),
+          uuid: data['uuid'],
+          uid: data['uid'],
+          totalRating: data['totalRate'].toString(),
+          title: data['title'],
+          perHrPrice: data['pricePerHr'].toString(),
+          photo: data['photo'],
+          description: data['description'],
+        ),
       ),
     );
   }

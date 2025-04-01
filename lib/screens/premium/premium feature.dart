@@ -141,7 +141,7 @@ class _PremiumFeatureState extends State<PremiumFeature> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                  "Para desbloquear PREMIUM, comparte la aplicación con 20 contactos en WhatsApp Tenga en cuenta que debe compartir 5 contactos a la vez en WhatsApp, por lo que debe compartir 4 veces para desbloquear la función premium."),
+                  "Para desbloquear PREMIUM, comparte la aplicación con 5 contactos en WhatsApp Tenga en cuenta que debe compartir 5 contactos a la vez en WhatsApp, por lo que debe compartir 4 veces para desbloquear la función premium."),
               SizedBox(height: 10),
               if (shareCount > 0) Text("Progreso: $shareCount/20"),
               SizedBox(height: 10),
