@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kelimbo/screens/hiring/hiring_service.dart';
 import 'package:kelimbo/utils/colors.dart';
+import 'package:kelimbo/utils/image_utils.dart';
 
 class LocationFilterCategory extends StatefulWidget {
   final String locationCategory;
@@ -287,32 +288,38 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                     final DocumentSnapshot document = filteredDocuments[index];
                     final List<dynamic> favorites = data['favorite'] ?? [];
                     bool isFavorite = favorites.contains(currentUserId);
-
+                    bool isCurrentUserService = data['uid'] == currentUserId;
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (builder) => HiringService(
-                              serviceDescription: data['description'],
-                              serviceId: data['uuid'],
-                              currencyType: data['currency'],
-                              price: data['price'].toString(),
-                              userEmail: data['userEmail'],
-                              userImage: data['userImage'],
-                              userName: data['userName'],
-                              category: data['category'],
-                              totalReviews: data['totalReviews'].toString(),
-                              uuid: data['uuid'],
-                              uid: data['uid'],
-                              totalRating: data['totalRate'].toString(),
-                              title: data['title'],
-                              perHrPrice: data['pricePerHr'].toString(),
-                              photo: data['photo'],
-                              description: data['description'],
+                        if (isCurrentUserService) {
+                          // Navigate to edit service page
+                          showMessageBar("Añades este servicio", context);
+                        } else {
+                          // Navigate to hiring service page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (builder) => HiringService(
+                                serviceDescription: data['description'],
+                                serviceId: data['uuid'],
+                                currencyType: data['currency'],
+                                price: data['price'].toString(),
+                                userEmail: data['userEmail'],
+                                userImage: data['userImage'],
+                                userName: data['userName'],
+                                category: data['category'],
+                                totalReviews: data['totalReviews'].toString(),
+                                uuid: data['uuid'],
+                                uid: data['uid'],
+                                totalRating: data['totalRate'].toString(),
+                                title: data['title'],
+                                perHrPrice: data['pricePerHr'].toString(),
+                                photo: data['photo'],
+                                description: data['description'],
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
                       child: Card(
                         margin:
@@ -417,7 +424,7 @@ class _LocationFilterCategoryState extends State<LocationFilterCategory> {
                                         ],
                                       ),
                                       Text(
-                                        "${data['ratingCount']?.toString() ?? "0"} Reviews",
+                                        "${data['ratingCount']?.toString() ?? "0"} Comentarios",
                                         style: GoogleFonts.inter(
                                           color: const Color(0xff9C9EA2),
                                           fontWeight: FontWeight.bold,
